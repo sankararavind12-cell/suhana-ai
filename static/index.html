@@ -551,7 +551,11 @@
 
       statusText.textContent = "Suhana is thinking...";
 
-      const waiting = addMessage("Thinking...", "assistant");
+            const waiting = addMessage("", "assistant");
+      waiting.classList.add("typing-indicator");
+      waiting.setAttribute("aria-label", "Suhana is thinking");
+
+      waiting.innerHTML = "<span></span><span></span><span></span>";
 
       try {
         const response = await fetch("/api/chat", {
