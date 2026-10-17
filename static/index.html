@@ -205,23 +205,21 @@
     const input = document.getElementById("input");
     const chat = document.getElementById("chat");
     const statusText = document.getElementById("status");
-    const voiceButton = document.getElementById("voice");
-const statusText = document.getElementById("status");
+const voiceButton = document.getElementById("voice");
 const welcome = document.getElementById("welcome");
+const send = document.getElementById("send");
 
 let suhanaVoiceEnabled = true;
+const history = [];
 
 voiceButton.addEventListener("click", () => {
   suhanaVoiceEnabled = !suhanaVoiceEnabled;
-
   voiceButton.textContent = suhanaVoiceEnabled ? "🔊" : "🔇";
 
   if (!suhanaVoiceEnabled && "speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
 });
-
-const history = [];
 
 function speakSuhana(text) {
   if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
@@ -236,72 +234,6 @@ function speakSuhana(text) {
 
   const voices = window.speechSynthesis.getVoices();
   const preferredVoice = voices.find(voice => voice.lang === "en-IN");
-
-  if (preferredVoice) {
-    speech.voice = preferredVoice;
-  }
-
-  window.speechSynthesis.speak(speech);
-}
-let suhanaVoiceEnabled = true;
-
-voiceButton.onclick = function () {
-  suhanaVoiceEnabled = !suhanaVoiceEnabled;
-
-  if (suhanaVoiceEnabled) {
-    voiceButton.textContent = "🔊";
-  } else {
-    voiceButton.textContent = "🔇";
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-  }
-};
-let suhanaVoiceEnabled = true;
-
-voiceButton.addEventListener("click", () => {
-  suhanaVoiceEnabled = !suhanaVoiceEnabled;
-
-  if (!suhanaVoiceEnabled) {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-    voiceButton.textContent = "🔇";
-  } else {
-    voiceButton.textContent = "🔊";
-  }
-});
-
-voiceButton.addEventListener("click", () => {
-  suhanaVoiceEnabled = !suhanaVoiceEnabled;
-
-  if (!suhanaVoiceEnabled) {
-    window.speechSynthesis.cancel();
-    voiceButton.textContent = "🔇";
-  } else {
-    voiceButton.textContent = "🔊";
-  }
-});
-    const statusText = document.getElementById("status");
-    const welcome = document.getElementById("welcome");
-
-    const history = [];
-
-function speakSuhana(text) {
-  if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
-
-  window.speechSynthesis.cancel();
-
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.lang = "en-IN";
-  speech.rate = 1;
-  speech.pitch = 1.05;
-  speech.volume = 1;
-
-  const voices = window.speechSynthesis.getVoices();
-  const preferredVoice = voices.find(
-    voice => voice.lang === "en-IN"
-  );
 
   if (preferredVoice) {
     speech.voice = preferredVoice;
