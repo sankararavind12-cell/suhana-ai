@@ -199,7 +199,18 @@
     const form = document.getElementById("form");
     const input = document.getElementById("input");
     const chat = document.getElementById("chat");
-    const send = document.getElementById("send");
+    const voiceButton = document.getElementById("voice");
+
+voiceButton.addEventListener("click", () => {
+  suhanaVoiceEnabled = !suhanaVoiceEnabled;
+
+  if (!suhanaVoiceEnabled) {
+    window.speechSynthesis.cancel();
+    voiceButton.textContent = "🔇";
+  } else {
+    voiceButton.textContent = "🔊";
+  }
+});
     const statusText = document.getElementById("status");
     const welcome = document.getElementById("welcome");
 
