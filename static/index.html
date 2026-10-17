@@ -229,7 +229,6 @@ voiceButton.addEventListener("click", () => {
     const welcome = document.getElementById("welcome");
 
     const history = [];
-let suhanaVoiceEnabled = true;
 
 function speakSuhana(text) {
   if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
