@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10131f">
   <meta name="description" content="Meet Suhana, your personal AI assistant.">
+
   <link rel="manifest" href="/manifest.webmanifest">
+
   <title>Suhana AI</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -42,7 +46,10 @@
       font-weight: bold;
     }
 
-    h1 { margin: 0; font-size: 20px; }
+    h1 {
+      margin: 0;
+      font-size: 20px;
+    }
 
     .status {
       margin-top: 3px;
@@ -66,7 +73,9 @@
       margin: 30px 0 15px;
     }
 
-    .welcome .symbol { font-size: 42px; }
+    .welcome .symbol {
+      font-size: 42px;
+    }
 
     .welcome h2 {
       margin: 10px 0 8px;
@@ -101,7 +110,9 @@
       border-bottom-left-radius: 5px;
     }
 
-    .error { color: #ffaaaa; }
+    .error {
+      color: #ffaaaa;
+    }
 
     .composer {
       position: sticky;
@@ -134,7 +145,9 @@
       outline: none;
     }
 
-    textarea:focus { border-color: #9a89ff; }
+    textarea:focus {
+      border-color: #9a89ff;
+    }
 
     button {
       height: 46px;
@@ -165,9 +178,12 @@
 <body>
   <header>
     <div class="avatar">S</div>
+
     <div>
       <h1>Suhana</h1>
-      <div class="status" id="status">Your personal AI assistant</div>
+      <div class="status" id="status">
+        Your personal AI assistant
+      </div>
     </div>
   </header>
 
@@ -175,7 +191,10 @@
     <section class="welcome" id="welcome">
       <div class="symbol">✦</div>
       <h2>Hey, I'm Suhana.</h2>
-      <p>Your personal AI companion.<br>What's on your mind today?</p>
+      <p>
+        Your personal AI companion.<br>
+        What's on your mind today?
+      </p>
     </section>
   </main>
 
@@ -189,11 +208,29 @@
         aria-label="Your message"
         required
       ></textarea>
-      <button id="voice" type="button" aria-label="Toggle Suhana voice">🔊</button>
-      <button id="mic" type="button" aria-label="Speak your message">🎙️</button>
-      <button id="send" type="submit" aria-label="Send message">↑</button>
+
+      <button
+        id="voice"
+        type="button"
+        aria-label="Toggle Suhana voice"
+      >🔊</button>
+
+      <button
+        id="mic"
+        type="button"
+        aria-label="Speak your message"
+      >🎙️</button>
+
+      <button
+        id="send"
+        type="submit"
+        aria-label="Send message"
+      >↑</button>
     </form>
-    <div class="hint">Suhana AI · Your conversations are sent to the AI service to generate replies.</div>
+
+    <div class="hint">
+      Suhana AI · Your conversations are sent to the AI service to generate replies.
+    </div>
   </section>
 
   <script>
@@ -208,40 +245,63 @@
 
     let suhanaVoiceEnabled = true;
     let recognition = null;
+    let finalTranscript = "";
+    let isListening = false;
+
     const history = [];
 
+    // Toggle Suhana's spoken replies.
     voiceButton.addEventListener("click", () => {
       suhanaVoiceEnabled = !suhanaVoiceEnabled;
-      voiceButton.textContent = suhanaVoiceEnabled ? "🔊" : "🔇";
 
-      if (!suhanaVoiceEnabled && "speechSynthesis" in window) {
+      voiceButton.textContent =
+        suhanaVoiceEnabled ? "🔊" : "🔇";
+
+      if (
+        !suhanaVoiceEnabled &&
+        "speechSynthesis" in window
+      ) {
         window.speechSynthesis.cancel();
       }
     });
 
+    // Speak Suhana's response aloud.
     function speakSuhana(text) {
-      if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
+      if (
+        !suhanaVoiceEnabled ||
+        !("speechSynthesis" in window)
+      ) {
+        return;
+      }
 
       window.speechSynthesis.cancel();
 
       const speech = new SpeechSynthesisUtterance(text);
+
       speech.lang = "en-IN";
       speech.rate = 1;
       speech.pitch = 1.05;
       speech.volume = 1;
 
       const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(voice => voice.lang === "en-IN")
-        || voices.find(voice => voice.lang.startsWith("en"));
 
-      if (preferredVoice) speech.voice = preferredVoice;
+      const preferredVoice =
+        voices.find(voice => voice.lang === "en-IN") ||
+        voices.find(voice => voice.lang.startsWith("en"));
+
+      if (preferredVoice) {
+        speech.voice = preferredVoice;
+      }
 
       speech.onstart = () => {
         statusText.textContent = "Suhana is speaking...";
       };
 
       speech.onend = () => {
-        statusText.textContent = "Your personal AI assistant";
+        if (!isListening) {
+          statusText.textContent =
+            "Your personal AI assistant";
+        }
       };
 
       speech.onerror = (event) => {
@@ -252,24 +312,40 @@
       window.speechSynthesis.speak(speech);
     }
 
+    // Add a message to the chat.
     function addMessage(text, role, isError = false) {
       welcome?.remove();
 
       const bubble = document.createElement("div");
-      bubble.className = "message " + role + (isError ? " error" : "");
+
+      bubble.className =
+        "message " + role + (isError ? " error" : "");
+
       bubble.textContent = text;
+
       chat.appendChild(bubble);
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      });
+
       return bubble;
     }
 
+    // Send a message to the AI backend.
     async function sendMessage(message) {
       const cleanMessage = message.trim();
-      if (!cleanMessage || send.disabled) return;
+
+      if (!cleanMessage || send.disabled) {
+        return;
+      }
 
       addMessage(cleanMessage, "user");
+
       input.value = "";
       send.disabled = true;
+
       statusText.textContent = "Suhana is thinking...";
 
       const waiting = addMessage("Thinking...", "assistant");
@@ -277,7 +353,9 @@
       try {
         const response = await fetch("/api/chat", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             message: cleanMessage,
             history: history.slice(-10)
@@ -287,28 +365,48 @@
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || "Something went wrong.");
+          throw new Error(
+            data.error || "Something went wrong."
+          );
         }
 
-        const reply = data.reply || "I couldn't create a reply.";
+        const reply =
+          data.reply || "I couldn't create a reply.";
+
         waiting.textContent = reply;
+
         speakSuhana(reply);
 
         history.push(
-          { role: "user", content: cleanMessage },
-          { role: "assistant", content: reply }
+          {
+            role: "user",
+            content: cleanMessage
+          },
+          {
+            role: "assistant",
+            content: reply
+          }
         );
 
-        if (history.length > 20) history.splice(0, history.length - 20);
-        statusText.textContent = "Your personal AI assistant";
+        if (history.length > 20) {
+          history.splice(0, history.length - 20);
+        }
+
+        statusText.textContent =
+          "Your personal AI assistant";
+
       } catch (error) {
-        waiting.textContent = (error.message || "Connection failed.") +
+        waiting.textContent =
+          (error.message || "Connection failed.") +
           " Please check the server setup and try again.";
+
         waiting.classList.add("error");
+
         statusText.textContent = "Connection needs attention";
+
       } finally {
         send.disabled = false;
-        input.focus();
+
         window.scrollTo({
           top: document.body.scrollHeight,
           behavior: "smooth"
@@ -316,46 +414,126 @@
       }
     }
 
+    // Microphone and speech recognition.
     const SpeechRecognitionAPI =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
 
     if (SpeechRecognitionAPI) {
       recognition = new SpeechRecognitionAPI();
+
       recognition.lang = "en-IN";
       recognition.continuous = false;
       recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
 
       recognition.onstart = () => {
+        isListening = true;
+        finalTranscript = "";
+
+        input.value = "";
+
         micButton.textContent = "🛑";
         statusText.textContent = "Suhana is listening...";
       };
 
       recognition.onresult = (event) => {
-        let transcript = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
+        let interimTranscript = "";
+
+        for (
+          let i = event.resultIndex;
+          i < event.results.length;
+          i++
+        ) {
+          const spokenText =
+            event.results[i][0].transcript;
+
+          if (event.results[i].isFinal) {
+            finalTranscript += spokenText + " ";
+          } else {
+            interimTranscript += spokenText;
+          }
         }
-        input.value = transcript.trim();
+
+        input.value =
+          (finalTranscript + interimTranscript).trim();
       };
 
       recognition.onerror = (event) => {
-        statusText.textContent = "Microphone: " + event.error;
+        console.error(
+          "Suhana microphone error:",
+          event.error
+        );
+
+        if (event.error === "not-allowed") {
+          statusText.textContent =
+            "Please allow microphone access in your browser.";
+        } else if (event.error === "no-speech") {
+          statusText.textContent =
+            "I didn't hear anything. Please try again.";
+        } else if (event.error === "audio-capture") {
+          statusText.textContent =
+            "No working microphone was found.";
+        } else {
+          statusText.textContent =
+            "Microphone error: " + event.error;
+        }
       };
 
       recognition.onend = () => {
-  micButton.textContent = "🎙️";
+        isListening = false;
+        micButton.textContent = "🎙️";
 
-  if (statusText.textContent === "Suhana is listening...") {
-    statusText.textContent = "Your personal AI assistant";
-  }
+        const message = finalTranscript.trim();
 
-  const message = finalTranscript.trim();
+        if (message) {
+          input.value = message;
 
-  if (message && !send.disabled) {
-    input.value = message;
-    setTimeout(() => sendMessage(message), 400);
-  }
-};      
+          statusText.textContent = "Sending your message...";
+
+          if (!send.disabled) {
+            setTimeout(() => {
+              sendMessage(message);
+            }, 300);
+          }
+        } else {
+          if (
+            statusText.textContent ===
+            "Suhana is listening..."
+          ) {
+            statusText.textContent =
+              "Your personal AI assistant";
+          }
+        }
+      };
+
+      // This click handler was missing in your original code.
+      micButton.addEventListener("click", () => {
+        if (isListening) {
+          recognition.stop();
+          return;
+        }
+
+        try {
+          finalTranscript = "";
+
+          if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+          }
+
+          recognition.start();
+
+        } catch (error) {
+          console.error(
+            "Could not start microphone:",
+            error
+          );
+
+          statusText.textContent =
+            "Please try the microphone again.";
+        }
+      });
+
     } else {
       micButton.addEventListener("click", () => {
         statusText.textContent =
@@ -363,25 +541,39 @@
       });
     }
 
+    // Send typed messages.
     form.addEventListener("submit", event => {
       event.preventDefault();
+
       const message = input.value.trim();
-      if (message && !send.disabled) sendMessage(message);
+
+      if (message && !send.disabled) {
+        sendMessage(message);
+      }
     });
 
+    // Enter sends; Shift + Enter creates a new line.
     input.addEventListener("keydown", event => {
-      if (event.key === "Enter" && !event.shiftKey) {
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
         event.preventDefault();
         form.requestSubmit();
       }
     });
-  </script>
 
-  <script>
+    // Register the PWA service worker.
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js")
-          .catch(error => console.error("Service worker:", error));
+        navigator.serviceWorker
+          .register("/sw.js")
+          .catch(error => {
+            console.error(
+              "Service worker:",
+              error
+            );
+          });
       });
     }
   </script>
