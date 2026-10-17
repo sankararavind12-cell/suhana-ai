@@ -343,6 +343,19 @@
       };
 
       recognition.onend = () => {
+  micButton.textContent = "🎙️";
+
+  if (statusText.textContent === "Suhana is listening...") {
+    statusText.textContent = "Your personal AI assistant";
+  }
+
+  const message = finalTranscript.trim();
+
+  if (message && !send.disabled) {
+    input.value = message;
+    setTimeout(() => sendMessage(message), 400);
+  }
+};
         micButton.textContent = "🎙️";
         if (statusText.textContent === "Suhana is listening...") {
           statusText.textContent = "Your personal AI assistant";
