@@ -263,6 +263,7 @@ function speakSuhana(text) {
         }
 
         waiting.textContent = data.reply || "I couldn't create a reply.";
+speakSuhana(waiting.textContent);
 
         history.push(
           { role: "user", content: message },
