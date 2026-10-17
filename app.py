@@ -3,8 +3,9 @@ from flask import Flask, request, jsonify, send_from_directory
 from openai import OpenAI
 
 app = Flask(__name__, static_folder="static")
-API_KEY = os.environ.get("OPENAI_API_KEY")
-MODEL = os.environ.get("SUHANA_MODEL", "gpt-4o-mini")
+API_KEY = os.environ.get("GEMINI_API_KEY")
+MODEL = os.environ.get("SUHANA_MODEL", "gemini-2.5-flash")
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 
 @app.get("/")
 def home():
