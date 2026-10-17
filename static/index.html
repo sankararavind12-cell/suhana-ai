@@ -189,7 +189,12 @@
         aria-label="Your message"
         required
       ></textarea>
-      <button id="voice" type="button" aria-label="Toggle Suhana voice">🔊</button>
+      <button
+  id="voice"
+  type="button"
+  onclick="this.textContent = this.textContent === '🔊' ? '🔇' : '🔊'"
+  aria-label="Toggle Suhana voice"
+>🔊</button>
 <button id="send" type="submit" aria-label="Send message">↑</button>
     </form>
     <div class="hint">Suhana AI · Your conversations are sent to the AI service to generate replies.</div>
