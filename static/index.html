@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131f">
+  <meta name="description" content="Meet Suhana, your personal AI assistant.">
+  <title>Suhana AI</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #10131f;
+      color: #f4f5ff;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #171b2a;
+      border-bottom: 1px solid #292e42;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      color: #10131f;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    h1 { margin: 0; font-size: 20px; }
+
+    .status {
+      margin-top: 3px;
+      font-size: 12px;
+      color: #9ba5bc;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 760px;
+      margin: auto;
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .welcome {
+      text-align: center;
+      margin: 30px 0 15px;
+    }
+
+    .welcome .symbol { font-size: 42px; }
+
+    .welcome h2 {
+      margin: 10px 0 8px;
+      font-size: 27px;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: #9ba5bc;
+      line-height: 1.6;
+    }
+
+    .message {
+      max-width: 88%;
+      padding: 13px 16px;
+      border-radius: 18px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #7663db;
+      border-bottom-right-radius: 5px;
+    }
+
+    .assistant {
+      align-self: flex-start;
+      background: #20263a;
+      border: 1px solid #303750;
+      border-bottom-left-radius: 5px;
+    }
+
+    .error { color: #ffaaaa; }
+
+    .composer {
+      position: sticky;
+      bottom: 0;
+      padding: 12px;
+      background: #10131f;
+      border-top: 1px solid #292e42;
+    }
+
+    form {
+      max-width: 760px;
+      margin: auto;
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    textarea {
+      flex: 1;
+      resize: none;
+      min-width: 0;
+      height: 48px;
+      max-height: 120px;
+      padding: 13px 15px;
+      border: 1px solid #343b55;
+      border-radius: 16px;
+      background: #1b2031;
+      color: white;
+      font: inherit;
+      outline: none;
+    }
+
+    textarea:focus { border-color: #9a89ff; }
+
+    button {
+      height: 46px;
+      min-width: 48px;
+      border: 0;
+      border-radius: 15px;
+      background: #a99aff;
+      color: #111323;
+      font-size: 19px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    .hint {
+      text-align: center;
+      color: #737e98;
+      font-size: 11px;
+      margin-top: 9px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="avatar">S</div>
+    <div>
+      <h1>Suhana</h1>
+      <div class="status" id="status">Your personal AI assistant</div>
+    </div>
+  </header>
+
+  <main id="chat">
+    <section class="welcome" id="welcome">
+      <div class="symbol">✦</div>
+      <h2>Hey, I'm Suhana.</h2>
+      <p>Your personal AI companion.<br>What's on your mind today?</p>
+    </section>
+  </main>
+
+  <section class="composer">
+    <form id="form">
+      <textarea
+        id="input"
+        placeholder="Message Suhana..."
+        rows="1"
+        maxlength="8000"
+        aria-label="Your message"
+        required
+      ></textarea>
+      <button id="send" type="submit" aria-label="Send message">↑</button>
+    </form>
+    <div class="hint">Suhana AI · Your conversations are sent to the AI service to generate replies.</div>
+  </section>
+
+  <script>
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    const chat = document.getElementById("chat");
+    const send = document.getElementById("send");
+    const statusText = document.getElementById("status");
+    const welcome = document.getElementById("welcome");
+
+    const history = [];
+
+    function addMessage(text, role, isError = false) {
+      welcome?.remove();
+
+      const bubble = document.createElement("div");
+      bubble.className = "message " + role + (isError ? " error" : "");
+      bubble.textContent = text;
+      chat.appendChild(bubble);
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      return bubble;
+    }
+
+    async function sendMessage(message) {
+      addMessage(message, "user");
+      input.value = "";
+      send.disabled = true;
+      statusText.textContent = "Suhana is thinking...";
+
+      const waiting = addMessage("Thinking...", "assistant");
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message,
+            history: history.slice(-10)
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Something went wrong.");
+        }
+
+        waiting.textContent = data.reply || "I couldn't create a reply.";
+
+        history.push(
+          { role: "user", content: message },
+          { role: "assistant", content: data.reply || "" }
+        );
+
+        if (history.length > 20) history.splice(0, history.length - 20);
+
+        statusText.textContent = "Your personal AI assistant";
+      } catch (error) {
+        waiting.textContent = error.message +
+          " Please check the server setup and try again.";
+        waiting.classList.add("error");
+        statusText.textContent = "Connection needs attention";
+      } finally {
+        send.disabled = false;
+        input.focus();
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth"
+        });
+      }
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const message = input.value.trim();
+      if (message && !send.disabled) sendMessage(message);
+    });
+
+    input.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+  </script>
+</body>
+      </html>
