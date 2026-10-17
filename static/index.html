@@ -190,13 +190,8 @@
         required
       ></textarea>
       <button id="voice" type="button" aria-label="Toggle Suhana voice">🔊</button>
-      
-      <button
-  id="mic"
-  type="button"
-  aria-label="Start voice conversation"
->🎙️</button>
-<button id="send" type="submit" aria-label="Send message">↑</button>
+      <button id="mic" type="button" aria-label="Speak your message">🎙️</button>
+      <button id="send" type="submit" aria-label="Send message">↑</button>
     </form>
     <div class="hint">Suhana AI · Your conversations are sent to the AI service to generate replies.</div>
   </section>
@@ -206,259 +201,58 @@
     const input = document.getElementById("input");
     const chat = document.getElementById("chat");
     const statusText = document.getElementById("status");
-const voiceButton = document.getElementById("voice");
+    const voiceButton = document.getElementById("voice");
     const micButton = document.getElementById("mic");
-const welcome = document.getElementById("welcome");
-const send = document.getElementById("send");
+    const welcome = document.getElementById("welcome");
+    const send = document.getElementById("send");
 
-let suhanaVoiceEnabled = true;
-const history = [];
+    let suhanaVoiceEnabled = true;
+    let recognition = null;
+    const history = [];
 
-voiceButton.addEventListener("click", () => {
-  suhanaVoiceEnabled = !suhanaVoiceEnabled;
-  voiceButton.textContent = suhanaVoiceEnabled ? "🔊" : "🔇";
+    voiceButton.addEventListener("click", () => {
+      suhanaVoiceEnabled = !suhanaVoiceEnabled;
+      voiceButton.textContent = suhanaVoiceEnabled ? "🔊" : "🔇";
 
-  if (!suhanaVoiceEnabled && "speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-});
+      if (!suhanaVoiceEnabled && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    });
 
-function speakSuhana(text) {
-  if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
+    function speakSuhana(text) {
+      if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
 
-  window.speechSynthesis.cancel();
+      window.speechSynthesis.cancel();
 
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.lang = "en-US";
-  speech.rate = 1;
-  speech.pitch = 1.05;
-  speech.volume = 1;
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = "en-IN";
+      speech.rate = 1;
+      speech.pitch = 1.05;
+      speech.volume = 1;
 
-  const voices = window.speechSynthesis.getVoices();
-  const preferredVoice = voices.find(voice => voice.lang === "en-IN");
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(voice => voice.lang === "en-IN")
+        || voices.find(voice => voice.lang.startsWith("en"));
 
-  if (preferredVoice) {
-    speech.voice = preferredVoice;
-  }
+      if (preferredVoice) speech.voice = preferredVoice;
 
-  speech.onstart = () => {
-  statusText.textContent = "Suhana is speaking...";
-};
+      speech.onstart = () => {
+        statusText.textContent = "Suhana is speaking...";
+      };
 
-speech.onend = () => {
-  statusText.textContent = "Your personal AI assistant";
-};
+      speech.onend = () => {
+        statusText.textContent = "Your personal AI assistant";
+      };
 
-speech.onerror = (event) => {
-  statusText.textContent = "Voice error: " + event.error;
-  console.log("Suhana voice error:", event.error);
-};
+      speech.onerror = (event) => {
+        statusText.textContent = "Voice playback unavailable";
+        console.log("Suhana voice error:", event.error);
+      };
 
-window.speechSynthesis.speak(speech);
-}
+      window.speechSynthesis.speak(speech);
+    }
+
     function addMessage(text, role, isError = false) {
-      // Suhana's voice recognition
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-let recognition = null;
-let listeningForWakeWord = false;
-let suhanaIsAwake = false;
-
-if (SpeechRecognition) {
-  recognition = new SpeechRecognition();
-  recognition.lang = "en-IN";
-  recognition.continuous = true;
-  recognition.interimResults = false;
-
-  recognition.onstart = () => {
-    statusText.textContent = listeningForWakeWord
-      ? 'Listening for "Hey Suhana"...'
-      : "Suhana is listening...";
-  };
-
-  recognition.onresult = (event) => {
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      if (!event.results[i].isFinal) continue;
-
-      const words = event.results[i][0].transcript.trim();
-      console.log("Heard:", words);
-
-      if (!suhanaIsAwake) {
-        const wakeMatch = words.match(/hey\s+suhana[\s,!.]*/i);
-
-        if (wakeMatch) {
-          suhanaIsAwake = true;
-
-          const remainder = words.slice(wakeMatch[0].length).trim();
-
-          statusText.textContent = "I'm listening to you!";
-          speakSuhana("Yes, I'm listening.");
-
-          if (remainder) {
-            sendMessage(remainder);
-          } else {
-            statusText.textContent = "Go ahead, I'm listening.";
-          }
-        }
-      } else {
-        if (words) {
-          sendMessage(words);
-        }
-      }
-    }
-<script>
-    const form = document.getElementById("form");
-    const input = document.getElementById("input");
-    const chat = document.getElementById("chat");
-    const statusText = document.getElementById("status");
-const voiceButton = document.getElementById("voice");
-    const micButton = document.getElementById("mic");
-const welcome = document.getElementById("welcome");
-const send = document.getElementById("send");
-
-let suhanaVoiceEnabled = true;
-const history = [];
-
-voiceButton.addEventListener("click", () => {
-  suhanaVoiceEnabled = !suhanaVoiceEnabled;
-  voiceButton.textContent = suhanaVoiceEnabled ? "🔊" : "🔇";
-
-  if (!suhanaVoiceEnabled && "speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-});
-
-function speakSuhana(text) {
-  if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
-
-  window.speechSynthesis.cancel();
-
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.lang = "en-US";
-  speech.rate = 1;
-  speech.pitch = 1.05;
-  speech.volume = 1;
-
-  const voices = window.speechSynthesis.getVoices();
-  const preferredVoice = voices.find(voice => voice.lang === "en-IN");
-
-  if (preferredVoice) {
-    speech.voice = preferredVoice;
-  }
-
-  speech.onstart = () => {
-  statusText.textContent = "Suhana is speaking...";
-};
-
-speech.onend = () => {
-  statusText.textContent = "Your personal AI assistant";
-};
-
-speech.onerror = (event) => {
-  statusText.textContent = "Voice error: " + event.error;
-  console.log("Suhana voice error:", event.error);
-};
-
-window.speechSynthesis.speak(speech);
-}
-    function addMessage(text, role, isError = false) {
-      // Suhana's voice recognition
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-let recognition = null;
-let listeningForWakeWord = false;
-let suhanaIsAwake = false;
-
-if (SpeechRecognition) {
-  recognition = new SpeechRecognition();
-  recognition.lang = "en-IN";
-  recognition.continuous = true;
-  recognition.interimResults = false;
-
-  recognition.onstart = () => {
-    statusText.textContent = listeningForWakeWord
-      ? 'Listening for "Hey Suhana"...'
-      : "Suhana is listening...";
-  };
-
-  recognition.onresult = (event) => {
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      if (!event.results[i].isFinal) continue;
-
-      const words = event.results[i][0].transcript.trim();
-      console.log("Heard:", words);
-
-      if (!suhanaIsAwake) {
-        const wakeMatch = words.match(/hey\s+suhana[\s,!.]*/i);
-
-        if (wakeMatch) {
-          suhanaIsAwake = true;
-
-          const remainder = words.slice(wakeMatch[0].length).trim();
-
-          statusText.textContent = "I'm listening to you!";
-          speakSuhana("Yes, I'm listening.");
-
-          if (remainder) {
-            sendMessage(remainder);
-          } else {
-            statusText.textContent = "Go ahead, I'm listening.";
-          }
-        }
-      } else {
-        if (words) {
-          sendMessage(words);
-        }
-      }
-    }
-  };
-
-  recognition.onerror = (event) => {
-    statusText.textContent = "Microphone: " + event.error;
-    console.log("Recognition error:", event.error);
-  };
-
-  recognition.onend = () => {
-    if (listeningForWakeWord) {
-      try {
-        recognition.start();
-      } catch (error) {
-        console.log("Recognition restart:", error);
-      }
-    } else {
-      statusText.textContent = "Your personal AI assistant";
-    }
-  };
-
-  micButton.addEventListener("click", () => {
-    if (listeningForWakeWord) {
-      listeningForWakeWord = false;
-      suhanaIsAwake = false;
-      micButton.textContent = "🎙️";
-      recognition.stop();
-      statusText.textContent = "Voice conversation stopped";
-      return;
-    }
-
-    listeningForWakeWord = true;
-    suhanaIsAwake = false;
-    micButton.textContent = "🛑";
-
-    try {
-      recognition.start();
-    } catch (error) {
-      statusText.textContent = "Please try the microphone again";
-      console.log(error);
-    }
-  });
-} else {
-  micButton.addEventListener("click", () => {
-    statusText.textContent =
-      "Speech recognition isn't supported in this browser.";
-  });
-                             }
       welcome?.remove();
 
       const bubble = document.createElement("div");
@@ -470,7 +264,10 @@ if (SpeechRecognition) {
     }
 
     async function sendMessage(message) {
-      addMessage(message, "user");
+      const cleanMessage = message.trim();
+      if (!cleanMessage || send.disabled) return;
+
+      addMessage(cleanMessage, "user");
       input.value = "";
       send.disabled = true;
       statusText.textContent = "Suhana is thinking...";
@@ -482,7 +279,7 @@ if (SpeechRecognition) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            message,
+            message: cleanMessage,
             history: history.slice(-10)
           })
         });
@@ -493,19 +290,19 @@ if (SpeechRecognition) {
           throw new Error(data.error || "Something went wrong.");
         }
 
-        waiting.textContent = data.reply || "I couldn't create a reply.";
-speakSuhana(waiting.textContent);
+        const reply = data.reply || "I couldn't create a reply.";
+        waiting.textContent = reply;
+        speakSuhana(reply);
 
         history.push(
-          { role: "user", content: message },
-          { role: "assistant", content: data.reply || "" }
+          { role: "user", content: cleanMessage },
+          { role: "assistant", content: reply }
         );
 
         if (history.length > 20) history.splice(0, history.length - 20);
-
         statusText.textContent = "Your personal AI assistant";
       } catch (error) {
-        waiting.textContent = error.message +
+        waiting.textContent = (error.message || "Connection failed.") +
           " Please check the server setup and try again.";
         waiting.classList.add("error");
         statusText.textContent = "Connection needs attention";
@@ -517,6 +314,53 @@ speakSuhana(waiting.textContent);
           behavior: "smooth"
         });
       }
+    }
+
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognitionAPI) {
+      recognition = new SpeechRecognitionAPI();
+      recognition.lang = "en-IN";
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        micButton.textContent = "🛑";
+        statusText.textContent = "Suhana is listening...";
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        input.value = transcript.trim();
+      };
+
+      recognition.onerror = (event) => {
+        statusText.textContent = "Microphone: " + event.error;
+      };
+
+      recognition.onend = () => {
+        micButton.textContent = "🎙️";
+        if (statusText.textContent === "Suhana is listening...") {
+          statusText.textContent = "Your personal AI assistant";
+        }
+      };
+
+      micButton.addEventListener("click", () => {
+        try {
+          recognition.start();
+        } catch (error) {
+          statusText.textContent = "Please try the microphone again.";
+        }
+      });
+    } else {
+      micButton.addEventListener("click", () => {
+        statusText.textContent =
+          "Speech recognition isn't supported in this browser.";
+      });
     }
 
     form.addEventListener("submit", event => {
@@ -532,7 +376,7 @@ speakSuhana(waiting.textContent);
       }
     });
   </script>
-  <script>
+
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
