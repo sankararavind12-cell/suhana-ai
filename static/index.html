@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10131f">
   <meta name="description" content="Meet Suhana, your personal AI assistant.">
+  <link rel="manifest" href="/manifest.webmanifest">
   <title>Suhana AI</title>
 
   <style>
@@ -278,3 +279,11 @@
   </script>
 </body>
       </html>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js")
+        .catch(error => console.error("Service worker:", error));
+    });
+  }
+</script>
