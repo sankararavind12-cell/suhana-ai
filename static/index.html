@@ -355,20 +355,7 @@
     input.value = message;
     setTimeout(() => sendMessage(message), 400);
   }
-};
-        micButton.textContent = "🎙️";
-        if (statusText.textContent === "Suhana is listening...") {
-          statusText.textContent = "Your personal AI assistant";
-        }
-      };
-
-      micButton.addEventListener("click", () => {
-        try {
-          recognition.start();
-        } catch (error) {
-          statusText.textContent = "Please try the microphone again.";
-        }
-      });
+};      
     } else {
       micButton.addEventListener("click", () => {
         statusText.textContent =
