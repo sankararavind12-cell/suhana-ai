@@ -335,6 +335,16 @@
       return bubble;
     }
 
+    // Restore saved messages when the page opens.
+history.forEach((item) => {
+  if (
+    item &&
+    ["user", "assistant"].includes(item.role) &&
+    typeof item.content === "string"
+  ) {
+    addMessage(item.content, item.role);
+  }
+});
     // Send a message to the AI backend.
     async function sendMessage(message) {
       const cleanMessage = message.trim();
