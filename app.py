@@ -38,7 +38,10 @@ def chat():
             if isinstance(item, dict) and item.get("role") in ("user", "assistant") and isinstance(item.get("content"), str):
                 safe_history.append({"role": item["role"], "content": item["content"][:8000]})
     try:
-        client = OpenAI(api_key=API_KEY)
+        client = OpenAI(
+    api_key=API_KEY,
+    base_url=GEMINI_BASE_URL
+                                     )
         response = client.chat.completions.create(
             model=MODEL,
             messages=[
