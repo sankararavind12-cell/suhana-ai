@@ -234,7 +234,20 @@ function speakSuhana(text) {
     speech.voice = preferredVoice;
   }
 
-  window.speechSynthesis.speak(speech);
+  speech.onstart = () => {
+  statusText.textContent = "Suhana is speaking...";
+};
+
+speech.onend = () => {
+  statusText.textContent = "Your personal AI assistant";
+};
+
+speech.onerror = (event) => {
+  statusText.textContent = "Voice error: " + event.error;
+  console.log("Suhana voice error:", event.error);
+};
+
+window.speechSynthesis.speak(speech);
 }
     function addMessage(text, role, isError = false) {
       welcome?.remove();
