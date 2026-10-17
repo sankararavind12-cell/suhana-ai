@@ -307,6 +307,112 @@ if (SpeechRecognition) {
         }
       }
     }
+<script>
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    const chat = document.getElementById("chat");
+    const statusText = document.getElementById("status");
+const voiceButton = document.getElementById("voice");
+    const micButton = document.getElementById("mic");
+const welcome = document.getElementById("welcome");
+const send = document.getElementById("send");
+
+let suhanaVoiceEnabled = true;
+const history = [];
+
+voiceButton.addEventListener("click", () => {
+  suhanaVoiceEnabled = !suhanaVoiceEnabled;
+  voiceButton.textContent = suhanaVoiceEnabled ? "🔊" : "🔇";
+
+  if (!suhanaVoiceEnabled && "speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+});
+
+function speakSuhana(text) {
+  if (!suhanaVoiceEnabled || !("speechSynthesis" in window)) return;
+
+  window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-US";
+  speech.rate = 1;
+  speech.pitch = 1.05;
+  speech.volume = 1;
+
+  const voices = window.speechSynthesis.getVoices();
+  const preferredVoice = voices.find(voice => voice.lang === "en-IN");
+
+  if (preferredVoice) {
+    speech.voice = preferredVoice;
+  }
+
+  speech.onstart = () => {
+  statusText.textContent = "Suhana is speaking...";
+};
+
+speech.onend = () => {
+  statusText.textContent = "Your personal AI assistant";
+};
+
+speech.onerror = (event) => {
+  statusText.textContent = "Voice error: " + event.error;
+  console.log("Suhana voice error:", event.error);
+};
+
+window.speechSynthesis.speak(speech);
+}
+    function addMessage(text, role, isError = false) {
+      // Suhana's voice recognition
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+let recognition = null;
+let listeningForWakeWord = false;
+let suhanaIsAwake = false;
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = "en-IN";
+  recognition.continuous = true;
+  recognition.interimResults = false;
+
+  recognition.onstart = () => {
+    statusText.textContent = listeningForWakeWord
+      ? 'Listening for "Hey Suhana"...'
+      : "Suhana is listening...";
+  };
+
+  recognition.onresult = (event) => {
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (!event.results[i].isFinal) continue;
+
+      const words = event.results[i][0].transcript.trim();
+      console.log("Heard:", words);
+
+      if (!suhanaIsAwake) {
+        const wakeMatch = words.match(/hey\s+suhana[\s,!.]*/i);
+
+        if (wakeMatch) {
+          suhanaIsAwake = true;
+
+          const remainder = words.slice(wakeMatch[0].length).trim();
+
+          statusText.textContent = "I'm listening to you!";
+          speakSuhana("Yes, I'm listening.");
+
+          if (remainder) {
+            sendMessage(remainder);
+          } else {
+            statusText.textContent = "Go ahead, I'm listening.";
+          }
+        }
+      } else {
+        if (words) {
+          sendMessage(words);
+        }
+      }
+    }
   };
 
   recognition.onerror = (event) => {
@@ -426,6 +532,7 @@ speakSuhana(waiting.textContent);
       }
     });
   </script>
+  <script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
