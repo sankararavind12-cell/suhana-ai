@@ -1,0 +1,10 @@
+{
+  "name": "Suhana AI",
+  "short_name": "Suhana",
+  "description": "Your personal AI assistant",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#10131f",
+  "theme_color": "#10131f"
+}
