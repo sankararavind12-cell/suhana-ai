@@ -394,6 +394,11 @@
           history.splice(0, history.length - 20);
         }
 
+        localStorage.setItem(
+  "suhana_history",
+  JSON.stringify(history)
+);
+
         statusText.textContent =
           "Your personal AI assistant";
 
