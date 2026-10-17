@@ -202,6 +202,20 @@
     const voiceButton = document.getElementById("voice");
 let suhanaVoiceEnabled = true;
 
+voiceButton.onclick = function () {
+  suhanaVoiceEnabled = !suhanaVoiceEnabled;
+
+  if (suhanaVoiceEnabled) {
+    voiceButton.textContent = "🔊";
+  } else {
+    voiceButton.textContent = "🔇";
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+};
+let suhanaVoiceEnabled = true;
+
 voiceButton.addEventListener("click", () => {
   suhanaVoiceEnabled = !suhanaVoiceEnabled;
 
