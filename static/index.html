@@ -248,7 +248,9 @@
     let finalTranscript = "";
     let isListening = false;
 
-    const history = [];
+    const history = JSON.parse(
+  localStorage.getItem("suhana_history") || "[]"
+);
 
     // Toggle Suhana's spoken replies.
     voiceButton.addEventListener("click", () => {
