@@ -39,8 +39,8 @@ def chat():
     try:
         client = OpenAI(
     api_key=API_KEY,
-    base_url=GEMINI_BASE_URL
-                                     )
+    base_url=GROQ_BASE_URL
+    )
         response = client.chat.completions.create(
             model=MODEL,
             messages=[
