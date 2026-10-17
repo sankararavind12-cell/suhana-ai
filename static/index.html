@@ -200,6 +200,20 @@
     const input = document.getElementById("input");
     const chat = document.getElementById("chat");
     const voiceButton = document.getElementById("voice");
+let suhanaVoiceEnabled = true;
+
+voiceButton.addEventListener("click", () => {
+  suhanaVoiceEnabled = !suhanaVoiceEnabled;
+
+  if (!suhanaVoiceEnabled) {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    voiceButton.textContent = "🔇";
+  } else {
+    voiceButton.textContent = "🔊";
+  }
+});
 
 voiceButton.addEventListener("click", () => {
   suhanaVoiceEnabled = !suhanaVoiceEnabled;
