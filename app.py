@@ -27,6 +27,16 @@ def chat():
     if not API_KEY:
         return jsonify({"error": "AI provider is not configured"}), 503
     body = request.get_json(silent=True) or {}
+        memories = body.get("memories", [])
+
+    if not isinstance(memories, list):
+        memories = []
+
+    memories = [
+        str(memory)[:500]
+        for memory in memories[-30:]
+        if isinstance(memory, str) and memory.strip()
+    ]
     message = str(body.get("message", "")).strip()
     if not message or len(message) > 8000:
         return jsonify({"error": "Message must be 1–8000 characters"}), 400
