@@ -440,7 +440,10 @@ chats.forEach((item) => {
 const button = document.createElement("button");
 
 button.type = "button";
-button.textContent = item.title || "New chat";
+button.textContent =
+  item.title && item.title !== "New chat"
+    ? item.title
+    : (item.messages?.find(msg => msg.role === "user")?.content || "New chat").slice(0, 35);
 button.style.cssText =
   "display:block;width:100%;text-align:left;padding:10px;margin:4px 0;border-radius:8px;";
 
