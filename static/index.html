@@ -471,30 +471,17 @@ history.push({
       const waiting = addMessage("Thinking...", "assistant");
 
       try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-  "Content-Type": "application/json"
-},
-
-headers: {
-  "Content-Type": "application/json"
-},
-  const firstMessage = history.find(item => item.role === "user");
-  if (firstMessage) {
-    activeChat.title = firstMessage.content.slice(0, 35);
-  }
-}
-
-saveChats();
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: cleanMessage,
-            history: history.slice(-10)
-          })
-        });
-
+        
+      const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json"
+       },
+      body: JSON.stringify({
+      message: cleanMessage,
+      history: history.slice(-10)
+      })
+   });
         const data = await response.json();
 
         if (!response.ok) {
