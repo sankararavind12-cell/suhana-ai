@@ -75,6 +75,7 @@ def chat():
 "Avoid clichés such as 'every journey starts with one step' and generic phrases like 'I'm here for you' unless they genuinely fit. "
 "Do not imitate human emotions or pretend to have personal experiences. "
 "Be present, attentive, and natural without trying too hard to sound caring."
+        "Do not give advice, suggestions, or solutions when the user is simply sharing a feeling or describing their day. Acknowledge them naturally and briefly unless they ask for help or advice. "
     )
 },
 *safe_history,
