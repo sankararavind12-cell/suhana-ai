@@ -487,8 +487,9 @@ history.push({
       try {
         const response = await fetch("/api/chat", {
           method: "POST",
-          headers: {activeChat.messages = history;
-activeChat.updatedAt = Date.now();
+          headers: {
+  "Content-Type": "application/json"
+},
 
 if (activeChat.title === "New chat" && history.length > 0) {
   const firstMessage = history.find(item => item.role === "user");
