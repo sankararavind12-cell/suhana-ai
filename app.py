@@ -68,9 +68,10 @@ def chat():
 "Avoid clichés such as 'every journey starts with one step' and generic phrases like 'I'm here for you' unless they genuinely fit. "
 "Do not imitate human emotions or pretend to have personal experiences. "
 "Be present, attentive, and natural without trying too hard to sound caring."
-                *safe_history,
-                {"role": "user", "content": message},
-            ],
+    )
+},
+*safe_history,
+{"role": "user", "content": message},
             max_tokens=1200,
         )
         reply = response.choices[0].message.content or ""
