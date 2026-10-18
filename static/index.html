@@ -433,6 +433,52 @@ history.forEach((item) => {
     addMessage(item.content, item.role);
   }
 });
+    function renderChatList() {
+historyList.replaceChildren();
+
+chats.forEach((item) => {
+const button = document.createElement("button");
+
+button.type = "button";
+button.textContent = item.title || "New chat";
+button.style.cssText =
+  "display:block;width:100%;text-align:left;padding:10px;margin:4px 0;border-radius:8px;";
+
+button.addEventListener("click", () => {
+  activeChat = item;
+  activeChatId = item.id;
+  history = activeChat.messages;
+
+  saveChats();
+
+  chat.replaceChildren();
+  welcome.style.display = "none";
+
+  history.forEach((msg) => {
+    if (
+      msg &&
+      ["user", "assistant"].includes(msg.role) &&
+      typeof msg.content === "string"
+    ) {
+      addMessage(msg.content, msg.role);
+    }
+  });
+
+  historyPanel.style.display = "none";
+  input.focus();
+});
+
+historyList.appendChild(button);
+
+});
+}
+
+historyButton.addEventListener("click", () => {
+renderChatList();
+
+historyPanel.style.display =
+historyPanel.style.display === "none" ? "block" : "none";
+});
     // Send a message to the AI backend.
     async function sendMessage(message) {
       const cleanMessage = message.trim();
