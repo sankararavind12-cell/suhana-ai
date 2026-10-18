@@ -313,6 +313,31 @@ function saveChats() {
     // Toggle Suhana's spoken replies.
     // Start a fresh conversation without deleting saved memories.
 newChatButton.addEventListener("click", () => {
+  activeChat = {
+    id: Date.now().toString(),
+    title: "New chat",
+    messages: [],
+    updatedAt: Date.now()
+  };
+
+  chats.unshift(activeChat);
+  activeChatId = activeChat.id;
+  history = activeChat.messages;
+
+  saveChats();
+
+  chat.replaceChildren(welcome);
+  welcome.style.display = "";
+  statusText.textContent = "Your personal AI assistant";
+  input.value = "";
+  send.disabled = false;
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  input.focus();
+});
   history.length = 0;
   localStorage.removeItem("suhana_history");
 
