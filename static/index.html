@@ -296,6 +296,19 @@ function saveChats() {
   localStorage.getItem("suhana_memories") || "[]"
 ); 
     function saveMemory(text) {
+const memory = text.trim();
+
+if (!memory) return false;
+
+memories.push(memory);
+
+localStorage.setItem(
+"suhana_memories",
+JSON.stringify(memories)
+);
+
+return true;
+    }
   const memory = text.trim();
 
   if (!memory) return false;
