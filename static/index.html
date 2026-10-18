@@ -369,6 +369,17 @@ history.forEach((item) => {
 
       // Handle requests to remember something.
 if (cleanMessage.toLowerCase().startsWith("remember that ")) {
+  addMessage(cleanMessage, "user");
+
+history.push({
+  role: "user",
+  content: cleanMessage
+});
+
+localStorage.setItem(
+  "suhana_history",
+  JSON.stringify(history)
+);
   const memoryText = cleanMessage.slice(14).trim();
 
   if (saveMemory(memoryText)) {
