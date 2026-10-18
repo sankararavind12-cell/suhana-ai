@@ -529,9 +529,10 @@ history.push({
       "Content-Type": "application/json"
        },
       body: JSON.stringify({
-      message: cleanMessage,
-      history: history.slice(-10)
-      })
+message: cleanMessage,
+history: history.slice(-10),
+memories: memories
+})
    });
         const data = await response.json();
 
