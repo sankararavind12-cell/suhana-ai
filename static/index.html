@@ -302,10 +302,20 @@ function saveChats() {
 
   memories.push(memory);
 
-  localStorage.setItem(
-    "suhana_memories",
-    JSON.stringify(memories)
+  activeChat.messages = history;
+activeChat.updatedAt = Date.now();
+
+if (activeChat.title === "New chat") {
+  const firstMessage = history.find(
+    item => item.role === "user"
   );
+
+  if (firstMessage) {
+    activeChat.title = firstMessage.content.slice(0, 35);
+  }
+}
+
+saveChats();
 
   return true;
     }
