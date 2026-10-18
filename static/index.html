@@ -648,14 +648,26 @@ history.splice(0, history.length - 20);
 activeChat.messages = history;
 activeChat.updatedAt = Date.now();
 
-if (activeChat.title === "New chat") {
-const firstMessage = history.find(
-item => item.role === "user"
-);
+if (
+  activeChat.title === "New chat" ||
+  activeChat.title === "Previous chat"
+) {
+  const firstMessage = history.find(
+    item => item.role === "user"
+  );
 
-if (firstMessage) {
-activeChat.title = firstMessage.content.slice(0, 35);
-}
+  if (firstMessage) {
+    let title = firstMessage.content
+      .replace(/^remember that\s+/i, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (title.length > 35) {
+      title = title.slice(0, 32).trimEnd() + "...";
+    }
+
+    activeChat.title = title || "New conversation";
+  }
 }
 
 saveChats();
