@@ -252,6 +252,10 @@
   localStorage.getItem("suhana_history") || "[]"
 );
 
+   let memories = JSON.parse(
+  localStorage.getItem("suhana_memories") || "[]"
+); 
+  
     // Toggle Suhana's spoken replies.
     voiceButton.addEventListener("click", () => {
       suhanaVoiceEnabled = !suhanaVoiceEnabled;
