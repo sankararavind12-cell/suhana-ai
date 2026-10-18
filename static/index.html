@@ -309,29 +309,6 @@ JSON.stringify(memories)
 
 return true;
     }
-  const memory = text.trim();
-
-  if (!memory) return false;
-
-  memories.push(memory);
-
-  activeChat.messages = history;
-activeChat.updatedAt = Date.now();
-
-if (activeChat.title === "New chat") {
-  const firstMessage = history.find(
-    item => item.role === "user"
-  );
-
-  if (firstMessage) {
-    activeChat.title = firstMessage.content.slice(0, 35);
-  }
-}
-
-saveChats();
-
-  return true;
-    }
   
     // Toggle Suhana's spoken replies.
     // Start a fresh conversation without deleting saved memories.
