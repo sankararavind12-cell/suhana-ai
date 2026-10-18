@@ -433,49 +433,131 @@ history.forEach((item) => {
     addMessage(item.content, item.role);
   }
 });
-    function renderChatList() {
-historyList.replaceChildren();
+ function renderChatList() {
+  historyList.replaceChildren();
 
-chats.forEach((item) => {
-const button = document.createElement("button");
+  // Delete all chat history
+  const deleteAllButton = document.createElement("button");
+  deleteAllButton.type = "button";
+  deleteAllButton.textContent = "🗑️ Delete all history";
+  deleteAllButton.style.cssText =
+    "display:block;width:100%;padding:10px;margin-bottom:12px;background:#b91c1c;color:white;border-radius:8px;font-size:14px;";
 
-button.type = "button";
-button.textContent =
-  item.title && item.title !== "New chat"
-    ? item.title
-    : (item.messages?.find(msg => msg.role === "user")?.content || "New chat").slice(0, 35);
-button.style.cssText =
-  "display:block;width:100%;text-align:left;padding:10px;margin:4px 0;border-radius:8px;";
-
-button.addEventListener("click", () => {
-  activeChat = item;
-  activeChatId = item.id;
-  history = activeChat.messages;
-
-  saveChats();
-
-  chat.replaceChildren();
-  welcome.style.display = "none";
-
-  history.forEach((msg) => {
-    if (
-      msg &&
-      ["user", "assistant"].includes(msg.role) &&
-      typeof msg.content === "string"
-    ) {
-      addMessage(msg.content, msg.role);
+  deleteAllButton.addEventListener("click", () => {
+    if (!confirm("Delete ALL chat history? This cannot be undone.")) {
+      return;
     }
+
+    activeChat = {
+      id: Date.now().toString(),
+      title: "New chat",
+      messages: [],
+      updatedAt: Date.now()
+    };
+
+    chats = [activeChat];
+    activeChatId = activeChat.id;
+    history = activeChat.messages;
+
+    saveChats();
+
+    chat.replaceChildren(welcome);
+    welcome.style.display = "";
+    historyPanel.style.display = "none";
+    statusText.textContent = "Your personal AI assistant";
+    input.value = "";
+
+    renderChatList();
   });
 
-  historyPanel.style.display = "none";
-  input.focus();
-});
+  historyList.appendChild(deleteAllButton);
 
-historyList.appendChild(button);
+  // Display each saved conversation
+  chats.forEach((item) => {
+    const row = document.createElement("div");
+    row.style.cssText =
+      "display:flex;gap:6px;align-items:center;margin:6px 0;";
 
-});
-}
+    const openButton = document.createElement("button");
+    openButton.type = "button";
 
+    openButton.textContent =
+      item.title && item.title !== "New chat"
+        ? item.title
+        : (
+            item.messages?.find(msg => msg.role === "user")?.content
+            || "New chat"
+          ).slice(0, 35);
+
+    openButton.style.cssText =
+      "flex:1;min-width:0;text-align:left;padding:10px;border-radius:8px;font-size:13px;overflow:hidden;";
+
+    openButton.addEventListener("click", () => {
+      activeChat = item;
+      activeChatId = item.id;
+      history = activeChat.messages;
+
+      saveChats();
+
+      chat.replaceChildren();
+      welcome.style.display = "none";
+
+      history.forEach((msg) => {
+        if (
+          msg &&
+          ["user", "assistant"].includes(msg.role) &&
+          typeof msg.content === "string"
+        ) {
+          addMessage(msg.content, msg.role);
+        }
+      });
+
+      historyPanel.style.display = "none";
+      input.focus();
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.textContent = "🗑️";
+    deleteButton.title = "Delete this chat";
+    deleteButton.setAttribute("aria-label", "Delete this chat");
+    deleteButton.style.cssText =
+      "min-width:44px;padding:8px;background:#b91c1c;color:white;border-radius:8px;";
+
+    deleteButton.addEventListener("click", () => {
+      if (!confirm("Delete this conversation?")) {
+        return;
+      }
+
+      chats = chats.filter(chatItem => chatItem.id !== item.id);
+
+      if (activeChatId === item.id) {
+        activeChat = {
+          id: Date.now().toString(),
+          title: "New chat",
+          messages: [],
+          updatedAt: Date.now()
+        };
+
+        chats.unshift(activeChat);
+        activeChatId = activeChat.id;
+        history = activeChat.messages;
+
+        chat.replaceChildren(welcome);
+        welcome.style.display = "";
+        statusText.textContent = "Your personal AI assistant";
+        input.value = "";
+      }
+
+      saveChats();
+      renderChatList();
+    });
+
+    row.appendChild(openButton);
+    row.appendChild(deleteButton);
+    historyList.appendChild(row);
+  });
+                }   
 historyButton.addEventListener("click", () => {
 renderChatList();
 
