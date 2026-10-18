@@ -72,7 +72,8 @@ def chat():
 },
 *safe_history,
 {"role": "user", "content": message},
-            max_tokens=1200,
+],
+max_tokens=1200,
         )
         reply = response.choices[0].message.content or ""
         return jsonify({"reply": reply})
