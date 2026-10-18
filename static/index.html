@@ -274,6 +274,23 @@
     }
   
     // Toggle Suhana's spoken replies.
+    // Start a fresh conversation without deleting saved memories.
+newChatButton.addEventListener("click", () => {
+  history.length = 0;
+  localStorage.removeItem("suhana_history");
+
+  chat.replaceChildren(welcome);
+  welcome.style.display = "";
+  statusText.textContent = "Your personal AI assistant";
+  input.value = "";
+  send.disabled = false;
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  input.focus();
+});
     voiceButton.addEventListener("click", () => {
       suhanaVoiceEnabled = !suhanaVoiceEnabled;
 
