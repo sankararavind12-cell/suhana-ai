@@ -258,11 +258,40 @@
     let recognition = null;
     let finalTranscript = "";
     let isListening = false;
+let chats = JSON.parse(
+  localStorage.getItem("suhana_chats") || "[]"
+);
 
-    const history = JSON.parse(
+if (!Array.isArray(chats)) chats = [];
+
+const oldHistory = JSON.parse(
   localStorage.getItem("suhana_history") || "[]"
 );
 
+if (chats.length === 0) {
+  chats.push({
+    id: Date.now().toString(),
+    title: "Previous chat",
+    messages: Array.isArray(oldHistory) ? oldHistory : [],
+    updatedAt: Date.now()
+  });
+}
+
+let activeChatId = localStorage.getItem("suhana_active_chat");
+
+let activeChat = chats.find(
+  item => item.id === activeChatId
+) || chats[0];
+
+activeChatId = activeChat.id;
+
+let history = activeChat.messages;
+
+function saveChats() {
+  localStorage.setItem("suhana_chats", JSON.stringify(chats));
+  localStorage.setItem("suhana_active_chat", activeChatId);
+}
+    
    let memories = JSON.parse(
   localStorage.getItem("suhana_memories") || "[]"
 ); 
