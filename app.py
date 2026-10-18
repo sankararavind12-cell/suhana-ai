@@ -38,6 +38,10 @@ def chat():
         if isinstance(memory, str) and memory.strip()
     ]
     message = str(body.get("message", "")).strip()
+{
+    "role": "system",
+    "content": (
+        "You are Suhana...
     if not message or len(message) > 8000:
         return jsonify({"error": "Message must be 1–8000 characters"}), 400
     history = body.get("history", [])
