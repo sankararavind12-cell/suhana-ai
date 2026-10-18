@@ -61,8 +61,7 @@ def chat():
                     "Be honest about uncertainty. Never invent personal details or memories, claim personal experiences, or pretend to have human emotions. "
                     "Use relevant memories only when they are actually provided. If the current message conflicts with a memory, trust the current message. "
                     "Use lists, headings, and Markdown only when they are useful or requested."
-                )
-            },
+                )         
 },
 *safe_history,
 {"role": "user", "content": message},
