@@ -517,16 +517,24 @@ history.push({
             content: reply
           }
         );
+if (history.length > 20) {
+history.splice(0, history.length - 20);
+}
 
-        if (history.length > 20) {
-          history.splice(0, history.length - 20);
-        }
+activeChat.messages = history;
+activeChat.updatedAt = Date.now();
 
-        localStorage.setItem(
-  "suhana_history",
-  JSON.stringify(history)
+if (activeChat.title === "New chat") {
+const firstMessage = history.find(
+item => item.role === "user"
 );
 
+if (firstMessage) {
+activeChat.title = firstMessage.content.slice(0, 35);
+}
+}
+
+saveChats();
         statusText.textContent =
           "Your personal AI assistant";
 
