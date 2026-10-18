@@ -367,6 +367,20 @@ history.forEach((item) => {
     async function sendMessage(message) {
       const cleanMessage = message.trim();
 
+      // Handle requests to remember something.
+if (cleanMessage.toLowerCase().startsWith("remember that ")) {
+  const memoryText = cleanMessage.slice(14).trim();
+
+  if (saveMemory(memoryText)) {
+    addMessage("I'll remember that! 💜", "assistant");
+  } else {
+    addMessage("Tell me what you'd like me to remember.", "assistant");
+  }
+
+  input.value = "";
+  return;
+}
+
       if (!cleanMessage || send.disabled) {
         return;
       }
