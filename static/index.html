@@ -477,7 +477,9 @@ history.push({
   "Content-Type": "application/json"
 },
 
-if (activeChat.title === "New chat" && history.length > 0) {
+headers: {
+  "Content-Type": "application/json"
+},
   const firstMessage = history.find(item => item.role === "user");
   if (firstMessage) {
     activeChat.title = firstMessage.content.slice(0, 35);
