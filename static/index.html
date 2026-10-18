@@ -297,11 +297,11 @@
       window.speechSynthesis.cancel();
 
       const speech = new SpeechSynthesisUtterance(text);
-
       speech.lang = "en-IN";
-      speech.rate = 1;
+      speech.rate = 0.8;
       speech.pitch = 1.05;
       speech.volume = 1;
+      
 
       const voices = window.speechSynthesis.getVoices();
 
