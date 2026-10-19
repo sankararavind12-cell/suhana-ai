@@ -463,7 +463,32 @@ document.getElementById("signInBtn").onclick = async () => {
         showAuthMessage("Enter your email and password.");
         return;
     }
+document.getElementById("forgotPasswordBtn").onclick = async () => {
+    const email = document.getElementById("authEmail").value.trim();
 
+    if (!email) {
+        showAuthMessage("Enter your email address first.");
+        return;
+    }
+
+    showAuthMessage("Sending password reset email...");
+
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+        email,
+        {
+            redirectTo: window.location.origin
+        }
+    );
+
+    if (error) {
+        showAuthMessage(error.message);
+        return;
+    }
+
+    showAuthMessage(
+        "Password reset email sent! Check your inbox and spam folder."
+    );
+};
     showAuthMessage("Signing in...");
 
     const { error } = await supabaseClient.auth.signInWithPassword({
