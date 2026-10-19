@@ -430,6 +430,15 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        authMessage.textContent = message;
    }
 
+   let isPasswordRecovery = false;
+
+   // Check URL parameters for explicit recovery tokens or hash fragments
+   const urlParams = new URLSearchParams(window.location.search);
+   const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+   if (urlParams.get("reset") === "1" || hashParams.get("type") === "recovery") {
+       isPasswordRecovery = true;
+   }
+
    async function refreshAuth() {
        const { data, error } = await supabaseClient.auth.getSession();
 
@@ -441,6 +450,13 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 
        if (isPasswordRecovery) {
            authModal.style.display = "grid";
+           showAuthMessage("Enter your new password below.");
+           document.getElementById("authEmail").style.display = "none";
+           document.getElementById("authPassword").value = "";
+           document.getElementById("signInBtn").textContent = "UPDATE PASSWORD";
+           document.getElementById("forgotPasswordBtn").style.display = "none";
+           document.getElementById("signUpBtn").style.display = "none";
+           document.getElementById("signOutBtn").style.display = "none";
            return;
        }
 
@@ -463,8 +479,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
    document.getElementById("closeAuthBtn").addEventListener("click", () => {
        authModal.style.display = "none";
    });
-
-   let isPasswordRecovery = false;
 
    document.getElementById("signInBtn").onclick = async () => {
        const email = document.getElementById("authEmail").value.trim();
@@ -499,10 +513,14 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            isPasswordRecovery = false;
            showAuthMessage("Password updated successfully! Please sign in.");
 
+           document.getElementById("authEmail").style.display = "";
            document.getElementById("authPassword").value = "";
            document.getElementById("signInBtn").textContent = "SIGN IN";
            document.getElementById("forgotPasswordBtn").style.display = "";
            document.getElementById("signUpBtn").style.display = "";
+
+           // Clean up URL parameters
+           window.history.replaceState({}, document.title, window.location.pathname);
 
            await supabaseClient.auth.signOut();
            await refreshAuth();
@@ -537,7 +555,9 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            return;  
        }  
        showAuthMessage("Sending password reset email...");  
-       const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });  
+       const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+           redirectTo: window.location.origin + "/?reset=1"
+       });  
        if (error) {  
            showAuthMessage(error.message);  
            return;  
@@ -602,11 +622,16 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            authModal.style.display = "grid";
            showAuthMessage("Enter your new password below.");
 
+           document.getElementById("authEmail").style.display = "none";
            document.getElementById("authPassword").value = "";
            document.getElementById("signInBtn").textContent = "UPDATE PASSWORD";
            document.getElementById("forgotPasswordBtn").style.display = "none";
            document.getElementById("signUpBtn").style.display = "none";
            document.getElementById("signOutBtn").style.display = "none";
+           return;
+       }
+
+       if (isPasswordRecovery) {
            return;
        }
 
