@@ -459,19 +459,68 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        authModal.style.display = "none";
    });
 
+   let isPasswordRecovery = false;
+
    document.getElementById("signInBtn").onclick = async () => {
        const email = document.getElementById("authEmail").value.trim();
        const password = document.getElementById("authPassword").value;
-       if (!email || !password) {  
-           showAuthMessage("Enter your email and password.");  
-           return;  
+
+       if (!password) {
+           showAuthMessage(
+               isPasswordRecovery
+                   ? "Enter your new password."
+                   : "Enter your password."
+           );
+           return;
        }
+
+       if (isPasswordRecovery) {
+           if (password.length < 6) {
+               showAuthMessage("Use at least 6 characters.");
+               return;
+           }
+
+           showAuthMessage("Updating your password...");
+
+           const { error } = await supabaseClient.auth.updateUser({
+               password: password
+           });
+
+           if (error) {
+               showAuthMessage(error.message);
+               return;
+           }
+
+           isPasswordRecovery = false;
+           showAuthMessage("Password updated successfully! Please sign in.");
+
+           document.getElementById("authPassword").value = "";
+           document.getElementById("signInBtn").textContent = "SIGN IN";
+           document.getElementById("forgotPasswordBtn").style.display = "";
+           document.getElementById("signUpBtn").style.display = "";
+
+           await supabaseClient.auth.signOut();
+           await refreshAuth();
+           return;
+       }
+
+       if (!email) {
+           showAuthMessage("Enter your email address.");
+           return;
+       }
+
        showAuthMessage("Signing in...");
-       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });  
-       if (error) {  
-           showAuthMessage(error.message);  
-           return;  
-       }  
+
+       const { error } = await supabaseClient.auth.signInWithPassword({
+           email,
+           password
+       });
+
+       if (error) {
+           showAuthMessage(error.message);
+           return;
+       }
+
        await refreshAuth();
        authModal.style.display = "none";
    };
