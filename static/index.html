@@ -401,7 +401,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
 const $=id=>document.getElementById(id);
 const form=$("form"),input=$("input"),messagesEl=$("chatMessages"),statusEl=$("status"),send=$("send");
 let voiceEnabled=true,recognition=null,isListening=false,finalTranscript="";
@@ -514,6 +513,5 @@ $("storageInfo").textContent=(()=>{try{localStorage.setItem("_test","1");localSt
 updateClock();renderMemories();updateMetrics();renderMessages();
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script 
-<script>
  </body>
     </html>
