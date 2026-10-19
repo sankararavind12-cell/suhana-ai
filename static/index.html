@@ -1,645 +1,352 @@
-<!doctype html>
-<html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#020a12">
-  <meta name="description" content="Suhana — personal AI companion">
-  <link rel="manifest" href="/manifest.webmanifest">
-  <title>SUHANA // AI INTERFACE</title>
-  <style>
-:root{--cyan:#19f6ff;--cyan2:#00a8c8;--teal:#087c86;--bg:#02080e;--panel:rgba(3,20,29,.88);--line:rgba(25,246,255,.38);--muted:#66aeb8;--white:#d7fcff;--green:#4dffbd;--red:#ff4c63}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg);color:var(--white);font-family:Segoe UI,Roboto,Arial,sans-serif}
-body{min-height:100dvh;overflow-x:hidden;background:radial-gradient(ellipse at 50% 43%,#06323c 0,#03151e 35%,#02080e 75%);letter-spacing:.2px}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(rgba(25,246,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(25,246,255,.035) 1px,transparent 1px);background-size:30px 30px;mask-image:linear-gradient(to bottom,black,transparent 95%)}
-body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.15;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,255,255,.08) 4px)}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-shadow:0 0 12px #19f6ff55}
-.app{position:relative;z-index:1;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;max-width:1800px;margin:auto}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line);background:rgba(0,7,12,.88);box-shadow:0 4px 28px #00d9ff12;min-height:66px}
-.brand{display:flex;align-items:center;gap:12px;min-width:0}
-.brandmark{width:42px;height:42px;border:1px solid var(--cyan);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-weight:900;font-size:21px;text-shadow:0 0 12px var(--cyan);box-shadow:inset 0 0 15px #00d9ff30,0 0 18px #00d9ff30;position:relative}
-.brandmark:after{content:"";position:absolute;inset:5px;border:1px dashed #19f6ff88;border-radius:50%;animation:spin 18s linear infinite}
-.brand h1{font-size:18px;letter-spacing:5px;margin:0;color:var(--cyan);text-shadow:0 0 12px #19f6ff88}
-.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:4px}
-.topstats{display:flex;align-items:center;gap:20px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.stat strong{display:block;color:var(--cyan);font-size:15px;letter-spacing:1px;margin-top:3px}
-.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin-right:6px}
-.top-actions{display:flex;gap:7px}
-.hud-btn{border:1px solid var(--line);background:#03212b;color:var(--cyan);padding:9px 11px;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-radius:2px}
-.hud-btn:hover{background:#06404a;box-shadow:0 0 14px #19f6ff2c}
-.dashboard{display:grid;grid-template-columns:minmax(205px,1fr) minmax(340px,1.8fr) minmax(220px,1fr);gap:12px;padding:12px;min-height:0}
-.column{display:flex;flex-direction:column;gap:12px;min-width:0}
-.panel{position:relative;border:1px solid var(--line);background:linear-gradient(135deg,rgba(4,28,39,.87),rgba(0,10,18,.8));box-shadow:inset 0 0 22px #00d9ff08,0 0 14px #00d9ff08;overflow:hidden}
-.panel:before{content:"";position:absolute;left:0;top:0;width:26px;height:2px;background:var(--cyan);box-shadow:0 0 9px var(--cyan)}
-.panel-title{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #19f6ff22;font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
-.panel-title span:last-child{color:var(--muted);font-size:9px;letter-spacing:1px}
-.panel-body{padding:12px}
-.mini-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.meter{height:4px;background:#0b303b;margin:7px 0 12px;overflow:hidden}
-.meter i{display:block;height:100%;background:linear-gradient(90deg,#087c86,var(--cyan));box-shadow:0 0 8px var(--cyan);width:var(--w,65%)}
-.metric-line{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin:12px 0 4px}
-.metric-line strong{color:var(--cyan);font-weight:500}
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.quick{min-height:62px;background:#03151e;border:1px solid #19f6ff30;color:var(--muted);text-align:left;padding:9px;font-size:10px}
-.quick b{display:block;color:var(--cyan);font-size:17px;margin-bottom:5px;font-weight:400}
-.quick:hover{border-color:var(--cyan);color:var(--white)}
-.memory-list{display:flex;flex-direction:column;gap:6px}
-.memory-item{font-size:10px;color:#9cdce2;border-left:2px solid var(--teal);padding:5px 7px;background:#03141c;overflow-wrap:anywhere}
-.memory-item.empty{color:var(--muted)}
-.core-area{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.core-area:before,.core-area:after{content:"";position:absolute;border:1px solid #19f6ff20;border-radius:50%;width:min(94%,560px);aspect-ratio:1}
-.core-area:after{width:min(78%,440px);border-style:dashed;animation:spin 80s linear infinite}
-.core-heading{text-align:center;z-index:2;margin-bottom:10px}
-.core-heading .eyebrow{font-size:10px;letter-spacing:4px;color:var(--muted)}
-.core-heading h2{font-size:clamp(17px,2vw,24px);letter-spacing:5px;color:var(--cyan);margin:8px 0;text-shadow:0 0 14px #19f6ff77}
-.reactor{width:min(57vw,300px);min-width:205px;aspect-ratio:1;position:relative;display:grid;place-items:center;z-index:2;filter:drop-shadow(0 0 15px #00eaff35)}
-.ring{position:absolute;border-radius:50%;border:2px solid transparent}
-.ring.r1{inset:0;border-top-color:var(--cyan);border-right-color:#078a9d;border-bottom-color:#19f6ff66;animation:spin 13s linear infinite}
-.ring.r2{inset:8%;border:1px dashed #23f7ff99;animation:spin 20s linear infinite reverse}
-.ring.r3{inset:16%;border:7px solid #0c5e6b;border-top-color:var(--cyan);border-bottom-color:#13d9e6;animation:spin 8s linear infinite}
-.ring.r4{inset:24%;border:2px solid #16f4ff99;box-shadow:inset 0 0 20px #00eaff22,0 0 14px #00eaff22}
-.ring.r5{inset:31%;border:1px dashed #7dffff;animation:spin 5s linear infinite}
-.core{width:37%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c6ffff 0,#45ffff 12%,#08b9e2 38%,#056184 65%,#031e31 100%);box-shadow:0 0 18px #19f6ff,0 0 48px #00cfff88,inset 0 0 20px #b8ffff88;animation:pulse 3s ease-in-out infinite}
-.core:after{content:"";position:absolute;width:19%;aspect-ratio:1;left:40.5%;top:40.5%;border-radius:50%;border:1px solid #d5ffff99}
-.orbit-label{position:absolute;font-size:9px;letter-spacing:1px;color:var(--cyan);z-index:3;background:#03131ddd;padding:4px 7px;border:1px solid #19f6ff35}
-.label-a{left:0;top:27%}.label-b{right:0;top:42%}.label-c{left:8%;bottom:22%}.label-d{right:8%;bottom:20%}
-.core-caption{text-align:center;z-index:2;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:18px}
-.core-caption strong{color:var(--green);font-weight:500}
-.center-lower{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.clock-panel{text-align:center}
-.big-clock{font-size:clamp(25px,3vw,38px);color:var(--cyan);text-shadow:0 0 14px #19f6ff66;letter-spacing:3px}
-.date-text{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:5px}
-.wave{height:42px;display:flex;align-items:center;gap:3px;justify-content:center;overflow:hidden}
-.wave i{display:block;width:3px;height:var(--h);background:var(--cyan);opacity:.75;box-shadow:0 0 5px #19f6ff;animation:wave 1.1s ease-in-out infinite alternate;animation-delay:var(--d)}
-.chat-panel{display:flex;flex-direction:column;min-height:340px;flex:1}
-.chat-messages{padding:12px;display:flex;flex-direction:column;gap:9px;overflow:auto;max-height:440px;min-height:150px;scrollbar-color:#087c86 #03131c;scrollbar-width:thin}
-.welcome-chat{text-align:center;padding:20px 10px;color:var(--muted);font-size:12px;line-height:1.8}
-.welcome-chat b{display:block;font-size:18px;color:var(--cyan);letter-spacing:3px;margin-bottom:6px}
-.message{max-width:95%;padding:10px 12px;border:1px solid #19f6ff35;background:#041923;font-size:12px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:2px}
-.message.user{align-self:flex-end;background:#05313e;border-color:#00d9e877}
-.message.assistant{align-self:flex-start}
-.message.error{border-color:var(--red);color:#ffb9c0}
-.chat-compose{display:flex;gap:6px;padding:9px;border-top:1px solid #19f6ff28;background:#020c13}
-#input{flex:1;min-width:0;resize:vertical;min-height:42px;max-height:110px;background:#031923;border:1px solid #19f6ff40;color:var(--white);padding:11px;font-size:12px;outline:none;border-radius:2px}
-#input::placeholder{color:#477d87}
-.icon-btn{width:42px;min-width:42px;height:42px;border:1px solid var(--line);background:#042631;color:var(--cyan);font-size:16px;border-radius:2px}
-.icon-btn:hover{background:#07505b}
-#send{background:var(--cyan);color:#001015;font-weight:900}
-.statusline{display:flex;justify-content:space-between;gap:8px;padding:7px 11px;font-size:9px;letter-spacing:1px;color:var(--muted);border-top:1px solid #19f6ff18}
-.statusline strong{color:var(--green);font-weight:500}
-.weather-current{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.weather-icon{font-size:36px;color:var(--cyan);filter:drop-shadow(0 0 9px #19f6ff66)}
-.temp{font-size:30px;color:var(--cyan)}
-.weather-note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:7px}
-.forecast{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:12px}
-.forecast div{background:#03151d;border:1px solid #19f6ff20;text-align:center;padding:7px 2px;font-size:9px;color:var(--muted)}
-.forecast b{display:block;font-size:15px;color:var(--cyan);margin:5px 0}
-.feed-list{display:flex;flex-direction:column;gap:0}
-.feed-row{padding:10px 0;border-bottom:1px solid #19f6ff1b;font-size:11px;color:#a2dce1;line-height:1.5}
-.feed-row:last-child{border-bottom:0}
-.feed-row small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
-.audio-controls{display:flex;align-items:center;gap:8px}
-.audio-controls button{background:#031b25;color:var(--cyan);border:1px solid #19f6ff40;padding:8px 10px}
-.audio-controls .audio-track{height:4px;background:#0c3440;flex:1;overflow:hidden}
-.audio-track i{display:block;width:33%;height:100%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
-.graph{height:44px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #19f6ff44;padding:4px 0}
-.graph i{flex:1;height:var(--h);background:linear-gradient(to top,#087c86,#19f6ff);opacity:.8;min-width:2px}
-.bottomline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 16px 12px;color:#387b85;font-size:9px;letter-spacing:1px}
-.bottomline strong{color:var(--cyan);font-weight:500}
-.modal-backdrop{position:fixed;inset:0;background:#000b;z-index:20;display:none;place-items:center;padding:16px}
-.modal{width:min(560px,100%);max-height:80dvh;overflow:auto;background:#03131d;border:1px solid var(--cyan);box-shadow:0 0 30px #00d9ff33;padding:16px}
-.modal h3{color:var(--cyan);letter-spacing:2px;font-size:13px}
-.history-row{display:flex;gap:6px;margin:7px 0}
-.history-row button:first-child{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis}
-.hidden{display:none!important}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{50%{transform:scale(1.06);filter:brightness(1.3)}}
-@keyframes wave{to{height:calc(var(--h)*.45);opacity:.35}}
-@media(min-width:1200px){.dashboard{min-height:calc(100dvh - 112px)}.chat-messages{max-height:clamp(250px,35vh,460px)}}
-@media(max-width:900px){.dashboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.center-column{grid-column:1/-1;grid-row:1}.left-column{grid-column:1}.right-column{grid-column:2}.core-area{min-height:340px}.reactor{width:min(40vw,260px)}.topstats .stat:nth-child(2){display:none}}
-@media(max-width:560px){.topbar{padding:9px 10px;gap:6px;flex-wrap:wrap}.brandmark{width:34px;height:34px}.brand h1{font-size:14px;letter-spacing:3px}.brand small{font-size:8px;letter-spacing:1px}.topstats{margin-left:auto;gap:8px}.topstats .stat{font-size:8px}.topstats .stat strong{font-size:12px}.top-actions{width:100%;justify-content:flex-end}.hud-btn{padding:7px 9px;font-size:9px}.dashboard{display:flex;flex-direction:column;padding:8px;gap:8px}.center-column{order:0}.left-column{order:1;display:grid;grid-template-columns:1fr 1fr;align-items:start}.right-column{order:2;display:grid;grid-template-columns:1fr}.core-area{min-height:310px}.reactor{width:205px}.core-heading h2{letter-spacing:3px}.center-lower{gap:8px}.panel-title{padding:9px;font-size:9px}.panel-body{padding:10px}.chat-panel{min-height:330px}.chat-messages{max-height:360px}.bottomline{padding:8px 10px;font-size:8px}.forecast{grid-template-columns:repeat(4,1fr)}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
-</style>
- </head>
- <body>
-  <div class="app">
-   <header class="topbar">
-    <div class="brand">
-     <div class="brandmark">S</div>
-     <div>
-      <h1>SUHANA</h1>
-      <small>PERSONAL AI INTERFACE // MK-I</small>
-     </div>
-    </div>
-    <div class="topstats">
-     <div class="stat">
-      <span><i class="live-dot"></i>SYSTEM</span><strong>ONLINE</strong>
-     </div>
-     <div class="stat">
-      <span>LOCAL TIME</span><strong id="topClock">--:--:--</strong>
-     </div>
-     <div class="stat">
-      <span>DATE</span><strong id="topDate">---</strong>
-     </div>
-    </div>
-    <div class="top-actions">
-     <button class="hud-btn" id="newChat">＋ New session</button>
-     <button class="hud-btn" id="historyButton">▤ History</button>
-    </div>
-   </header>
-   <main class="dashboard">
-    <aside class="column left-column">
-     <section class="panel">
-      <div class="panel-title">
-       <span>System diagnostics</span><span>SYS.01</span>
-      </div>
-      <div class="panel-body">
-       <div class="metric-line">
-        <span>Interface load</span><strong id="cpuText">NORMAL</strong>
-       </div>
-       <div class="meter">
-        <i style="--w:68%" id="cpuMeter"></i>
-       </div>
-       <div class="metric-line">
-        <span>Memory bank</span><strong id="memoryCount">00 ITEMS</strong>
-       </div>
-       <div class="meter">
-        <i style="--w:22%" id="memMeter"></i>
-       </div>
-       <div class="metric-line">
-        <span>Chat storage</span><strong id="chatCount">01 SESSION</strong>
-       </div>
-       <div class="meter">
-        <i style="--w:45%" id="chatMeter"></i>
-       </div>
-       <div class="metric-line">
-        <span>Connection</span><strong id="connectionText">READY</strong>
-       </div>
-      </div>
-     </section>
-     <section class="panel">
-      <div class="panel-title">
-       <span>Command deck</span><span>CMD.02</span>
-      </div>
-      <div class="panel-body">
-       <div class="quick-grid">
-        <button class="quick" id="focusChat"><b>⌁</b>Open chat</button>
-        <button class="quick" id="toggleVoice"><b id="voiceIcon">◖))</b>Voice output</button>
-        <button class="quick" id="openMemories"><b>◈</b>Memory bank</button>
-        <button class="quick" id="clearChat"><b>×</b>Clear session</button>
-       </div>
-      </div>
-     </section>
-     <section class="panel">
-      <div class="panel-title">
-       <span>Saved memory bank</span><span id="memBadge">LOCAL</span>
-      </div>
-      <div class="panel-body">
-       <div class="memory-list" id="memoryList">
-        <div class="memory-item empty">No saved memories yet.</div>
-       </div>
-       <div style="margin-top:9px;color:var(--muted);font-size:9px;line-height:1.5">Stored in this browser. Use “Remember that…” in chat to save a detail.</div>
-      </div>
-     </section>
-     <section class="panel">
-      <div class="panel-title">
-       <span>Quick telemetry</span><span>LIVE</span>
-      </div>
-      <div class="panel-body">
-       <div class="metric-line">
-        <span>Screen</span><strong id="screenInfo">--</strong>
-       </div>
-       <div class="metric-line">
-        <span>Browser</span><strong id="browserInfo">WEB</strong>
-       </div>
-       <div class="metric-line">
-        <span>Local storage</span><strong id="storageInfo">AVAILABLE</strong>
-       </div>
-      </div>
-     </section>
-    </aside>
-    <section class="column center-column">
-     <section class="panel core-area">
-      <div class="core-heading">
-       <div class="eyebrow">NEURAL INTERFACE // ACTIVE</div>
-       <h2>SUHANA CORE</h2>
-      </div>
-      <div class="reactor" aria-label="Animated cyan reactor">
-       <div class="ring r1"></div>
-       <div class="ring r2"></div>
-       <div class="ring r3"></div>
-       <div class="ring r4"></div>
-       <div class="ring r5"></div>
-       <div class="core"></div>
-       <span class="orbit-label label-a">AI CORE</span><span class="orbit-label label-b">LINK OK</span><span class="orbit-label label-c">MEMORY</span><span class="orbit-label label-d">VOICE</span>
-      </div>
-      <div class="core-caption">
-       <strong><i class="live-dot"></i>CORE STABLE</strong> &nbsp; // &nbsp; ALL SYSTEMS NOMINAL
-      </div>
-     </section>
-     <div class="center-lower">
-      <section class="panel clock-panel">
-       <div class="panel-title">
-        <span>Chronometer</span><span>LOCAL</span>
-       </div>
-       <div class="panel-body">
-        <div class="big-clock" id="mainClock">--:--:--</div>
-        <div class="date-text" id="mainDate">LOADING DATE</div>
-        <div class="wave" id="wave"></div>
-       </div>
-      </section>
-      <section class="panel">
-       <div class="panel-title">
-        <span>Activity monitor</span><span>SIMULATED VISUAL</span>
-       </div>
-       <div class="panel-body">
-        <div class="metric-line">
-         <span>Interface activity</span><strong id="activityValue">64%</strong>
-        </div>
-        <div class="graph" id="activityGraph"></div>
-        <div class="metric-line">
-         <span>API response</span><strong id="apiStatus">STANDBY</strong>
-        </div>
-       </div>
-      </section>
-     </div>
-     <section class="panel chat-panel" id="chatPanel">
-      <div class="panel-title">
-       <span>Secure communication // Suhana</span><span id="chatStatus">READY</span>
-      </div>
-      <div class="chat-messages" id="chatMessages">
-       <div class="welcome-chat" id="welcomeChat">
-        <b>CHANNEL OPEN</b>I'm here. Send a message to begin our conversation.
-        <br>
-        <span style="color:#397b85">TEXT // VOICE INPUT // SPOKEN REPLIES</span>
-       </div>
-      </div>
-      <form class="chat-compose" id="form">
-       <textarea id="input" rows="1" maxlength="8000" placeholder="Transmit message to Suhana..." aria-label="Your message" required></textarea>
-       <button class="icon-btn" id="voice" type="button" title="Toggle spoken replies" aria-label="Toggle spoken replies">◖))</button>
-       <button class="icon-btn" id="mic" type="button" title="Voice input" aria-label="Voice input">🎙</button>
-       <button class="icon-btn" id="send" type="submit" aria-label="Send message">➤</button>
-      </form>
-      <div class="statusline">
-       <span id="status">SYSTEM READY</span><span><strong>● ENCRYPTED UI</strong> // LOCAL MEMORY</span>
-      </div>
-     </section>
-    </section>
-    <aside class="column right-column">
-     <section class="panel">
-      <div class="panel-title">
-       <span>Environment</span><span>DEMO DATA</span>
-      </div>
-      <div class="panel-body">
-       <div class="weather-current">
-        <div>
-         <div class="mini-label">Weather service</div>
-         <div class="temp" id="temp">--°</div>
-         <div class="weather-note" id="weatherNote">Weather needs an internet data source.</div>
-        </div>
-        <div class="weather-icon" id="weatherIcon">◉</div>
-       </div>
-       <div class="forecast">
-        <div>
-         TODAY<b>☼</b><span>—</span>
-        </div>
-        <div>
-         +1 DAY<b>◌</b><span>—</span>
-        </div>
-        <div>
-         +2 DAYS<b>☁</b><span>—</span>
-        </div>
-        <div>
-         +3 DAYS<b>◉</b><span>—</span>
-        </div>
-       </div>
-       <button class="hud-btn" id="weatherButton" style="margin-top:12px;width:100%">Load local weather</button>
-      </div>
-     </section>
-     <section class="panel">
-      <div class="panel-title">
-       <span>Information feed</span><span>LINKS</span>
-      </div>
-      <div class="panel-body">
-       <div class="feed-list">
-        <div class="feed-row">
-         LIVE INFORMATION FEED<small>This panel is ready for a real news API connection.</small>
-        </div>
-        <div class="feed-row">
-         NO EXTERNAL FEED CONNECTED<small>Nothing here is presented as live news.</small>
-        </div>
-        <div class="feed-row">
-         SYSTEM NOTE<small>Chat responses are handled by your existing Suhana backend.</small>
-        </div>
-       </div>
-      </div>
-     </section>
-     <section class="panel">
-      <div class="panel-title">
-       <span>Media controls</span><span>AUDIO</span>
-      </div>
-      <div class="panel-body">
-       <div style="font-size:11px;color:#9cdce2;margin-bottom:10px">SUHANA VOICE CHANNEL</div>
-       <div class="audio-controls">
-        <button id="playTest" type="button">▶</button>
-        <div class="audio-track">
-         <i></i>
-        </div>
-        <button id="stopAudio" type="button">■</button>
-       </div>
-       <div class="wave" id="audioWave"></div>
-       <div class="mini-label" id="audioStatus">VOICE OUTPUT ENABLED</div>
-      </div>
-     </section>
-     <section class="panel">
-      <div class="panel-title">
-       <span>Storage / session</span><span>LOCAL</span>
-      </div>
-      <div class="panel-body">
-       <div class="metric-line">
-        <span>Saved sessions</span><strong id="sessionValue">01</strong>
-       </div>
-       <div class="meter">
-        <i style="--w:35%" id="sessionMeter"></i>
-       </div>
-       <div class="metric-line">
-        <span>Active session</span><strong id="activeSession">READY</strong>
-       </div>
-       <div class="metric-line">
-        <span>Memory privacy</span><strong>THIS DEVICE</strong>
-       </div>
-      </div>
-     </section>
-    </aside>
-   </main>
-   <footer class="bottomline">
-    <span>SUHANA AI <strong>// PERSONAL ASSISTANT</strong></span><span>HUD INTERFACE <strong>MK-I</strong></span><span id="footerIp">LOCAL DEVICE // <strong>PRIVATE</strong></span><span>NO REAL HARDWARE TELEMETRY</span>
-   </footer>
-  </div>
-  <div class="modal-backdrop" id="historyModal">
-   <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-     <h3>CONVERSATION ARCHIVE</h3>
-     <button class="hud-btn" id="closeHistory">CLOSE ×</button>
-    </div>
-    <div id="historyList"></div>
-    <button class="hud-btn" id="deleteAll" style="margin-top:12px;border-color:#ff4c63;color:#ff8795">Delete all chat history</button>
-   </div>
-  </div>
-  <div class="modal-backdrop" id="memoryModal">
-   <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-     <h3>MEMORY BANK</h3>
-     <button class="hud-btn" id="closeMemory">CLOSE ×</button>
-    </div>
-    <p style="font-size:11px;color:var(--muted);line-height:1.6">Memories are saved in this browser and sent to your AI backend with chat requests.</p>
-    <div id="fullMemoryList"></div>
-    <button class="hud-btn" id="clearMemories" style="margin-top:12px;border-color:#ff4c63;color:#ff8795">Erase all memories</button>
-   </div>
-  </div>
-<div class="modal-backdrop" id="authModal">
-  <div class="modal">
-    <h3>SUHANA ACCESS</h3>
-    <p id="authMessage">Sign in to access your personal memory.</p>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
+  <script>  
+   const SUPABASE_URL = "https://jtxsibjspbbcxoefxffr.supabase.co";  
+   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XNWenU3XsiF56YBg9UEueQ_JQFn8wBG";  
+   const supabaseClient = window.supabase.createClient(  
+    SUPABASE_URL,  
+    SUPABASE_PUBLISHABLE_KEY  
+);  
+   const $=id=>document.getElementById(id);  
+   const authModal = document.getElementById("authModal");  
+   const authMessage = document.getElementById("authMessage");  
 
-    <input id="authEmail" type="email"
-      placeholder="Email address" autocomplete="email"
-      style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">
+   function showAuthMessage(message) {
+       authMessage.textContent = message;
+   }
 
-    <input id="authPassword" type="password"
-      placeholder="Password" autocomplete="current-password"
-      style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">
+   async function refreshAuth() {
+       const { data, error } = await supabaseClient.auth.getSession();
 
-    <button class="hud-btn" id="signInBtn">SIGN IN</button>
-   <button class="hud-btn" id="forgotPasswordBtn">FORGOT PASSWORD</button>
-    <button class="hud-btn" id="signUpBtn">CREATE ACCOUNT</button>
-    <button class="hud-btn" id="signOutBtn" style="display:none">SIGN OUT</button>
-  </div>
-</div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-   const SUPABASE_URL = "https://jtxsibjspbbcxoefxffr.supabase.co";
-   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XNWenU3XsiF56YBg9UEueQ_JQFn8wBG";
-   const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
-   const $=id=>document.getElementById(id);
-   const authModal = document.getElementById("authModal");
-const authMessage = document.getElementById("authMessage");
+       if (error) {  
+           showAuthMessage("Unable to check your session. Please refresh.");  
+           authModal.style.display = "grid";  
+           return;  
+       }  
 
-function showAuthMessage(message) {
-    authMessage.textContent = message;
-}
+       const signedIn = !!data.session;  
 
-async function refreshAuth() {
-    const { data, error } = await supabaseClient.auth.getSession();
+       authModal.style.display = signedIn ? "none" : "grid";  
+       document.getElementById("signOutBtn").style.display =  
+           signedIn ? "inline-block" : "none";  
 
-    if (error) {
-        showAuthMessage("Unable to check your session. Please refresh.");
-        authModal.style.display = "grid";
-        return;
-    }
+       if (!signedIn) {  
+           showAuthMessage("Sign in to access your personal memory.");  
+       }
+   }
 
-    const signedIn = !!data.session;
+   document.getElementById("signInBtn").onclick = async () => {
+       const email = document.getElementById("authEmail").value.trim();
+       const password = document.getElementById("authPassword").value;
 
-    authModal.style.display = signedIn ? "none" : "grid";
-    document.getElementById("signOutBtn").style.display =
-        signedIn ? "inline-block" : "none";
+       if (!email || !password) {  
+           showAuthMessage("Enter your email and password.");  
+           return;  
+       }
 
-    if (!signedIn) {
-        showAuthMessage("Sign in to access your personal memory.");
-    }
-}
+       showAuthMessage("Signing in...");
 
-document.getElementById("signInBtn").onclick = async () => {
-    const email = document.getElementById("authEmail").value.trim();
-    const password = document.getElementById("authPassword").value;
+       const { error } = await supabaseClient.auth.signInWithPassword({  
+           email,  
+           password  
+       });  
 
-    if (!email || !password) {
-        showAuthMessage("Enter your email and password.");
-        return;
-    }
-document.getElementById("forgotPasswordBtn").onclick = async () => {
-    const email = document.getElementById("authEmail").value.trim();
+       if (error) {  
+           showAuthMessage(error.message);  
+           return;  
+       }  
 
-    if (!email) {
-        showAuthMessage("Enter your email address first.");
-        return;
-    }
+       await refreshAuth();
+   };
 
-    showAuthMessage("Sending password reset email...");
+   document.getElementById("forgotPasswordBtn").onclick = async () => {
+       const email = document.getElementById("authEmail").value.trim();
 
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(
-        email,
-        {
-            redirectTo: window.location.origin
-        }
-    );
+       if (!email) {  
+           showAuthMessage("Enter your email address first.");  
+           return;  
+       }  
 
-    if (error) {
-        showAuthMessage(error.message);
-        return;
-    }
+       showAuthMessage("Sending password reset email...");  
 
-    showAuthMessage(
-        "Password reset email sent! Check your inbox and spam folder."
-    );
-};
-    showAuthMessage("Signing in...");
+       const { error } = await supabaseClient.auth.resetPasswordForEmail(  
+           email,  
+           {  
+               redirectTo: window.location.origin  
+           }  
+       );  
 
-    const { error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
+       if (error) {  
+           showAuthMessage(error.message);  
+           return;  
+       }  
 
-    if (error) {
-        showAuthMessage(error.message);
-        return;
-    }
+       showAuthMessage(  
+           "Password reset email sent! Check your inbox and spam folder."  
+       );
+   };
 
-    await refreshAuth();
-};
+   document.getElementById("signUpBtn").onclick = async () => {
+       const email = document.getElementById("authEmail").value.trim();
+       const password = document.getElementById("authPassword").value;
 
-document.getElementById("signUpBtn").onclick = async () => {
-    const 
-        showAuthMessage(
-            "Account created! Check your email for a confirmation link, if required."
-        );
-    }
-};
+       if (!email || !password) {  
+           showAuthMessage("Enter an email and choose a password.");  
+           return;  
+       }  
 
-document.getElementById("signOutBtn").onclick = async () => {
-    showAuthMessage("Signing out...");
+       if (password.length < 6) {  
+           showAuthMessage("Use a password with at least 6 characters.");  
+           return;  
+       }  
 
-    const { error } = await supabaseClient.auth.signOut();
+       showAuthMessage("Creating your account...");  
 
-    if (error) {
-        showAuthMessage(error.message);
-        return;
-    }
+       const { data, error } = await supabaseClient.auth.signUp({  
+           email,  
+           password,  
+           options: {  
+               emailRedirectTo: window.location.origin  
+           }  
+       });  
 
-    await refreshAuth();
-};
+       if (error) {  
+           showAuthMessage(error.message);  
+           return;  
+       }  
 
-supabaseClient.auth.onAuthStateChange(() => {
-    refreshAuth();
-});
+       if (data.session) {  
+           await refreshAuth();  
+       } else {  
+           showAuthMessage(  
+               "Account created! Check your email for a confirmation link, if required."  
+           );  
+       }
+   };
 
-refreshAuth();
-const form=$("form"),input=$("input"),messagesEl=$("chatMessages"),statusEl=$("status"),send=$("send");
-let voiceEnabled=true,recognition=null,isListening=false,finalTranscript="";
-let chats=readJSON("suhana_chats",[]);if(!Array.isArray(chats))chats=[];
-const oldHistory=readJSON("suhana_history",[]);
-if(!chats.length)chats.push({id:Date.now().toString(),title:"Previous chat",messages:Array.isArray(oldHistory)?oldHistory:[],updatedAt:Date.now()});
-let activeChatId=localStorage.getItem("suhana_active_chat");
-let activeChat=chats.find(c=>c.id===activeChatId)||chats[0];activeChatId=activeChat.id;
-if(!Array.isArray(activeChat.messages))activeChat.messages=[];
-let history=activeChat.messages;
-let memories=readJSON("suhana_memories",[]);if(!Array.isArray(memories))memories=[];
-function readJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
-function saveChats(){localStorage.setItem("suhana_chats",JSON.stringify(chats));localStorage.setItem("suhana_active_chat",activeChatId);updateMetrics()}
-function saveMemories(){localStorage.setItem("suhana_memories",JSON.stringify(memories));renderMemories();updateMetrics()}
-function updateMetrics(){$("memoryCount").textContent=String(memories.length).padStart(2,"0")+" ITEMS";$("memMeter").style.setProperty("--w",Math.min(100,memories.length*8+8)+"%");$("chatCount").textContent=chats.length+" SESSIONS";$("sessionValue").textContent=String(chats.length).padStart(2,"0");$("sessionMeter").style.setProperty("--w",Math.min(100,chats.length*12+12)+"%");$("activeSession").textContent=activeChat.title.slice(0,16).toUpperCase();$("chatMeter").style.setProperty("--w",Math.min(100,history.length*5+10)+"%")}
-function renderMemories() {
-    const short = $("memoryList");
-    const full = $("fullMemoryList");
+   document.getElementById("signOutBtn").onclick = async () => {
+       showAuthMessage("Signing out...");
 
-    short.replaceChildren();
-    full.replaceChildren();
+       const { error } = await supabaseClient.auth.signOut();  
 
-    if (!memories.length) {
-        const empty = document.createElement("div");
-        empty.className = "memory-item empty";
-        empty.textContent = "No saved memories yet.";
+       if (error) {  
+           showAuthMessage(error.message);  
+           return;  
+       }  
 
-        short.append(empty);
-        full.append(empty.cloneNode(true));
-        return;
-    }
+       await refreshAuth();
+   };
 
-    // Show the four most recent memories in the dashboard.
-    memories.slice(-4).reverse().forEach(memory => {
-        const item = document.createElement("div");
-        item.className = "memory-item";
-        item.textContent = "◈ " + memory;
-        short.append(item);
-    });
+   supabaseClient.auth.onAuthStateChange(() => {
+       refreshAuth();
+   });
 
-    // Show all memories with a delete button.
-    memories.forEach((memory, index) => {
-        const row = document.createElement("div");
-        row.className = "history-row";
+   refreshAuth();
 
-        const text = document.createElement("div");
-        text.className = "memory-item";
-        text.style.flex = "1";
-        text.textContent = memory;
+   const form=$("form"),input=$("input"),messagesEl=$("chatMessages"),statusEl=$("status"),send=$("send");
+   let voiceEnabled=true,recognition=null,isListening=false,finalTranscript="";
+   let chats=readJSON("suhana_chats",[]);if(!Array.isArray(chats))chats=[];
+   const oldHistory=readJSON("suhana_history",[]);
+   if(!chats.length)chats.push({id:Date.now().toString(),title:"Previous chat",messages:Array.isArray(oldHistory)?oldHistory:[],updatedAt:Date.now()});
+   let activeChatId=localStorage.getItem("suhana_active_chat");
+   let activeChat=chats.find(c=>c.id===activeChatId)||chats[0];activeChatId=activeChat.id;
+   if(!Array.isArray(activeChat.messages))activeChat.messages=[];
+   let history=activeChat.messages;
+   let memories=readJSON("suhana_memories",[]);if(!Array.isArray(memories))memories=[];
+   
+   function readJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
+   function saveChats(){localStorage.setItem("suhana_chats",JSON.stringify(chats));localStorage.setItem("suhana_active_chat",activeChatId);updateMetrics()}
+   function saveMemories(){localStorage.setItem("suhana_memories",JSON.stringify(memories));renderMemories();updateMetrics()}
+   function updateMetrics(){$("memoryCount").textContent=String(memories.length).padStart(2,"0")+" ITEMS";$("memMeter").style.setProperty("--w",Math.min(100,memories.length*8+8)+"%");$("chatCount").textContent=chats.length+" SESSIONS";$("sessionValue").textContent=String(chats.length).padStart(2,"0");$("sessionMeter").style.setProperty("--w",Math.min(100,chats.length*12+12)+"%");$("activeSession").textContent=activeChat.title.slice(0,16).toUpperCase();$("chatMeter").style.setProperty("--w",Math.min(100,history.length*5+10)+"%")}
+   
+   function renderMemories() {
+       const short = $("memoryList");
+       const full = $("fullMemoryList");
 
-        const del = document.createElement("button");
-        del.className = "hud-btn";
-        del.textContent = "×";
-        del.title = "Delete this memory";
-        del.setAttribute("aria-label", "Delete memory");
+       short.replaceChildren();  
+       full.replaceChildren();  
 
-        del.onclick = () => {
-            if (!confirm("Delete this saved memory?\n\n" + memory)) {
-                return;
-            }
+       if (!memories.length) {  
+           const empty = document.createElement("div");  
+           empty.className = "memory-item empty";  
+           empty.textContent = "No saved memories yet.";  
 
-            memories.splice(index, 1);
-            saveMemories();
-        };
+           short.append(empty);  
+           full.append(empty.cloneNode(true));  
+           return;  
+       }  
 
-        row.append(text, del);
-        full.append(row);
-    });
-}
-function addMessage(text,role,isError=false){$("welcomeChat")?.remove();const el=document.createElement("div");el.className="message "+role+(isError?" error":"");el.textContent=text;messagesEl.append(el);messagesEl.scrollTop=messagesEl.scrollHeight;return el}
-function renderMessages(){messagesEl.replaceChildren();if(!history.length){const w=document.createElement("div");w.className="welcome-chat";w.id="welcomeChat";w.innerHTML="<b>CHANNEL OPEN</b>I'm here. Send a message to begin our conversation.<br><span style='color:#397b85'>TEXT // VOICE INPUT // SPOKEN REPLIES</span>";messagesEl.append(w)}else history.forEach(m=>{if(m&&["user","assistant"].includes(m.role)&&typeof m.content==="string")addMessage(m.content,m.role)})}
-function saveMemory(text){const clean=text.trim();if(!clean)return false;memories.push(clean);if(memories.length>50)memories=memories.slice(-50);saveMemories();return true}
-function setStatus(s){statusEl.textContent=s.toUpperCase();$("chatStatus").textContent=s.toUpperCase().slice(0,18)}
-function speak(text){if(!voiceEnabled||!("speechSynthesis"in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-IN";u.rate=.88;u.pitch=1.03;const vs=speechSynthesis.getVoices();u.voice=vs.find(v=>v.lang==="en-IN")||vs.find(v=>v.lang.startsWith("en"))||null;u.onstart=()=>{setStatus("Suhana speaking");$("audioStatus").textContent="VOICE CHANNEL ACTIVE"};u.onend=()=>{if(!isListening)setStatus("System ready");$("audioStatus").textContent=voiceEnabled?"VOICE OUTPUT ENABLED":"VOICE OUTPUT MUTED"};speechSynthesis.speak(u)}
-async function sendMessage(raw){const clean=raw.trim();if(!clean||send.disabled)return;
-addMessage(clean,"user");input.value="";
-history.push({role:"user",content:clean});activeChat.messages=history;
-if(/^remember that\s+/i.test(clean)){const memory=clean.replace(/^remember that\s+/i,"").trim();if(saveMemory(memory))addMessage("Saved to your local memory bank. 💙","assistant");else addMessage("Tell me what you'd like me to remember.","assistant");history.push({role:"assistant",content:"Saved to your local memory bank. 💙"});saveChats();return}
-send.disabled=true;setStatus("Suhana thinking");$("apiStatus").textContent="REQUESTING";const wait=addMessage("Establishing secure link…","assistant");
-try{const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:clean,history:history.slice(-11,-1),memories})});const data=await response.json();if(!response.ok)throw new Error(data.error||"Request failed");const reply=data.reply||"I couldn't create a reply.";wait.textContent=reply;history.push({role:"assistant",content:reply});if(history.length>40)history=history.slice(-40);activeChat.messages=history;activeChat.updatedAt=Date.now();if(["New chat","Previous chat"].includes(activeChat.title)){const first=history.find(m=>m.role==="user");if(first){let title=first.content.replace(/^remember that\s+/i,"").replace(/\s+/g," ").trim();if(title.length>35)title=title.slice(0,32).trimEnd()+"...";activeChat.title=title||"New conversation"}}saveChats();$("apiStatus").textContent="CONNECTED";speak(reply);setStatus("System ready")}catch(e){wait.textContent=(e.message||"Connection failed.")+" — check the Suhana server and try again.";wait.classList.add("error");$("apiStatus").textContent="OFFLINE";setStatus("Connection error")}finally{send.disabled=false;input.focus()}}
-function startNewChat(){activeChat={id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()};chats.unshift(activeChat);activeChatId=activeChat.id;history=activeChat.messages;saveChats();renderMessages();setStatus("System ready");if("speechSynthesis"in window)speechSynthesis.cancel();input.value="";input.focus()}
-function renderHistory(){const list=$("historyList");list.replaceChildren();if(!chats.length){list.textContent="No saved conversations.";return}chats.forEach(c=>{const row=document.createElement("div");row.className="history-row";const open=document.createElement("button");open.className="hud-btn";open.textContent=c.title||"New chat";open.onclick=()=>{activeChat=c;activeChatId=c.id;history=activeChat.messages||[];saveChats();renderMessages();$("historyModal").style.display="none";setStatus("System ready")};const del=document.createElement("button");del.className="hud-btn";del.textContent="DELETE";del.style.color="var(--red)";del.onclick=()=>{if(!confirm("Delete this conversation?"))return;chats=chats.filter(x=>x.id!==c.id);if(!chats.length)chats.push({id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()});if(activeChatId===c.id){activeChat=chats[0];activeChatId=activeChat.id;history=activeChat.messages||[];renderMessages()}saveChats();renderHistory()};row.append(open,del);list.append(row)})}
-$("newChat").onclick=startNewChat;
-$("historyButton").onclick=()=>{renderHistory();$("historyModal").style.display="grid"};
-$("closeHistory").onclick=()=>$("historyModal").style.display="none";
-$("deleteAll").onclick=()=>{if(!confirm("Delete all chat history? Memories will stay saved."))return;chats=[{id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()}];activeChat=chats[0];activeChatId=activeChat.id;history=activeChat.messages;saveChats();renderMessages();renderHistory()};
-$("focusChat").onclick=()=>{ $("chatPanel").scrollIntoView({behavior:"smooth",block:"center"});input.focus()};
-$("toggleVoice").onclick=()=>{voiceEnabled=!voiceEnabled;$("voiceIcon").textContent=voiceEnabled?"◖))":"MUTE";$("voice").textContent=voiceEnabled?"◖))":"×";$("audioStatus").textContent=voiceEnabled?"VOICE OUTPUT ENABLED":"VOICE OUTPUT MUTED";if(!voiceEnabled&&"speechSynthesis"in window)speechSynthesis.cancel()};
-$("voice").onclick=()=>{$("toggleVoice").click()};
-$("playTest").onclick=()=>speak("Suhana interface online. I'm listening.");
-$("stopAudio").onclick=()=>{if("speechSynthesis"in window)speechSynthesis.cancel();$("audioStatus").textContent="AUDIO STOPPED"};
-$("clearChat").onclick=()=>{if(!confirm("Clear this conversation? Other saved sessions and memories will remain."))return;history=[];activeChat.messages=history;activeChat.updatedAt=Date.now();saveChats();renderMessages()};
-$("openMemories").onclick=()=>$("memoryModal").style.display="grid";
-$("closeMemory").onclick=()=>$("memoryModal").style.display="none";
-$("clearMemories").onclick=()=>{if(!confirm("Erase all saved memories from this browser?"))return;memories=[];saveMemories()};
-$("weatherButton").onclick=async()=>{const b=$("weatherButton");b.disabled=true;b.textContent="LOADING…";try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=9.98&longitude=76.28&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4&timezone=Asia%2FKolkata");if(!r.ok)throw Error("Weather unavailable");const d=await r.json();const c=d.current;$("temp").textContent=Math.round(c.temperature_2m)+"°C";const desc=weatherName(c.weather_code);$("weatherNote").textContent=desc+" · Feels "+Math.round(c.apparent_temperature)+"°C · Humidity "+c.relative_humidity_2m+"%";$("weatherIcon").textContent=weatherIcon(c.weather_code);const f=document.querySelectorAll(".forecast div");f.forEach((el,i)=>{el.innerHTML=(i===0?"TODAY":i===1?"TOMORROW":new Date(d.daily.time[i]+"T12:00:00").toLocaleDateString("en",{weekday:"short"}))+"<b>"+weatherIcon(d.daily.weather_code[i])+"</b><span>"+Math.round(d.daily.temperature_2m_max[i])+"° / "+Math.round(d.daily.temperature_2m_min[i])+"°</span>"});b.textContent="REFRESH WEATHER"}catch(e){$("weatherNote").textContent="Could not load weather. Check internet and retry.";b.textContent="TRY AGAIN"}finally{b.disabled=false}};
-function weatherName(c){if(c===0)return"Clear sky";if([1,2,3].includes(c))return"Partly cloudy";if([45,48].includes(c))return"Fog";if([51,53,55,56,57].includes(c))return"Drizzle";if([61,63,65,66,67,80,81,82].includes(c))return"Rain";if([71,73,75,77,85,86].includes(c))return"Snow";if([95,96,99].includes(c))return"Thunderstorm";return"Current conditions"}
-function weatherIcon(c){if(c===0)return"☀";if([1,2,3,45,48].includes(c))return"☁";if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c))return"☂";if([95,96,99].includes(c))return"ϟ";return"◉"}
-const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(SpeechAPI){recognition=new SpeechAPI();recognition.lang="en-IN";recognition.continuous=false;recognition.interimResults=true;recognition.onstart=()=>{isListening=true;finalTranscript="";input.value="";$("mic").textContent="■";setStatus("Listening")};recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalTranscript+=t+" ";else interim+=t}input.value=(finalTranscript+interim).trim()};recognition.onerror=e=>setStatus(e.error==="not-allowed"?"Allow microphone access":"Microphone "+e.error);recognition.onend=()=>{isListening=false;$("mic").textContent="🎙";const t=finalTranscript.trim();if(t){input.value=t;sendMessage(t)}else setStatus("System ready")};$("mic").onclick=()=>{if(isListening)recognition.stop();else try{speechSynthesis?.cancel();recognition.start()}catch{setStatus("Try microphone again")}}}else $("mic").onclick=()=>setStatus("Voice input not supported in this browser");
-form.addEventListener("submit",e=>{e.preventDefault();sendMessage(input.value)});
-input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
-function updateClock(){const now=new Date();const t=now.toLocaleTimeString("en-GB",{hour12:false});$("topClock").textContent=t;$("mainClock").textContent=t;$("topDate").textContent=now.toLocaleDateString("en-GB",{day:"2-digit",month:"short"}).toUpperCase();$("mainDate").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",year:"numeric"}).toUpperCase()}
-function bars(id,count){const el=$(id);for(let i=0;i<count;i++){const b=document.createElement("i");b.style.setProperty("--h",(12+Math.random()*85)+"%");b.style.setProperty("--d",(Math.random()*1.2)+"s");el.append(b)}}
-bars("wave",38);bars("audioWave",28);bars("activityGraph",36);
-setInterval(()=>{updateClock();document.querySelectorAll("#activityGraph i").forEach(b=>b.style.height=(8+Math.random()*90)+"%");$("activityValue").textContent=(35+Math.floor(Math.random()*55))+"%"},1000);
-$("screenInfo").textContent=window.innerWidth+"×"+window.innerHeight;
-$("browserInfo").textContent=/Android/i.test(navigator.userAgent)?"ANDROID":/iPhone|iPad/i.test(navigator.userAgent)?"IOS":"DESKTOP";
-$("storageInfo").textContent=(()=>{try{localStorage.setItem("_test","1");localStorage.removeItem("_test");return"AVAILABLE"}catch{return"BLOCKED"}})();
-updateClock();renderMemories();updateMetrics();renderMessages();
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{})); 
+       memories.slice(-4).reverse().forEach(memory => {  
+           const item = document.createElement("div");  
+           item.className = "memory-item";  
+           item.textContent = "◈ " + memory;  
+           short.append(item);  
+       });  
+
+       memories.forEach((memory, index) => {  
+           const row = document.createElement("div");  
+           row.className = "history-row";  
+
+           const text = document.createElement("div");  
+           text.className = "memory-item";  
+           text.style.flex = "1";  
+           text.textContent = memory;  
+
+           const del = document.createElement("button");  
+           del.className = "hud-btn";  
+           del.textContent = "×";  
+           del.title = "Delete this memory";  
+           del.setAttribute("aria-label", "Delete memory");  
+
+           del.onclick = () => {  
+               if (!confirm("Delete this saved memory?\n\n" + memory)) {  
+                   return;  
+               }  
+               memories.splice(index, 1);  
+               saveMemories();  
+           };  
+
+           row.append(text, del);  
+           full.append(row);  
+       });
+   }
+
+   function addMessage(text,role,isError=false){$("welcomeChat")?.remove();const el=document.createElement("div");el.className="message "+role+(isError?" error":"");el.textContent=text;messagesEl.append(el);messagesEl.scrollTop=messagesEl.scrollHeight;return el}
+   function renderMessages(){messagesEl.replaceChildren();if(!history.length){const w=document.createElement("div");w.className="welcome-chat";w.id="welcomeChat";w.innerHTML="<b>CHANNEL OPEN</b>I'm here. Send a message to begin our conversation.<br><span style='color:#397b85'>TEXT // VOICE INPUT // SPOKEN REPLIES</span>";messagesEl.append(w)}else history.forEach(m=>{if(m&&["user","assistant"].includes(m.role)&&typeof m.content==="string")addMessage(m.content,m.role)})}
+   function saveMemory(text){const clean=text.trim();if(!clean)return false;memories.push(clean);if(memories.length>50)memories=memories.slice(-50);saveMemories();return true}
+   function setStatus(s){statusEl.textContent=s.toUpperCase();$("chatStatus").textContent=s.toUpperCase().slice(0,18)}
+   
+   function speak(text){if(!voiceEnabled||!("speechSynthesis"in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-IN";u.rate=.88;u.pitch=1.03;const vs=speechSynthesis.getVoices();u.voice=vs.find(v=>v.lang==="en-IN")||vs.find(v=>v.lang.startsWith("en"))||null;u.onstart=()=>{setStatus("Suhana speaking");$("audioStatus").textContent="VOICE CHANNEL ACTIVE"};u.onend=()=>{if(!isListening)setStatus("System ready");$("audioStatus").textContent=voiceEnabled?"VOICE OUTPUT ENABLED":"VOICE OUTPUT MUTED"};speechSynthesis.speak(u)}
+   
+   async function sendMessage(raw){
+       const clean=raw.trim();
+       if(!clean||send.disabled)return;
+       addMessage(clean,"user");
+       input.value="";
+       history.push({role:"user",content:clean});
+       activeChat.messages=history;
+       
+       if(/^remember that\s+/i.test(clean)){
+           const memory=clean.replace(/^remember that\s+/i,"").trim();
+           if(saveMemory(memory))addMessage("Saved to your local memory bank. 💙","assistant");
+           else addMessage("Tell me what you'd like me to remember.","assistant");
+           history.push({role:"assistant",content:"Saved to your local memory bank. 💙"});
+           saveChats();
+           return;
+       }
+       
+       send.disabled=true;
+       setStatus("Suhana thinking");
+       $("apiStatus").textContent="REQUESTING";
+       const wait=addMessage("Establishing secure link…","assistant");
+       
+       try{
+           const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:clean,history:history.slice(-11,-1),memories})});
+           const data=await response.json();
+           if(!response.ok)throw new Error(data.error||"Request failed");
+           const reply=data.reply||"I couldn't create a reply.";
+           wait.textContent=reply;
+           history.push({role:"assistant",content:reply});
+           if(history.length>40)history=history.slice(-40);
+           activeChat.messages=history;
+           activeChat.updatedAt=Date.now();
+           
+           if(["New chat","Previous chat"].includes(activeChat.title)){
+               const first=history.find(m=>m.role==="user");
+               if(first){
+                   let title=first.content.replace(/^remember that\s+/i,"").replace(/\s+/g," ").trim();
+                   if(title.length>35)title=title.slice(0,32).trimEnd()+"...";
+                   activeChat.title=title||"New conversation";
+               }
+           }
+           
+           saveChats();
+           $("apiStatus").textContent="CONNECTED";
+           speak(reply);
+           setStatus("System ready");
+       }catch(e){
+           wait.textContent=(e.message||"Connection failed.")+" — check the Suhana server and try again.";
+           wait.classList.add("error");
+           $("apiStatus").textContent="OFFLINE";
+           setStatus("Connection error");
+       }finally{
+           send.disabled=false;
+           input.focus();
+       }
+   }
+
+   function startNewChat(){activeChat={id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()};chats.unshift(activeChat);activeChatId=activeChat.id;history=activeChat.messages;saveChats();renderMessages();setStatus("System ready");if("speechSynthesis"in window)speechSynthesis.cancel();input.value="";input.focus()}
+   function renderHistory(){const list=$("historyList");list.replaceChildren();if(!chats.length){list.textContent="No saved conversations.";return}chats.forEach(c=>{const row=document.createElement("div");row.className="history-row";const open=document.createElement("button");open.className="hud-btn";open.textContent=c.title||"New chat";open.onclick=()=>{activeChat=c;activeChatId=c.id;history=activeChat.messages||[];saveChats();renderMessages();$("historyModal").style.display="none";setStatus("System ready")};const del=document.createElement("button");del.className="hud-btn";del.textContent="DELETE";del.style.color="var(--red)";del.onclick=()=>{if(!confirm("Delete this conversation?"))return;chats=chats.filter(x=>x.id!==c.id);if(!chats.length)chats.push({id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()});if(activeChatId===c.id){activeChat=chats[0];activeChatId=activeChat.id;history=activeChat.messages||[];renderMessages()}saveChats();renderHistory()};row.append(open,del);list.append(row)})}
+   
+   $("newChat").onclick=startNewChat;
+   $("historyButton").onclick=()=>{renderHistory();$("historyModal").style.display="grid"};
+   $("closeHistory").onclick=()=>$("historyModal").style.display="none";
+   $("deleteAll").onclick=()=>{if(!confirm("Delete all chat history? Memories will stay saved."))return;chats=[{id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()}];activeChat=chats[0];activeChatId=activeChat.id;history=activeChat.messages;saveChats();renderMessages();renderHistory()};
+   $("focusChat").onclick=()=>{ $("chatPanel").scrollIntoView({behavior:"smooth",block:"center"});input.focus()};
+   $("toggleVoice").onclick=()=>{voiceEnabled=!voiceEnabled;$("voiceIcon").textContent=voiceEnabled?"◖))":"MUTE";$("voice").textContent=voiceEnabled?"◖))":"×";$("audioStatus").textContent=voiceEnabled?"VOICE OUTPUT ENABLED":"VOICE OUTPUT MUTED";if(!voiceEnabled&&"speechSynthesis"in window)speechSynthesis.cancel()};
+   $("voice").onclick=()=>{$("toggleVoice").click()};
+   $("playTest").onclick=()=>speak("Suhana interface online. I'm listening.");
+   $("stopAudio").onclick=()=>{if("speechSynthesis"in window)speechSynthesis.cancel();$("audioStatus").textContent="AUDIO STOPPED"};
+   $("clearChat").onclick=()=>{if(!confirm("Clear this conversation? Other saved sessions and memories will remain."))return;history=[];activeChat.messages=history;activeChat.updatedAt=Date.now();saveChats();renderMessages()};
+   $("openMemories").onclick=()=>$("memoryModal").style.display="grid";
+   $("closeMemory").onclick=()=>$("memoryModal").style.display="none";
+   $("clearMemories").onclick=()=>{if(!confirm("Erase all saved memories from this browser?"))return;memories=[];saveMemories()};
+   
+   $("weatherButton").onclick=async()=>{
+       const b=$("weatherButton");
+       b.disabled=true;
+       b.textContent="LOADING…";
+       try{
+           const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=9.98&longitude=76.28&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4&timezone=Asia%2FKolkata");
+           if(!r.ok)throw Error("Weather unavailable");
+           const d=await r.json();
+           const c=d.current;
+           $("temp").textContent=Math.round(c.temperature_2m)+"°C";
+           const desc=weatherName(c.weather_code);
+           $("weatherNote").textContent=desc+" · Feels "+Math.round(c.apparent_temperature)+"°C · Humidity "+c.relative_humidity_2m+"%";
+           $("weatherIcon").textContent=weatherIcon(c.weather_code);
+           const f=document.querySelectorAll(".forecast div");
+           f.forEach((el,i)=>{el.innerHTML=(i===0?"TODAY":i===1?"TOMORROW":new Date(d.daily.time[i]+"T12:00:00").toLocaleDateString("en",{weekday:"short"}))+"<b>"+weatherIcon(d.daily.weather_code[i])+"</b><span>"+Math.round(d.daily.temperature_2m_max[i])+"° / "+Math.round(d.daily.temperature_2m_min[i])+"°</span>"});
+           b.textContent="REFRESH WEATHER";
+       }catch(e){
+           $("weatherNote").textContent="Could not load weather. Check internet and retry.";
+           b.textContent="TRY AGAIN";
+       }finally{
+           b.disabled=false;
+       }
+   };
+
+   function weatherName(c){if(c===0)return"Clear sky";if([1,2,3].includes(c))return"Partly cloudy";if([45,48].includes(c))return"Fog";if([51,53,55,56,57].includes(c))return"Drizzle";if([61,63,65,66,67,80,81,82].includes(c))return"Rain";if([71,73,75,77,85,86].includes(c))return"Snow";if([95,96,99].includes(c))return"Thunderstorm";return"Current conditions"}
+   function weatherIcon(c){if(c===0)return"☀";if([1,2,3,45,48].includes(c))return"☁";if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c))return"☂";if([95,96,99].includes(c))return"ϟ";return"◉"}
+
+   const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
+   if(SpeechAPI){
+       recognition=new SpeechAPI();
+       recognition.lang="en-IN";
+       recognition.continuous=false;
+       recognition.interimResults=true;
+       recognition.onstart=()=>{isListening=true;finalTranscript="";input.value="";$("mic").textContent="■";setStatus("Listening")};
+       recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalTranscript+=t+" ";else interim+=t}input.value=(finalTranscript+interim).trim()};
+       recognition.onerror=e=>setStatus(e.error==="not-allowed"?"Allow microphone access":"Microphone "+e.error);
+       recognition.onend=()=>{isListening=false;$("mic").textContent="🎙";const t=finalTranscript.trim();if(t){input.value=t;sendMessage(t)}else setStatus("System ready")};
+       $("mic").onclick=()=>{if(isListening)recognition.stop();else try{speechSynthesis?.cancel();recognition.start()}catch{setStatus("Try microphone again")}};
+   }else{
+       $("mic").onclick=()=>setStatus("Voice input not supported in this browser");
+   }
+
+   form.addEventListener("submit",e=>{e.preventDefault();sendMessage(input.value)});
+   input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+   
+   function updateClock(){const now=new Date();const t=now.toLocaleTimeString("en-GB",{hour12:false});$("topClock").textContent=t;$("mainClock").textContent=t;$("topDate").textContent=now.toLocaleDateString("en-GB",{day:"2-digit",month:"short"}).toUpperCase();$("mainDate").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",year:"numeric"}).toUpperCase()}
+   function bars(id,count){const el=$(id);for(let i=0;i<count;i++){const b=document.createElement("i");b.style.setProperty("--h",(12+Math.random()*85)+"%");b.style.setProperty("--d",(Math.random()*1.2)+"s");el.append(b)}}
+   
+   bars("wave",38);bars("audioWave",28);bars("activityGraph",36);
+   setInterval(()=>{updateClock();document.querySelectorAll("#activityGraph i").forEach(b=>b.style.height=(8+Math.random()*90)+"%");$("activityValue").textContent=(35+Math.floor(Math.random()*55))+"%"},1000);
+   
+   $("screenInfo").textContent=window.innerWidth+"×"+window.innerHeight;
+   $("browserInfo").textContent=/Android/i.test(navigator.userAgent)?"ANDROID":/iPhone|iPad/i.test(navigator.userAgent)?"IOS":"DESKTOP";
+   $("storageInfo").textContent=(()=>{try{localStorage.setItem("_test","1");localStorage.removeItem("_test");return"AVAILABLE"}catch{return"BLOCKED"}})();
+   
+   updateClock();renderMemories();updateMetrics();renderMessages();
+   
+   if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
   </script>
- </body>
- </html>
