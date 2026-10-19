@@ -409,7 +409,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
     </div>  
     <p id="authMessage">Sign in to access your personal memory.</p>  
     <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
-    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
+    <input id="authPassword" type="password" placeholder="New Password" autocomplete="current-password" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
     <button class="hud-btn" id="signInBtn">SIGN IN</button>  
     <button class="hud-btn" id="forgotPasswordBtn">FORGOT PASSWORD</button>  
     <button class="hud-btn" id="signUpBtn">CREATE ACCOUNT</button>  
@@ -432,31 +432,37 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 
    let isPasswordRecovery = false;
 
-   // Check URL parameters for explicit recovery tokens or hash fragments
+   // Helper function to trigger recovery mode UI
+   function enterRecoveryMode() {
+       isPasswordRecovery = true;
+       authModal.style.display = "grid";
+       showAuthMessage("Enter your new password below.");
+       document.getElementById("authEmail").style.display = "none";
+       document.getElementById("authPassword").value = "";
+       document.getElementById("signInBtn").textContent = "UPDATE PASSWORD";
+       document.getElementById("forgotPasswordBtn").style.display = "none";
+       document.getElementById("signUpBtn").style.display = "none";
+       document.getElementById("signOutBtn").style.display = "none";
+   }
+
+   // Check URL parameters for Supabase PKCE code or recovery hashes
    const urlParams = new URLSearchParams(window.location.search);
    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-   if (urlParams.get("reset") === "1" || hashParams.get("type") === "recovery") {
-       isPasswordRecovery = true;
+   if (urlParams.get("reset") === "1" || urlParams.has("code") || hashParams.get("type") === "recovery") {
+       enterRecoveryMode();
    }
 
    async function refreshAuth() {
+       if (isPasswordRecovery) {
+           enterRecoveryMode();
+           return;
+       }
+
        const { data, error } = await supabaseClient.auth.getSession();
 
        if (error) {
            showAuthMessage("Unable to check your session. Please refresh.");
            authModal.style.display = "grid";
-           return;
-       }
-
-       if (isPasswordRecovery) {
-           authModal.style.display = "grid";
-           showAuthMessage("Enter your new password below.");
-           document.getElementById("authEmail").style.display = "none";
-           document.getElementById("authPassword").value = "";
-           document.getElementById("signInBtn").textContent = "UPDATE PASSWORD";
-           document.getElementById("forgotPasswordBtn").style.display = "none";
-           document.getElementById("signUpBtn").style.display = "none";
-           document.getElementById("signOutBtn").style.display = "none";
            return;
        }
 
@@ -519,7 +525,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            document.getElementById("forgotPasswordBtn").style.display = "";
            document.getElementById("signUpBtn").style.display = "";
 
-           // Clean up URL parameters
+           // Clean up URL parameters/code
            window.history.replaceState({}, document.title, window.location.pathname);
 
            await supabaseClient.auth.signOut();
@@ -617,17 +623,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 
    supabaseClient.auth.onAuthStateChange((event, session) => {
        if (event === "PASSWORD_RECOVERY") {
-           isPasswordRecovery = true;
-
-           authModal.style.display = "grid";
-           showAuthMessage("Enter your new password below.");
-
-           document.getElementById("authEmail").style.display = "none";
-           document.getElementById("authPassword").value = "";
-           document.getElementById("signInBtn").textContent = "UPDATE PASSWORD";
-           document.getElementById("forgotPasswordBtn").style.display = "none";
-           document.getElementById("signUpBtn").style.display = "none";
-           document.getElementById("signOutBtn").style.display = "none";
+           enterRecoveryMode();
            return;
        }
 
