@@ -401,6 +401,9 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+   const SUPABASE_URL = "https://jtxsibjspbbcxoefxffr.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "PASTE_YOUR_ACTUAL_PUBLISHABLE_KEY_HERE";
 const $=id=>document.getElementById(id);
 const form=$("form"),input=$("input"),messagesEl=$("chatMessages"),statusEl=$("status"),send=$("send");
 let voiceEnabled=true,recognition=null,isListening=false,finalTranscript="";
