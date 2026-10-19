@@ -667,7 +667,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            const memory=clean.replace(/^remember that\s+/i,"").trim();
            if(saveMemory(memory))addMessage("Saved to your local memory bank. 💙","assistant");
            else addMessage("Tell me what you'd like me to remember.","assistant");
-           history.push({role:"assistant",content:"Saved to your local memory bank. 💙"});
+           history.push({role:"assistant",content:("Saved to your local memory bank. 💙")});
            saveChats();
            return;
        }
