@@ -439,6 +439,11 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            return;
        }
 
+       if (isPasswordRecovery) {
+           authModal.style.display = "grid";
+           return;
+       }
+
        const signedIn = !!data.session;
 
        document.getElementById("signOutBtn").style.display =
