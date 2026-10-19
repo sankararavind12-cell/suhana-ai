@@ -458,6 +458,10 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        await refreshAuth();
    };
 
+   document.getElementById("openAuthBtn").addEventListener("click", () => {
+       document.getElementById("authModal").style.display = "grid";
+   });
+
    document.getElementById("forgotPasswordBtn").onclick = async () => {
        const email = document.getElementById("authEmail").value.trim();
        if (!email) {  
