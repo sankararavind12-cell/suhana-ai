@@ -146,7 +146,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
      </div>  
     </div>  
     <div class="top-actions">  
-     <button class="hud-btn" id="openAuthBtn">SIGN IN</button>
+     <button class="hud-btn" id="openAuthBtn">SIGN IN</button>  
      <button class="hud-btn" id="newChat">＋ New session</button>  
      <button class="hud-btn" id="historyButton">▤ History</button>  
     </div>  
@@ -403,7 +403,10 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
   </div>  
   <div class="modal-backdrop" id="authModal">  
    <div class="modal">  
-    <h3>SUHANA ACCESS</h3>  
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">  
+     <h3>SUHANA ACCESS</h3>  
+     <button class="hud-btn" id="closeAuthBtn">CLOSE ×</button>  
+    </div>  
     <p id="authMessage">Sign in to access your personal memory.</p>  
     <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
     <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
@@ -435,12 +438,19 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            return;  
        }  
        const signedIn = !!data.session;  
-       authModal.style.display = signedIn ? "none" : "grid";  
        document.getElementById("signOutBtn").style.display = signedIn ? "inline-block" : "none";  
        if (!signedIn) {  
            showAuthMessage("Sign in to access your personal memory.");  
        }
    }
+
+   document.getElementById("openAuthBtn").addEventListener("click", () => {
+       authModal.style.display = "grid";
+   });
+
+   document.getElementById("closeAuthBtn").addEventListener("click", () => {
+       authModal.style.display = "none";
+   });
 
    document.getElementById("signInBtn").onclick = async () => {
        const email = document.getElementById("authEmail").value.trim();
@@ -456,11 +466,8 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            return;  
        }  
        await refreshAuth();
+       authModal.style.display = "none";
    };
-
-   document.getElementById("openAuthBtn").addEventListener("click", () => {
-       document.getElementById("authModal").style.display = "grid";
-   });
 
    document.getElementById("forgotPasswordBtn").onclick = async () => {
        const email = document.getElementById("authEmail").value.trim();
@@ -496,6 +503,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        }  
        if (data.session) {  
            await refreshAuth();  
+           authModal.style.display = "none";
        } else {  
            showAuthMessage("Account created! Check your email for a confirmation link, if required.");  
        }
