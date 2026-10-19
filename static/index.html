@@ -541,8 +541,17 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        await refreshAuth();
    };
 
-   supabaseClient.auth.onAuthStateChange(() => {
-       refreshAuth();
+   supabaseClient.auth.onAuthStateChange((_event, session) => {
+       const signedIn = !!session;
+
+       document.getElementById("signOutBtn").style.display =
+           signedIn ? "inline-block" : "none";
+
+       authModal.style.display = signedIn ? "none" : "grid";
+
+       if (!signedIn) {
+           showAuthMessage("Sign in to access your personal memory.");
+       }
    });
 
    refreshAuth();
