@@ -3,67 +3,68 @@
  <head>  
   <meta charset="UTF-8">  
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">  
-  <meta name="theme-color" content="#020610">  
+  <meta name="theme-color" content="#010612">  
   <title>SUHANA // CYBER AI INTERFACE</title>  
   <style>  
-:root{--cyan:#00d2ff;--cyan-glow:#00d2ff88;--bg:#020610;--panel:rgba(2,12,24,.85);--line:rgba(0,210,255,.35);--muted:#3c7a96;--white:#d6f8ff;--green:#00ffaa;--red:#ff3366}  
+:root{--cyan:#00d8ff;--cyan-glow:#00d8ff99;--bg:#010612;--panel:rgba(2,11,23,.88);--line:rgba(0,216,255,.35);--muted:#387c9a;--white:#d2f7ff;--green:#00ffb7;--red:#ff3366}  
 *{box-sizing:border-box}  
 html,body{margin:0;min-height:100%;background:var(--bg);color:var(--white);font-family:Segoe UI,Roboto,Arial,sans-serif}  
-body{min-height:100dvh;overflow-x:hidden;background:radial-gradient(circle at 50% 50%,#041529 0,#020814 50%,#010307 90%);letter-spacing:.2px}  
-body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(rgba(0,210,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,210,255,.025) 1px,transparent 1px);background-size:20px 20px}  
+body{min-height:100dvh;overflow-x:hidden;background:radial-gradient(circle at 50% 50%,#031830 0,#010916 55%,#000308 90%);letter-spacing:.2px}  
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(rgba(0,216,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,216,255,.025) 1px,transparent 1px);background-size:22px 22px}  
 button,input,textarea{font:inherit}  
 button{cursor:pointer}  
 button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-shadow:0 0 10px var(--cyan)}  
 
 .app{position:relative;z-index:1;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;max-width:1920px;margin:auto}  
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line);background:rgba(2,8,18,.9);box-shadow:0 4px 20px #00d2ff10;min-height:64px}  
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line);background:rgba(1,8,18,.92);box-shadow:0 4px 20px #00d8ff12;min-height:64px}  
 .brand{display:flex;align-items:center;gap:12px;min-width:0}  
-.brandmark{width:40px;height:40px;border:1px solid var(--cyan);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-weight:900;font-size:20px;text-shadow:0 0 10px var(--cyan);box-shadow:inset 0 0 12px #00d2ff33,0 0 15px #00d2ff33;position:relative}  
-.brandmark:after{content:"";position:absolute;inset:4px;border:1px dashed #00d2ffaa;border-radius:50%;animation:spin 20s linear infinite}  
-.brand h1{font-size:17px;letter-spacing:5px;margin:0;color:var(--cyan);text-shadow:0 0 10px #00d2ff77}  
+.brandmark{width:40px;height:40px;border:1px solid var(--cyan);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-weight:900;font-size:20px;text-shadow:0 0 10px var(--cyan);box-shadow:inset 0 0 12px #00d8ff33,0 0 15px #00d8ff33;position:relative}  
+.brandmark:after{content:"";position:absolute;inset:4px;border:1px dashed #00d8ffaa;border-radius:50%;animation:spin 20s linear infinite}  
+.brand h1{font-size:17px;letter-spacing:5px;margin:0;color:var(--cyan);text-shadow:0 0 10px #00d8ff77}  
 .brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;margin-top:2px}  
 
 .topstats{display:flex;align-items:center;gap:18px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}  
 .stat strong{display:block;color:var(--cyan);font-size:14px;letter-spacing:1px;margin-top:2px}  
 .live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:5px}  
 .top-actions{display:flex;gap:6px}  
-.hud-btn{border:1px solid var(--line);background:#031222;color:var(--cyan);padding:8px 10px;font-size:10px;letter-spacing:1px;text-transform:uppercase;border-radius:2px;transition:.2s}  
-.hud-btn:hover{background:#072644;box-shadow:0 0 12px #00d2ff44}  
+.hud-btn{border:1px solid var(--line);background:#021122;color:var(--cyan);padding:8px 10px;font-size:10px;letter-spacing:1px;text-transform:uppercase;border-radius:2px;transition:.2s}  
+.hud-btn:hover{background:#062646;box-shadow:0 0 12px #00d8ff44}  
 
-/* LAYOUT EXACTLY MATCHING THE REFERENCE IMAGE */  
 .dashboard{display:grid;grid-template-columns:300px minmax(380px,1fr) 300px;gap:12px;padding:12px;min-height:0}  
 .column{display:flex;flex-direction:column;gap:12px;min-width:0}  
-.panel{position:relative;border:1px solid var(--line);background:linear-gradient(135deg,rgba(3,14,27,.9),rgba(1,7,15,.85));box-shadow:inset 0 0 18px #00d2ff08,0 0 10px #00d2ff08;border-radius:2px;overflow:hidden}  
+.panel{position:relative;border:1px solid var(--line);background:linear-gradient(135deg,rgba(2,13,26,.9),rgba(1,6,14,.85));box-shadow:inset 0 0 18px #00d8ff08,0 0 10px #00d8ff08;border-radius:2px;overflow:hidden}  
 .panel:before{content:"";position:absolute;left:0;top:0;width:20px;height:2px;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}  
-.panel-title{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #00d2ff22;font-size:9px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}  
+.panel-title{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #00d8ff22;font-size:9px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}  
 .panel-title span:last-child{color:var(--muted);font-size:8px;letter-spacing:1px}  
 .panel-body{padding:10px}  
 .mini-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}  
-.meter{height:3px;background:#05182c;margin:5px 0 8px;overflow:hidden;border-radius:1px}  
+.meter{height:3px;background:#04172b;margin:5px 0 8px;overflow:hidden;border-radius:1px}  
 .meter i{display:block;height:100%;background:linear-gradient(90deg,#0055ff,var(--cyan));box-shadow:0 0 6px var(--cyan);width:var(--w,65%)}  
 .metric-line{display:flex;justify-content:space-between;gap:6px;font-size:10px;margin:8px 0 3px}  
 .metric-line strong{color:var(--cyan);font-weight:500}  
 
-/* CENTERPIECE: EXACT AI AVATAR & HUD BACKGROUND STYLE */  
+/* EXACT HUMAN FACE AVATAR BACKGROUND PANEL */  
 .center-column{display:flex;flex-direction:column;gap:12px;position:relative}  
-.core-area{min-height:440px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:2px solid var(--cyan);box-shadow:inset 0 0 35px #00d2ff33,0 0 25px #00d2ff22;border-radius:4px}  
-.core-bg-image{position:absolute;inset:0;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="%2301050f"/><circle cx="400" cy="280" r="190" fill="none" stroke="%2300d2ff" stroke-width="1" opacity="0.35"/><circle cx="400" cy="280" r="130" fill="none" stroke="%2300d2ff" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/><path d="M150,280 H650 M280,100 V460 M520,100 V460" stroke="%2300d2ff" stroke-width="0.5" opacity="0.12"/></svg>') center/cover no-repeat;opacity:.55;z-index:1}  
-.core-area > *{z-index:2}  
+.core-area{min-height:480px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:2px solid var(--cyan);box-shadow:inset 0 0 40px #00d8ff33,0 0 25px #00d8ff22;border-radius:4px}  
+.core-avatar-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat;filter:drop-shadow(0 0 30px #00d8ff66) hue-rotate(185deg) saturate(220%);opacity:.85;z-index:1}  
+.core-avatar-overlay{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,transparent 10%,rgba(1,6,18,.85) 85%);z-index:2;pointer-events:none}  
+.core-area > *:not(.core-avatar-bg):not(.core-avatar-overlay){z-index:3}  
+
 .core-heading{text-align:center;margin-bottom:6px}  
 .core-heading .eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted)}  
-.core-heading h2{font-size:clamp(18px,2.2vw,26px);letter-spacing:5px;color:var(--cyan);margin:4px 0;text-shadow:0 0 14px #00d2ffaa}  
+.core-heading h2{font-size:clamp(18px,2.2vw,26px);letter-spacing:5px;color:var(--cyan);margin:4px 0;text-shadow:0 0 14px #00d8ffaa}  
 
-.reactor{width:min(55vw,290px);min-width:190px;aspect-ratio:1;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 20px #00d2ff88)}  
+.reactor{width:min(55vw,280px);min-width:180px;aspect-ratio:1;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 20px #00d8ff88)}  
 .ring{position:absolute;border-radius:50%;border:2px solid transparent}  
-.ring.r1{inset:0;border-top-color:var(--cyan);border-right-color:#0055ff;border-bottom-color:#00d2ff55;animation:spin 12s linear infinite}  
-.ring.r2{inset:8%;border:1px dashed #00d2ffbb;animation:spin 16s linear infinite reverse}  
-.ring.r3{inset:16%;border:6px solid #031e38;border-top-color:var(--cyan);border-bottom-color:#0099ff;animation:spin 6s linear infinite}  
-.ring.r4{inset:24%;border:2px solid #00d2ff88;box-shadow:inset 0 0 18px #00d2ff33,0 0 12px #00d2ff33}  
+.ring.r1{inset:0;border-top-color:var(--cyan);border-right-color:#0055ff;border-bottom-color:#00d8ff55;animation:spin 12s linear infinite}  
+.ring.r2{inset:8%;border:1px dashed #00d8ffbb;animation:spin 16s linear infinite reverse}  
+.ring.r3{inset:16%;border:6px solid #021a32;border-top-color:var(--cyan);border-bottom-color:#0099ff;animation:spin 6s linear infinite}  
+.ring.r4{inset:24%;border:2px solid #00d8ff88;box-shadow:inset 0 0 18px #00d8ff33,0 0 12px #00d8ff33}  
 .ring.r5{inset:32%;border:1px dashed #88ffff;animation:spin 4s linear infinite}  
 
-.core{width:36%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffffff 0,#70ffff 15%,#00aaff 40%,#003388 70%,#010a14 100%);box-shadow:0 0 25px var(--cyan),0 0 60px #00d2ffaa,inset 0 0 18px #ffffffaa;animation:pulse 2.2s ease-in-out infinite}  
+.core{width:34%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffffff 0,#70ffff 15%,#00aaff 40%,#003388 70%,#010916 100%);box-shadow:0 0 25px var(--cyan),0 0 60px #00d8ffaa,inset 0 0 18px #ffffffaa;animation:pulse 2.2s ease-in-out infinite}  
 
-.orbit-label{position:absolute;font-size:8px;letter-spacing:1px;color:var(--white);z-index:3;background:#020d1aee;padding:3px 6px;border:1px solid #00d2ff55;border-radius:1px;box-shadow:0 0 6px #00d2ff33}  
+.orbit-label{position:absolute;font-size:8px;letter-spacing:1px;color:var(--white);z-index:3;background:#010c1cee;padding:3px 6px;border:1px solid #00d8ff55;border-radius:1px;box-shadow:0 0 6px #00d8ff33}  
 .label-a{left:2%;top:26%}.label-b{right:2%;top:36%}.label-c{left:6%;bottom:20%}.label-d{right:6%;bottom:18%}  
 
 .core-caption{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:10px}  
@@ -71,38 +72,38 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 
 /* CHAT & CONTROLS */  
 .chat-panel{display:flex;flex-direction:column;min-height:340px;flex:1}  
-.chat-messages{padding:12px;display:flex;flex-direction:column;gap:8px;overflow:auto;max-height:420px;min-height:150px;scrollbar-color:#0055ff #031222;scrollbar-width:thin}  
+.chat-messages{padding:12px;display:flex;flex-direction:column;gap:8px;overflow:auto;max-height:420px;min-height:150px;scrollbar-color:#0055ff #021122;scrollbar-width:thin}  
 .welcome-chat{text-align:center;padding:20px 10px;color:var(--muted);font-size:11px;line-height:1.7}  
 .welcome-chat b{display:block;font-size:16px;color:var(--cyan);letter-spacing:2px;margin-bottom:5px}  
-.message{max-width:95%;padding:10px 12px;border:1px solid #00d2ff35;background:#03182c;font-size:11px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:2px}  
-.message.user{align-self:flex-end;background:#062644;border-color:#00d2ff77}  
+.message{max-width:95%;padding:10px 12px;border:1px solid #00d8ff35;background:#021529;font-size:11px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:2px}  
+.message.user{align-self:flex-end;background:#052442;border-color:#00d8ff77}  
 .message.assistant{align-self:flex-start}  
 .message.error{border-color:var(--red);color:#ffb9c0}  
-.chat-compose{display:flex;gap:6px;padding:8px;border-top:1px solid #00d2ff28;background:#010914}  
-#input{flex:1;min-width:0;resize:vertical;min-height:40px;max-height:100px;background:#031527;border:1px solid #00d2ff40;color:var(--white);padding:10px;font-size:11px;outline:none;border-radius:2px}  
-#input::placeholder{color:#3c7a96}  
-.icon-btn{width:40px;min-width:40px;height:40px;border:1px solid var(--line);background:#051b30;color:var(--cyan);font-size:15px;border-radius:2px}  
-.icon-btn:hover{background:#0a3258}  
-#send{background:var(--cyan);color:#010914;font-weight:900}  
-.statusline{display:flex;justify-content:space-between;gap:6px;padding:6px 10px;font-size:8px;letter-spacing:1px;color:var(--muted);border-top:1px solid #00d2ff18}  
+.chat-compose{display:flex;gap:6px;padding:8px;border-top:1px solid #00d8ff28;background:#010814}  
+#input{flex:1;min-width:0;resize:vertical;min-height:40px;max-height:100px;background:#021325;border:1px solid #00d8ff40;color:var(--white);padding:10px;font-size:11px;outline:none;border-radius:2px}  
+#input::placeholder{color:#387c9a}  
+.icon-btn{width:40px;min-width:40px;height:40px;border:1px solid var(--line);background:#041a2e;color:var(--cyan);font-size:15px;border-radius:2px}  
+.icon-btn:hover{background:#083054}  
+#send{background:var(--cyan);color:#010814;font-weight:900}  
+.statusline{display:flex;justify-content:space-between;gap:6px;padding:6px 10px;font-size:8px;letter-spacing:1px;color:var(--muted);border-top:1px solid #00d8ff18}  
 .statusline strong{color:var(--green);font-weight:500}  
 
 /* SIDE PANELS & TELEMETRY */  
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}  
-.quick{min-height:58px;background:#020f1d;border:1px solid #00d2ff30;color:var(--muted);text-align:left;padding:8px;font-size:9px;border-radius:2px}  
+.quick{min-height:58px;background:#010d1b;border:1px solid #00d8ff30;color:var(--muted);text-align:left;padding:8px;font-size:9px;border-radius:2px}  
 .quick b{display:block;color:var(--cyan);font-size:15px;margin-bottom:3px;font-weight:400}  
 .quick:hover{border-color:var(--cyan);color:var(--white)}  
 .memory-list{display:flex;flex-direction:column;gap:5px}  
-.memory-item{font-size:9px;color:#9bf0ff;border-left:2px solid var(--cyan);padding:4px 6px;background:#021222;overflow-wrap:anywhere;border-radius:0 2px 2px 0}  
+.memory-item{font-size:9px;color:#9bf4ff;border-left:2px solid var(--cyan);padding:4px 6px;background:#01101f;overflow-wrap:anywhere;border-radius:0 2px 2px 0}  
 .memory-item.empty{color:var(--muted)}  
-.graph{height:42px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #00d2ff44;padding:3px 0}  
-.graph i{flex:1;height:var(--h);background:linear-gradient(to top,#0044cc,#00d2ff);opacity:.85;min-width:2px;border-radius:1px 1px 0 0}  
-.bottomline{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 16px;color:#3c7a96;font-size:8px;letter-spacing:1px;border-top:1px solid var(--line);background:#01050e}  
+.graph{height:42px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #00d8ff44;padding:3px 0}  
+.graph i{flex:1;height:var(--h);background:linear-gradient(to top,#0044cc,#00d8ff);opacity:.85;min-width:2px;border-radius:1px 1px 0 0}  
+.bottomline{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 16px;color:#387c9a;font-size:8px;letter-spacing:1px;border-top:1px solid var(--line);background:#00040c}  
 .bottomline strong{color:var(--cyan);font-weight:500}  
 
 /* MODALS */  
 .modal-backdrop{position:fixed;inset:0;background:#000b;z-index:20;display:none;place-items:center;padding:14px}  
-.modal{width:min(520px,100%);max-height:80dvh;overflow:auto;background:#031222;border:1px solid var(--cyan);box-shadow:0 0 30px #00d2ff44;padding:16px;border-radius:4px}  
+.modal{width:min(520px,100%);max-height:80dvh;overflow:auto;background:#021122;border:1px solid var(--cyan);box-shadow:0 0 30px #00d8ff44;padding:16px;border-radius:4px}  
 .modal h3{color:var(--cyan);letter-spacing:2px;font-size:12px}  
 .history-row{display:flex;gap:6px;margin:6px 0}  
 .history-row button:first-child{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis}  
@@ -145,7 +146,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
    </header>  
 
    <main class="dashboard">  
-    <!-- LEFT TELEMETRY COLUMN -->  
     <aside class="column">  
      <section class="panel">  
       <div class="panel-title">  
@@ -200,10 +200,11 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
      </section>  
     </aside>  
 
-    <!-- CENTRAL AI AVATAR & INTERACTIVE CHAT HUB -->  
+    <!-- CENTRAL AI AVATAR HUMAN FACE CORE -->  
     <section class="column center-column">  
      <section class="panel core-area">  
-      <div class="core-bg-image"></div>  
+      <div class="core-avatar-bg"></div>  
+      <div class="core-avatar-overlay"></div>  
       <div class="core-heading">  
        <div class="eyebrow">CYBERNETIC AVATAR // ACTIVE</div>  
        <h2>SUHANA NEURAL CORE</h2>  
@@ -233,7 +234,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        <div class="welcome-chat" id="welcomeChat">  
         <b>CHANNEL OPEN</b>Avatar matrix active. Send a message to begin.  
         <br>  
-        <span style="color:#3c7a96">TEXT // VOICE INPUT // SPOKEN REPLIES</span>  
+        <span style="color:#387c9a">TEXT // VOICE INPUT // SPOKEN REPLIES</span>  
        </div>  
       </div>  
       <form class="chat-compose" id="form">  
@@ -248,14 +249,13 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
      </section>  
     </section>  
 
-    <!-- RIGHT TELEMETRY & ENVIRONMENT COLUMN -->  
     <aside class="column right-column">  
      <section class="panel">  
       <div class="panel-title">  
        <span>Chronometer</span><span>LOCAL</span>  
       </div>  
       <div class="panel-body" style="text-align:center">  
-       <div class="big-clock" id="mainClock" style="font-size:26px;color:var(--cyan);text-shadow:0 0 10px #00d2ff66;letter-spacing:2px">--:--:--</div>  
+       <div class="big-clock" id="mainClock" style="font-size:26px;color:var(--cyan);text-shadow:0 0 10px #00d8ff66;letter-spacing:2px">--:--:--</div>  
        <div class="date-text" id="mainDate" style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:3px">LOADING DATE</div>  
        <div class="wave" id="wave" style="margin-top:8px"></div>  
       </div>  
@@ -319,7 +319,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
    </footer>  
   </div>  
 
-  <!-- MODALS -->  
   <div class="modal-backdrop" id="historyModal">  
    <div class="modal">  
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">  
@@ -350,8 +349,8 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
      <button class="hud-btn" id="closeAuthBtn">CLOSE ×</button>  
     </div>  
     <p id="authMessage" style="font-size:10px;color:var(--muted);margin:8px 0">Sign in to sync your personal avatar matrix and memory.</p>  
-    <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%;padding:10px;margin:6px 0;background:#031527;color:var(--white);border:1px solid #00d2ff55;border-radius:2px">  
-    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:10px;margin:6px 0;background:#031527;color:var(--white);border:1px solid #00d2ff55;border-radius:2px">  
+    <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%;padding:10px;margin:6px 0;background:#021325;color:var(--white);border:1px solid #00d8ff55;border-radius:2px">  
+    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:10px;margin:6px 0;background:#021325;color:var(--white);border:1px solid #00d8ff55;border-radius:2px">  
     <button class="hud-btn" id="signInBtn" style="width:100%;margin-top:5px">SIGN IN</button>  
     <button class="hud-btn" id="forgotPasswordBtn" style="width:100%;margin-top:5px">FORGOT PASSWORD</button>  
     <button class="hud-btn" id="signUpBtn" style="width:100%;margin-top:5px">CREATE ACCOUNT</button>  
@@ -653,7 +652,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
    }
    
    function addMessage(text,role,isError=false){$("welcomeChat")?.remove();const el=document.createElement("div");el.className="message "+role+(isError?" error":"");el.textContent=text;messagesEl.append(el);messagesEl.scrollTop=messagesEl.scrollHeight;return el}
-   function renderMessages(){messagesEl.replaceChildren();if(!history.length){const w=document.createElement("div");w.className="welcome-chat";w.id="welcomeChat";w.innerHTML="<b>CHANNEL OPEN</b>Avatar matrix active. Send a message to begin.<br><span style='color:#3c7a96'>TEXT // VOICE INPUT // SPOKEN REPLIES</span>";messagesEl.append(w)}else history.forEach(m=>{if(m&&["user","assistant"].includes(m.role)&&typeof m.content==="string")addMessage(m.content,m.role)})}
+   function renderMessages(){messagesEl.replaceChildren();if(!history.length){const w=document.createElement("div");w.className="welcome-chat";w.id="welcomeChat";w.innerHTML="<b>CHANNEL OPEN</b>Avatar matrix active. Send a message to begin.<br><span style='color:#387c9a'>TEXT // VOICE INPUT // SPOKEN REPLIES</span>";messagesEl.append(w)}else history.forEach(m=>{if(m&&["user","assistant"].includes(m.role)&&typeof m.content==="string")addMessage(m.content,m.role)})}
    function saveMemory(text){const clean=text.trim();if(!clean)return false;memories.push(clean);if(memories.length>50)memories=memories.slice(-50);saveMemories();return true}
    function setStatus(s){statusEl.textContent=s.toUpperCase();$("chatStatus").textContent=s.toUpperCase().slice(0,18)}
    
