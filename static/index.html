@@ -401,6 +401,24 @@ const SUPABASE_URL
     <button class="hud-btn" id="clearMemories" style="margin-top:12px;border-color:#ff4c63;color:#ff8795">Erase all memories</button>
    </div>
   </div>
+<div class="modal-backdrop" id="authModal">
+  <div class="modal">
+    <h3>SUHANA ACCESS</h3>
+    <p id="authMessage">Sign in to access your personal memory.</p>
+
+    <input id="authEmail" type="email"
+      placeholder="Email address" autocomplete="email"
+      style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">
+
+    <input id="authPassword" type="password"
+      placeholder="Password" autocomplete="current-password"
+      style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">
+
+    <button class="hud-btn" id="signInBtn">SIGN IN</button>
+    <button class="hud-btn" id="signUpBtn">CREATE ACCOUNT</button>
+    <button class="hud-btn" id="signOutBtn" style="display:none">SIGN OUT</button>
+  </div>
+</div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
    const SUPABASE_URL = "https://jtxsibjspbbcxoefxffr.supabase.co";
@@ -520,31 +538,6 @@ $("browserInfo").textContent=/Android/i.test(navigator.userAgent)?"ANDROID":/iPh
 $("storageInfo").textContent=(()=>{try{localStorage.setItem("_test","1");localStorage.removeItem("_test");return"AVAILABLE"}catch{return"BLOCKED"}})();
 updateClock();renderMemories();updateMetrics();renderMessages();
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{})); 
-<div class="modal-backdrop" id="authModal" style="display:none">
-  <div class="modal">
-    <h3>SUHANA ACCESS</h3>
-    <p id="authMessage">Sign in to access your personal memory.</p>
-
-    <input
-      id="authEmail"
-      type="email"
-      placeholder="Email address"
-      autocomplete="email"
-      style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55"
-    >
-
-    <input
-      id="authPassword"
-      type="password"
-      placeholder="Password"
-      autocomplete="current-password"
-      style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55"
-    >
-
-    <button class="hud-btn" id="signInBtn">SIGN IN</button>
-    <button class="hud-btn" id="signUpBtn">CREATE ACCOUNT</button>
-    <button class="hud-btn" id="signOutBtn" style="display:none">SIGN OUT</button>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </script>
  </body>
-    </html>
+ </html>
