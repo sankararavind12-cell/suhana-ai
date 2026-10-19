@@ -11,6 +11,189 @@
   <title>Suhana AI</title>
 
   <style>
+    /* SUHANA FUTURISTIC HUD */
+:root {
+  --cyan: #21f5ff;
+  --dark: #020910;
+  --panel: rgba(2, 20, 32, 0.9);
+}
+
+body {
+  background:
+    radial-gradient(circle at center, #063747 0%, #020910 65%);
+  color: #c9fcff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(33,245,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33,245,255,.045) 1px, transparent 1px);
+  background-size: 35px 35px;
+}
+
+header {
+  position: relative;
+  z-index: 2;
+  background: rgba(0, 12, 22, .96);
+  border-bottom: 1px solid var(--cyan);
+  box-shadow: 0 0 22px rgba(33,245,255,.15);
+}
+
+.avatar {
+  border-radius: 50%;
+  background: radial-gradient(circle, #bfffff, #00c8df 55%, #004253);
+  color: #001219;
+  border: 2px solid var(--cyan);
+  box-shadow: 0 0 20px rgba(33,245,255,.65);
+}
+
+h1 {
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 0 0 12px rgba(33,245,255,.7);
+}
+
+.status {
+  color: #64cbd6;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 20, 32, .48);
+  border-left: 1px solid rgba(33,245,255,.25);
+  border-right: 1px solid rgba(33,245,255,.25);
+}
+
+.welcome .symbol {
+  display: grid;
+  place-items: center;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto;
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+  color: var(--cyan);
+  text-shadow: 0 0 20px var(--cyan);
+  box-shadow:
+    0 0 20px rgba(33,245,255,.45),
+    inset 0 0 25px rgba(33,245,255,.2);
+  animation: reactorPulse 3s ease-in-out infinite;
+}
+
+.welcome h2 {
+  color: var(--cyan);
+  letter-spacing: 2px;
+}
+
+.welcome p {
+  color: #91cbd3;
+}
+
+@keyframes reactorPulse {
+  50% {
+    box-shadow:
+      0 0 35px rgba(33,245,255,.7),
+      inset 0 0 35px rgba(33,245,255,.4);
+  }
+}
+
+.message {
+  border: 1px solid rgba(33,245,255,.4);
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgba(33,245,255,.08);
+}
+
+.user {
+  background: rgba(0, 105, 140, .65);
+  border-color: var(--cyan);
+}
+
+.assistant {
+  background: var(--panel);
+  border-color: rgba(33,245,255,.35);
+}
+
+.composer {
+  position: sticky;
+  z-index: 2;
+  background: rgba(0, 9, 17, .97);
+  border-top: 1px solid var(--cyan);
+}
+
+textarea {
+  background: #041b29;
+  color: #e0ffff;
+  border-color: rgba(33,245,255,.55);
+  border-radius: 5px;
+}
+
+textarea:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(33,245,255,.2);
+}
+
+button {
+  border-radius: 5px;
+  background: linear-gradient(135deg, #80ffff, #00a9c7);
+  color: #001219;
+}
+
+#newChat,
+#historyButton {
+  background: #032532 !important;
+  color: var(--cyan) !important;
+  border: 1px solid rgba(33,245,255,.5) !important;
+}
+
+#historyPanel {
+  position: relative;
+  z-index: 3;
+  background: #03131f !important;
+  color: #c9fcff;
+  border-bottom: 1px solid var(--cyan) !important;
+}
+
+#historyPanel h3 {
+  color: var(--cyan);
+}
+
+.hint {
+  color: #55a8b4;
+}
+
+@media (max-width: 600px) {
+  header {
+    gap: 7px;
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+
+  main {
+    padding: 16px 10px;
+  }
+
+  .message {
+    max-width: 94%;
+  }
+  }
     * {
       box-sizing: border-box;
     }
