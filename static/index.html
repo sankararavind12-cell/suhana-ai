@@ -426,6 +426,114 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
 );
+   const $=id=>document.getElementById(id);
+   const authModal = document.getElementById("authModal");
+const authMessage = document.getElementById("authMessage");
+
+function showAuthMessage(message) {
+    authMessage.textContent = message;
+}
+
+async function refreshAuth() {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error) {
+        showAuthMessage("Unable to check your session. Please refresh.");
+        authModal.style.display = "grid";
+        return;
+    }
+
+    const signedIn = !!data.session;
+
+    authModal.style.display = signedIn ? "none" : "grid";
+    document.getElementById("signOutBtn").style.display =
+        signedIn ? "inline-block" : "none";
+
+    if (!signedIn) {
+        showAuthMessage("Sign in to access your personal memory.");
+    }
+}
+
+document.getElementById("signInBtn").onclick = async () => {
+    const email = document.getElementById("authEmail").value.trim();
+    const password = document.getElementById("authPassword").value;
+
+    if (!email || !password) {
+        showAuthMessage("Enter your email and password.");
+        return;
+    }
+
+    showAuthMessage("Signing in...");
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        showAuthMessage(error.message);
+        return;
+    }
+
+    await refreshAuth();
+};
+
+document.getElementById("signUpBtn").onclick = async () => {
+    const email = document.getElementById("authEmail").value.trim();
+    const password = document.getElementById("authPassword").value;
+
+    if (!email || !password) {
+        showAuthMessage("Enter an email and choose a password.");
+        return;
+    }
+
+    if (password.length < 6) {
+        showAuthMessage("Use a password with at least 6 characters.");
+        return;
+    }
+
+    showAuthMessage("Creating your account...");
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+            emailRedirectTo: window.location.origin
+        }
+    });
+
+    if (error) {
+        showAuthMessage(error.message);
+        return;
+    }
+
+    if (data.session) {
+        await refreshAuth();
+    } else {
+        showAuthMessage(
+            "Account created! Check your email for a confirmation link, if required."
+        );
+    }
+};
+
+document.getElementById("signOutBtn").onclick = async () => {
+    showAuthMessage("Signing out...");
+
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        showAuthMessage(error.message);
+        return;
+    }
+
+    await refreshAuth();
+};
+
+supabaseClient.auth.onAuthStateChange(() => {
+    refreshAuth();
+});
+
+refreshAuth();
 const $=id=>document.getElementById(id);
 const form=$("form"),input=$("input"),messagesEl=$("chatMessages"),statusEl=$("status"),send=$("send");
 let voiceEnabled=true,recognition=null,isListening=false,finalTranscript="";
