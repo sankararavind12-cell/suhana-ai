@@ -139,6 +139,9 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
       <span><i class="live-dot"></i>SYSTEM</span><strong>ONLINE</strong>  
      </div>  
      <div class="stat">  
+      <span>STATUS</span><strong id="authStatusBadge">GUEST</strong>  
+     </div>  
+     <div class="stat">  
       <span>LOCAL TIME</span><strong id="topClock">--:--:--</strong>  
      </div>  
      <div class="stat">  
@@ -409,7 +412,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
     </div>  
     <p id="authMessage">Sign in to access your personal memory.</p>  
     <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
-    <input id="authPassword" type="password" placeholder="New Password" autocomplete="current-password" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
+    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:12px;margin:8px 0;background:#03151e;color:#d7fcff;border:1px solid #19f6ff55">  
     <button class="hud-btn" id="signInBtn">SIGN IN</button>  
     <button class="hud-btn" id="forgotPasswordBtn">FORGOT PASSWORD</button>  
     <button class="hud-btn" id="signUpBtn">CREATE ACCOUNT</button>  
@@ -432,7 +435,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 
    let isPasswordRecovery = false;
 
-   // Helper function to trigger recovery mode UI
    function enterRecoveryMode() {
        isPasswordRecovery = true;
        authModal.style.display = "grid";
@@ -445,7 +447,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        document.getElementById("signOutBtn").style.display = "none";
    }
 
-   // Check URL parameters for Supabase PKCE code or recovery hashes
    const urlParams = new URLSearchParams(window.location.search);
    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
    if (urlParams.get("reset") === "1" || urlParams.has("code") || hashParams.get("type") === "recovery") {
@@ -467,6 +468,12 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        }
 
        const signedIn = !!data.session;
+       
+       const badge = document.getElementById("authStatusBadge");
+       if (badge) {
+           badge.textContent = signedIn ? "SECURE" : "GUEST";
+           badge.style.color = signedIn ? "var(--green)" : "var(--cyan)";
+       }
 
        document.getElementById("signOutBtn").style.display =
            signedIn ? "inline-block" : "none";
@@ -525,7 +532,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            document.getElementById("forgotPasswordBtn").style.display = "";
            document.getElementById("signUpBtn").style.display = "";
 
-           // Clean up URL parameters/code
            window.history.replaceState({}, document.title, window.location.pathname);
 
            await supabaseClient.auth.signOut();
@@ -632,6 +638,12 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        }
 
        const signedIn = !!session;
+
+       const badge = document.getElementById("authStatusBadge");
+       if (badge) {
+           badge.textContent = signedIn ? "SECURE" : "GUEST";
+           badge.style.color = signedIn ? "var(--green)" : "var(--cyan)";
+       }
 
        document.getElementById("signOutBtn").style.display =
            signedIn ? "inline-block" : "none";
