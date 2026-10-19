@@ -431,17 +431,23 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
    }
 
    async function refreshAuth() {
-   
-     const { data, error } = await supabaseClient.auth.getSession();
-       if (error) {  
-           showAuthMessage("Unable to check your session. Please refresh.");  
-           authModal.style.display = "grid";  
-           return;  
-       }  
-       const signedIn = !!data.session;  
-       document.getElementById("signOutBtn").style.display = signedIn ? "inline-block" : "none";  
-       if (!signedIn) {  
-           showAuthMessage("Sign in to access your personal memory.");  
+       const { data, error } = await supabaseClient.auth.getSession();
+
+       if (error) {
+           showAuthMessage("Unable to check your session. Please refresh.");
+           authModal.style.display = "grid";
+           return;
+       }
+
+       const signedIn = !!data.session;
+
+       document.getElementById("signOutBtn").style.display =
+           signedIn ? "inline-block" : "none";
+
+       authModal.style.display = signedIn ? "none" : "grid";
+
+       if (!signedIn) {
+           showAuthMessage("Sign in to access your personal memory.");
        }
    }
 
