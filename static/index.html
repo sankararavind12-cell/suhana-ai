@@ -503,16 +503,31 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
            return;  
        }  
        showAuthMessage("Creating your account...");  
-       const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } });  
+       
+       const { data, error } = await supabaseClient.auth.signUp({ 
+           email, 
+           password, 
+           options: { 
+               emailRedirectTo: window.location.origin 
+           } 
+       });  
+
        if (error) {  
            showAuthMessage(error.message);  
            return;  
        }  
+
        if (data.session) {  
            await refreshAuth();  
            authModal.style.display = "none";
        } else {  
-           showAuthMessage("Account created! Check your email for a confirmation link, if required.");  
+           const { error: signInError } = await supabaseClient.auth.signInWithPassword({ email, password });
+           if (!signInError) {
+               await refreshAuth();
+               authModal.style.display = "none";
+           } else {
+               showAuthMessage("Account created successfully! If confirmation is required, check your Supabase dashboard setting.");
+           }
        }
    };
 
