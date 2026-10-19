@@ -590,7 +590,21 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
        await refreshAuth();
    };
 
-   supabaseClient.auth.onAuthStateChange((_event, session) => {
+   supabaseClient.auth.onAuthStateChange((event, session) => {
+       if (event === "PASSWORD_RECOVERY") {
+           isPasswordRecovery = true;
+
+           authModal.style.display = "grid";
+           showAuthMessage("Enter your new password below.");
+
+           document.getElementById("authPassword").value = "";
+           document.getElementById("signInBtn").textContent = "UPDATE PASSWORD";
+           document.getElementById("forgotPasswordBtn").style.display = "none";
+           document.getElementById("signUpBtn").style.display = "none";
+           document.getElementById("signOutBtn").style.display = "none";
+           return;
+       }
+
        const signedIn = !!session;
 
        document.getElementById("signOutBtn").style.display =
