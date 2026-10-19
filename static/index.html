@@ -514,7 +514,6 @@ $("screenInfo").textContent=window.innerWidth+"×"+window.innerHeight;
 $("browserInfo").textContent=/Android/i.test(navigator.userAgent)?"ANDROID":/iPhone|iPad/i.test(navigator.userAgent)?"IOS":"DESKTOP";
 $("storageInfo").textContent=(()=>{try{localStorage.setItem("_test","1");localStorage.removeItem("_test");return"AVAILABLE"}catch{return"BLOCKED"}})();
 updateClock();renderMemories();updateMetrics();renderMessages();
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
-</script >
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{})); 
  </body>
     </html>
