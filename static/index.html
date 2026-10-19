@@ -534,7 +534,6 @@ supabaseClient.auth.onAuthStateChange(() => {
 });
 
 refreshAuth();
-const $=id=>document.getElementById(id);
 const form=$("form"),input=$("input"),messagesEl=$("chatMessages"),statusEl=$("status"),send=$("send");
 let voiceEnabled=true,recognition=null,isListening=false,finalTranscript="";
 let chats=readJSON("suhana_chats",[]);if(!Array.isArray(chats))chats=[];
