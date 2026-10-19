@@ -512,9 +512,7 @@ $("browserInfo").textContent=/Android/i.test(navigator.userAgent)?"ANDROID":/iPh
 $("storageInfo").textContent=(()=>{try{localStorage.setItem("_test","1");localStorage.removeItem("_test");return"AVAILABLE"}catch{return"BLOCKED"}})();
 updateClock();renderMemories();updateMetrics();renderMessages();
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  const SUPABASE_URL = "https://jtxsibjspbbcxoefxffr.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+ src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script 
 <script>
  </body>
     </html>
