@@ -505,37 +505,7 @@ document.getElementById("forgotPasswordBtn").onclick = async () => {
 };
 
 document.getElementById("signUpBtn").onclick = async () => {
-    const email = document.getElementById("authEmail").value.trim();
-    const password = document.getElementById("authPassword").value;
-
-    if (!email || !password) {
-        showAuthMessage("Enter an email and choose a password.");
-        return;
-    }
-
-    if (password.length < 6) {
-        showAuthMessage("Use a password with at least 6 characters.");
-        return;
-    }
-
-    showAuthMessage("Creating your account...");
-
-    const { data, error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-        options: {
-            emailRedirectTo: window.location.origin
-        }
-    });
-
-    if (error) {
-        showAuthMessage(error.message);
-        return;
-    }
-
-    if (data.session) {
-        await refreshAuth();
-    } else {
+    const 
         showAuthMessage(
             "Account created! Check your email for a confirmation link, if required."
         );
