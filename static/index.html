@@ -416,7 +416,60 @@ function readJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key)|
 function saveChats(){localStorage.setItem("suhana_chats",JSON.stringify(chats));localStorage.setItem("suhana_active_chat",activeChatId);updateMetrics()}
 function saveMemories(){localStorage.setItem("suhana_memories",JSON.stringify(memories));renderMemories();updateMetrics()}
 function updateMetrics(){$("memoryCount").textContent=String(memories.length).padStart(2,"0")+" ITEMS";$("memMeter").style.setProperty("--w",Math.min(100,memories.length*8+8)+"%");$("chatCount").textContent=chats.length+" SESSIONS";$("sessionValue").textContent=String(chats.length).padStart(2,"0");$("sessionMeter").style.setProperty("--w",Math.min(100,chats.length*12+12)+"%");$("activeSession").textContent=activeChat.title.slice(0,16).toUpperCase();$("chatMeter").style.setProperty("--w",Math.min(100,history.length*5+10)+"%")}
-function renderMemories(){const short=$("memoryList"),full=$("fullMemoryList");short.replaceChildren();full.replaceChildren();if(!memories.length){const e=document.createElement("div");e.className="memory-item empty";e.textContent="No saved memories yet.";short.append(e);full.append(e.cloneNode(true));return}memories.slice(-4).reverse().forEach((m,i)=>{const d=document.createElement("div");d.className="memory-item";d.textContent="◈ "+m;short.append(d)});memories.forEach((m,i)=>{const row=document.createElement("div");row.className="history-row";const txt=document.createElement("div");txt.className="memory-item";txt.style.flex="1";txt.textContent=m;const del=document.createElement("button");del.className="hud-btn";del.textContent="×";del.onclick=()=>{memories.splice(i,1);saveMemories()};row.append(txt,del);full.append(row)})}
+function renderMemories() {
+    const short = $("memoryList");
+    const full = $("fullMemoryList");
+
+    short.replaceChildren();
+    full.replaceChildren();
+
+    if (!memories.length) {
+        const empty = document.createElement("div");
+        empty.className = "memory-item empty";
+        empty.textContent = "No saved memories yet.";
+
+        short.append(empty);
+        full.append(empty.cloneNode(true));
+        return;
+    }
+
+    // Show the four most recent memories in the dashboard.
+    memories.slice(-4).reverse().forEach(memory => {
+        const item = document.createElement("div");
+        item.className = "memory-item";
+        item.textContent = "◈ " + memory;
+        short.append(item);
+    });
+
+    // Show all memories with a delete button.
+    memories.forEach((memory, index) => {
+        const row = document.createElement("div");
+        row.className = "history-row";
+
+        const text = document.createElement("div");
+        text.className = "memory-item";
+        text.style.flex = "1";
+        text.textContent = memory;
+
+        const del = document.createElement("button");
+        del.className = "hud-btn";
+        del.textContent = "×";
+        del.title = "Delete this memory";
+        del.setAttribute("aria-label", "Delete memory");
+
+        del.onclick = () => {
+            if (!confirm("Delete this saved memory?\n\n" + memory)) {
+                return;
+            }
+
+            memories.splice(index, 1);
+            saveMemories();
+        };
+
+        row.append(text, del);
+        full.append(row);
+    });
+}
 function addMessage(text,role,isError=false){$("welcomeChat")?.remove();const el=document.createElement("div");el.className="message "+role+(isError?" error":"");el.textContent=text;messagesEl.append(el);messagesEl.scrollTop=messagesEl.scrollHeight;return el}
 function renderMessages(){messagesEl.replaceChildren();if(!history.length){const w=document.createElement("div");w.className="welcome-chat";w.id="welcomeChat";w.innerHTML="<b>CHANNEL OPEN</b>I'm here. Send a message to begin our conversation.<br><span style='color:#397b85'>TEXT // VOICE INPUT // SPOKEN REPLIES</span>";messagesEl.append(w)}else history.forEach(m=>{if(m&&["user","assistant"].includes(m.role)&&typeof m.content==="string")addMessage(m.content,m.role)})}
 function saveMemory(text){const clean=text.trim();if(!clean)return false;memories.push(clean);if(memories.length>50)memories=memories.slice(-50);saveMemories();return true}
@@ -461,4 +514,4 @@ updateClock();renderMemories();updateMetrics();renderMessages();
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 </script>
  </body>
-         </html>
+    </html>
