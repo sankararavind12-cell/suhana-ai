@@ -1,752 +1,389 @@
-<!doctype html>
-<html lang="en">  
- <head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">  
-  <meta name="theme-color" content="#010612">  
-  <title>SUHANA // CYBER AI INTERFACE</title>  
-  <style>  
-:root{--cyan:#00d8ff;--cyan-glow:#00d8ff99;--bg:#010612;--panel:rgba(2,11,23,.88);--line:rgba(0,216,255,.35);--muted:#387c9a;--white:#d2f7ff;--green:#00ffb7;--red:#ff3366}  
-*{box-sizing:border-box}  
-html,body{margin:0;min-height:100%;background:var(--bg);color:var(--white);font-family:Segoe UI,Roboto,Arial,sans-serif}  
-body{min-height:100dvh;overflow-x:hidden;background:radial-gradient(circle at 50% 50%,#031830 0,#010916 55%,#000308 90%);letter-spacing:.2px}  
-body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(rgba(0,216,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,216,255,.025) 1px,transparent 1px);background-size:22px 22px}  
-button,input,textarea{font:inherit}  
-button{cursor:pointer}  
-button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-shadow:0 0 10px var(--cyan)}  
-
-.app{position:relative;z-index:1;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;max-width:1920px;margin:auto}  
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line);background:rgba(1,8,18,.92);box-shadow:0 4px 20px #00d8ff12;min-height:64px}  
-.brand{display:flex;align-items:center;gap:12px;min-width:0}  
-.brandmark{width:40px;height:40px;border:1px solid var(--cyan);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-weight:900;font-size:20px;text-shadow:0 0 10px var(--cyan);box-shadow:inset 0 0 12px #00d8ff33,0 0 15px #00d8ff33;position:relative}  
-.brandmark:after{content:"";position:absolute;inset:4px;border:1px dashed #00d8ffaa;border-radius:50%;animation:spin 20s linear infinite}  
-.brand h1{font-size:17px;letter-spacing:5px;margin:0;color:var(--cyan);text-shadow:0 0 10px #00d8ff77}  
-.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;margin-top:2px}  
-
-.topstats{display:flex;align-items:center;gap:18px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}  
-.stat strong{display:block;color:var(--cyan);font-size:14px;letter-spacing:1px;margin-top:2px}  
-.live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:5px}  
-.top-actions{display:flex;gap:6px}  
-.hud-btn{border:1px solid var(--line);background:#021122;color:var(--cyan);padding:8px 10px;font-size:10px;letter-spacing:1px;text-transform:uppercase;border-radius:2px;transition:.2s}  
-.hud-btn:hover{background:#062646;box-shadow:0 0 12px #00d8ff44}  
-
-.dashboard{display:grid;grid-template-columns:300px minmax(380px,1fr) 300px;gap:12px;padding:12px;min-height:0}  
-.column{display:flex;flex-direction:column;gap:12px;min-width:0}  
-.panel{position:relative;border:1px solid var(--line);background:linear-gradient(135deg,rgba(2,13,26,.9),rgba(1,6,14,.85));box-shadow:inset 0 0 18px #00d8ff08,0 0 10px #00d8ff08;border-radius:2px;overflow:hidden}  
-.panel:before{content:"";position:absolute;left:0;top:0;width:20px;height:2px;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}  
-.panel-title{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #00d8ff22;font-size:9px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}  
-.panel-title span:last-child{color:var(--muted);font-size:8px;letter-spacing:1px}  
-.panel-body{padding:10px}  
-.mini-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}  
-.meter{height:3px;background:#04172b;margin:5px 0 8px;overflow:hidden;border-radius:1px}  
-.meter i{display:block;height:100%;background:linear-gradient(90deg,#0055ff,var(--cyan));box-shadow:0 0 6px var(--cyan);width:var(--w,65%)}  
-.metric-line{display:flex;justify-content:space-between;gap:6px;font-size:10px;margin:8px 0 3px}  
-.metric-line strong{color:var(--cyan);font-weight:500}  
-
-/* EXACT ROBOTIC FACE HUD OVERLAY PANEL */  
-.center-column{display:flex;flex-direction:column;gap:12px;position:relative}  
-.core-area{min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;position:relative;overflow:hidden;border:2px solid var(--cyan);box-shadow:inset 0 0 40px #00d8ff33,0 0 25px #00d8ff22;border-radius:4px;padding:20px}  
-.core-avatar-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1400&auto=format&fit=crop') center/cover no-repeat;filter:drop-shadow(0 0 40px #00d8ff99) hue-rotate(185deg) saturate(240%);opacity:.96;z-index:1}  
-.core-avatar-overlay{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,transparent 5%,rgba(1,6,18,.75) 85%);z-index:2;pointer-events:none}  
-
-/* Holographic UI Frames overlaying the robotic face */  
-.hud-frame-top-left{position:absolute;top:10px;left:10px;border:1px dashed #00d8ff66;padding:8px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6);letter-spacing:1px}  
-.hud-frame-top-right{position:absolute;top:10px;right:10px;border:1px dashed #00d8ff66;padding:8px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6);letter-spacing:1px;text-align:right}  
-.hud-frame-bottom-left{position:absolute;bottom:50px;left:10px;border:1px solid #00d8ff44;padding:6px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6)}  
-.hud-frame-bottom-right{position:absolute;bottom:50px;right:10px;border:1px solid #00d8ff44;padding:6px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6)}  
-
-.core-area > *:not(.core-avatar-bg):not(.core-avatar-overlay):not([class*="hud-frame"]){z-index:3}  
-
-.core-heading{text-align:center;margin-bottom:6px;z-index:3}  
-.core-heading .eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted)}  
-.core-heading h2{font-size:clamp(18px,2.2vw,26px);letter-spacing:5px;color:var(--cyan);margin:4px 0;text-shadow:0 0 14px #00d8ffaa}  
-
-.core-caption{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:6px;z-index:3}  
-.core-caption strong{color:var(--green);font-weight:600}  
-
-/* CHAT & CONTROLS */  
-.chat-panel{display:flex;flex-direction:column;min-height:340px;flex:1}  
-.chat-messages{padding:12px;display:flex;flex-direction:column;gap:8px;overflow:auto;max-height:420px;min-height:150px;scrollbar-color:#0055ff #021122;scrollbar-width:thin}  
-.welcome-chat{text-align:center;padding:20px 10px;color:var(--muted);font-size:11px;line-height:1.7}  
-.welcome-chat b{display:block;font-size:16px;color:var(--cyan);letter-spacing:2px;margin-bottom:5px}  
-.message{max-width:95%;padding:10px 12px;border:1px solid #00d8ff35;background:#021529;font-size:11px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:2px}  
-.message.user{align-self:flex-end;background:#052442;border-color:#00d8ff77}  
-.message.assistant{align-self:flex-start}  
-.message.error{border-color:var(--red);color:#ffb9c0}  
-.chat-compose{display:flex;gap:6px;padding:8px;border-top:1px solid #00d8ff28;background:#010814}  
-#input{flex:1;min-width:0;resize:vertical;min-height:40px;max-height:100px;background:#021325;border:1px solid #00d8ff40;color:var(--white);padding:10px;font-size:11px;outline:none;border-radius:2px}  
-#input::placeholder{color:#387c9a}  
-.icon-btn{width:40px;min-width:40px;height:40px;border:1px solid var(--line);background:#041a2e;color:var(--cyan);font-size:15px;border-radius:2px}  
-.icon-btn:hover{background:#083054}  
-#send{background:var(--cyan);color:#010814;font-weight:900}  
-.statusline{display:flex;justify-content:space-between;gap:6px;padding:6px 10px;font-size:8px;letter-spacing:1px;color:var(--muted);border-top:1px solid #00d8ff18}  
-.statusline strong{color:var(--green);font-weight:500}  
-
-/* SIDE PANELS & TELEMETRY */  
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}  
-.quick{min-height:58px;background:#010d1b;border:1px solid #00d8ff30;color:var(--muted);text-align:left;padding:8px;font-size:9px;border-radius:2px}  
-.quick b{display:block;color:var(--cyan);font-size:15px;margin-bottom:3px;font-weight:400}  
-.quick:hover{border-color:var(--cyan);color:var(--white)}  
-.memory-list{display:flex;flex-direction:column;gap:5px}  
-.memory-item{font-size:9px;color:#9bf4ff;border-left:2px solid var(--cyan);padding:4px 6px;background:#01101f;overflow-wrap:anywhere;border-radius:0 2px 2px 0}  
-.memory-item.empty{color:var(--muted)}  
-.graph{height:42px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #00d8ff44;padding:3px 0}  
-.graph i{flex:1;height:var(--h);background:linear-gradient(to top,#0044cc,#00d8ff);opacity:.85;min-width:2px;border-radius:1px 1px 0 0}  
-.bottomline{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 16px;color:#387c9a;font-size:8px;letter-spacing:1px;border-top:1px solid var(--line);background:#00040c}  
-.bottomline strong{color:var(--cyan);font-weight:500}  
-
-/* MODALS */  
-.modal-backdrop{position:fixed;inset:0;background:#000b;z-index:20;display:none;place-items:center;padding:14px}  
-.modal{width:min(520px,100%);max-height:80dvh;overflow:auto;background:#021122;border:1px solid var(--cyan);box-shadow:0 0 30px #00d8ff44;padding:16px;border-radius:4px}  
-.modal h3{color:var(--cyan);letter-spacing:2px;font-size:12px}  
-.history-row{display:flex;gap:6px;margin:6px 0}  
-.history-row button:first-child{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis}  
-
-@keyframes spin{to{transform:rotate(360deg)}}  
-@keyframes pulse{50%{transform:scale(1.06);filter:brightness(1.4)}}  
-@media(max-width:1100px){.dashboard{grid-template-columns:1fr 1fr}.right-column{grid-column:1/-1}}  
-@media(max-width:700px){.dashboard{display:flex;flex-direction:column;padding:8px}}  
-</style>  
- </head>  
- <body>  
-  <div class="app">  
-   <header class="topbar">  
-    <div class="brand">  
-     <div class="brandmark">S</div>  
-     <div>  
-      <h1>SUHANA</h1>  
-      <small>CYBERNETIC AVATAR MATRIX // MK-II</small>  
-     </div>  
-    </div>  
-    <div class="topstats">  
-     <div class="stat">  
-      <span><i class="live-dot"></i>SYSTEM</span><strong>ONLINE</strong>  
-     </div>  
-     <div class="stat">  
-      <span>STATUS</span><strong id="authStatusBadge">GUEST</strong>  
-     </div>  
-     <div class="stat">  
-      <span>LOCAL TIME</span><strong id="topClock">--:--:--</strong>  
-     </div>  
-     <div class="stat">  
-      <span>DATE</span><strong id="topDate">---</strong>  
-     </div>  
-    </div>  
-    <div class="top-actions">  
-     <button class="hud-btn" id="openAuthBtn">SIGN IN</button>  
-     <button class="hud-btn" id="newChat">＋ New session</button>  
-     <button class="hud-btn" id="historyButton">▤ History</button>  
-    </div>  
-   </header>  
-
-   <main class="dashboard">  
-    <aside class="column">  
-     <section class="panel">  
-      <div class="panel-title">  
-       <span>System diagnostics</span><span>SYS.01</span>  
-      </div>  
-      <div class="panel-body">  
-       <div class="metric-line">  
-        <span>Neural load</span><strong id="cpuText">OPTIMAL</strong>  
-       </div>  
-       <div class="meter">  
-        <i style="--w:72%" id="cpuMeter"></i>  
-       </div>  
-       <div class="metric-line">  
-        <span>Memory bank</span><strong id="memoryCount">00 ITEMS</strong>  
-       </div>  
-       <div class="meter">  
-        <i style="--w:25%" id="memMeter"></i>  
-       </div>  
-       <div class="metric-line">  
-        <span>Session buffer</span><strong id="chatCount">01 SESSION</strong>  
-       </div>  
-       <div class="meter">  
-        <i style="--w:40%" id="chatMeter"></i>  
-       </div>  
-      </div>  
-     </section>  
-
-     <section class="panel">  
-      <div class="panel-title">  
-       <span>Command deck</span><span>CMD.02</span>  
-      </div>  
-      <div class="panel-body">  
-       <div class="quick-grid">  
-        <button class="quick" id="focusChat"><b>⌁</b>Open chat</button>  
-        <button class="quick" id="toggleVoice"><b id="voiceIcon">◖))</b>Voice output</button>  
-        <button class="quick" id="openMemories"><b>◈</b>Memory bank</button>  
-        <button class="quick" id="clearChat"><b>×</b>Clear session</button>  
-       </div>  
-      </div>  
-     </section>  
-
-     <section class="panel">  
-      <div class="panel-title">  
-       <span>Saved memory bank</span><span id="memBadge">LOCAL</span>  
-      </div>  
-      <div class="panel-body">  
-       <div class="memory-list" id="memoryList">  
-        <div class="memory-item empty">No saved memories yet.</div>  
-       </div>  
-       <div style="margin-top:8px;color:var(--muted);font-size:8px;line-height:1.4">Stored securely. Use “Remember that…” in chat to save.</div>  
-      </div>  
-     </section>  
-    </aside>  
-
-    <!-- CENTRAL ROBOTIC FACE AVATAR PANEL WITH HOLOGRAPHIC HUD -->  
-    <section class="column center-column">  
-     <section class="panel core-area">  
-      <div class="core-avatar-bg"></div>  
-      <div class="core-avatar-overlay"></div>  
-      
-      <!-- Holographic UI frames matching your image asset layout -->  
-      <div class="hud-frame-top-left">SYS_DIAG: 99.4%<br>CORE_SYNC: ACTIVE</div>  
-      <div class="hud-frame-top-right">NODE_ID: 0x8F2<br>LATENCY: 12MS</div>  
-      <div class="hud-frame-bottom-left">NEURAL MAPPING // ONLINE</div>  
-      <div class="hud-frame-bottom-right">STATUS: SECURE</div>  
-
-      <div class="core-heading">  
-       <div class="eyebrow">CYBERNETIC AVATAR // ACTIVE</div>  
-       <h2>SUHANA NEURAL CORE</h2>  
-      </div>  
-      <div class="core-caption">  
-       <strong><i class="live-dot"></i>AVATAR MATRIX ONLINE</strong> &nbsp; // &nbsp; ALL SYSTEMS STABLE  
-      </div>  
-     </section>  
-
-     <section class="panel chat-panel" id="chatPanel">  
-      <div class="panel-title">  
-       <span>Secure communication // Suhana</span><span id="chatStatus">READY</span>  
-      </div>  
-      <div class="chat-messages" id="chatMessages">  
-       <div class="welcome-chat" id="welcomeChat">  
-        <b>CHANNEL OPEN</b>Avatar matrix active. Send a message to begin.  
-        <br>  
-        <span style="color:#387c9a">TEXT // VOICE INPUT // SPOKEN REPLIES</span>  
-       </div>  
-      </div>  
-      <form class="chat-compose" id="form">  
-       <textarea id="input" rows="1" maxlength="8000" placeholder="Transmit message to Suhana..." aria-label="Your message" required></textarea>  
-       <button class="icon-btn" id="voice" type="button" title="Toggle spoken replies" aria-label="Toggle spoken replies">◖))</button>  
-       <button class="icon-btn" id="mic" type="button" title="Voice input" aria-label="Voice input">🎙</button>  
-       <button class="icon-btn" id="send" type="submit" aria-label="Send message">➤</button>  
-      </form>  
-      <div class="statusline">  
-       <span id="status">SYSTEM READY</span><span><strong>● ENCRYPTED HUD</strong> // NEURAL NET</span>  
-      </div>  
-     </section>  
-    </section>  
-
-    <aside class="column right-column">  
-     <section class="panel">  
-      <div class="panel-title">  
-       <span>Chronometer</span><span>LOCAL</span>  
-      </div>  
-      <div class="panel-body" style="text-align:center">  
-       <div class="big-clock" id="mainClock" style="font-size:26px;color:var(--cyan);text-shadow:0 0 10px #00d8ff66;letter-spacing:2px">--:--:--</div>  
-       <div class="date-text" id="mainDate" style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:3px">LOADING DATE</div>  
-       <div class="wave" id="wave" style="margin-top:8px"></div>  
-      </div>  
-     </section>  
-
-     <section class="panel">  
-      <div class="panel-title">  
-       <span>Telemetry monitor</span><span>LIVE STREAM</span>  
-      </div>  
-      <div class="panel-body">  
-       <div class="metric-line">  
-         <span>Activity spike</span><strong id="activityValue">68%</strong>  
-       </div>  
-       <div class="graph" id="activityGraph"></div>  
-       <div class="metric-line">  
-        <span>API status</span><strong id="apiStatus">CONNECTED</strong>  
-       </div>  
-      </div>  
-     </section>  
-
-     <section class="panel">  
-      <div class="panel-title">  
-       <span>Environment</span><span>GEO-SYNC</span>  
-      </div>  
-      <div class="panel-body">  
-       <div style="display:flex;align-items:center;justify-content:space-between">  
-        <div>  
-         <div class="mini-label">Weather service</div>  
-         <div class="temp" id="temp" style="font-size:24px;color:var(--cyan)">--°</div>  
-         <div class="weather-note" id="weatherNote" style="font-size:9px;color:var(--muted);margin-top:3px">Weather telemetry standby.</div>  
-        </div>  
-        <div class="weather-icon" id="weatherIcon" style="font-size:28px;color:var(--cyan)">◉</div>  
-       </div>  
-       <button class="hud-btn" id="weatherButton" style="margin-top:10px;width:100%">Load local telemetry</button>  
-      </div>  
-     </section>  
-
-     <section class="panel">  
-      <div class="panel-title">  
-       <span>Storage / session</span><span>LOCAL</span>  
-      </div>  
-      <div class="panel-body">  
-       <div class="metric-line">  
-        <span>Saved sessions</span><strong id="sessionValue">01</strong>  
-       </div>  
-       <div class="meter">  
-        <i style="--w:35%" id="sessionMeter"></i>  
-       </div>  
-       <div class="metric-line">  
-        <span>Memory privacy</span><strong>ENCRYPTED</strong>  
-       </div>  
-      </div>  
-     </section>  
-    </aside>  
-   </main>  
-
-   <footer class="bottomline">  
-    <span>SUHANA AI <strong>// CYBERNETIC AVATAR MATRIX</strong></span>  
-    <span>HUD INTERFACE <strong>MK-II</strong></span>  
-    <span>LOCAL DEVICE // <strong>SECURE</strong></span>  
-   </footer>  
-  </div>  
-
-  <div class="modal-backdrop" id="historyModal">  
-   <div class="modal">  
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">  
-     <h3>CONVERSATION ARCHIVE</h3>  
-     <button class="hud-btn" id="closeHistory">CLOSE ×</button>  
-    </div>  
-    <div id="historyList" style="margin-top:10px"></div>  
-    <button class="hud-btn" id="deleteAll" style="margin-top:10px;border-color:var(--red);color:#ff87a3">Delete all chat history</button>  
-   </div>  
-  </div>  
-
-  <div class="modal-backdrop" id="memoryModal">  
-   <div class="modal">  
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">  
-     <h3>MEMORY BANK</h3>  
-     <button class="hud-btn" id="closeMemory">CLOSE ×</button>  
-    </div>  
-    <p style="font-size:10px;color:var(--muted);line-height:1.5">Memories stored securely on this device.</p>  
-    <div id="fullMemoryList" style="margin-top:10px"></div>  
-    <button class="hud-btn" id="clearMemories" style="margin-top:10px;border-color:var(--red);color:#ff87a3">Erase all memories</button>  
-   </div>  
-  </div>  
-
-  <div class="modal-backdrop" id="authModal">  
-   <div class="modal">  
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">  
-     <h3>SUHANA ACCESS</h3>  
-     <button class="hud-btn" id="closeAuthBtn">CLOSE ×</button>  
-    </div>  
-    <p id="authMessage" style="font-size:10px;color:var(--muted);margin:8px 0">Sign in to sync your personal avatar matrix and memory.</p>  
-    <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%;padding:10px;margin:6px 0;background:#021325;color:var(--white);border:1px solid #00d8ff55;border-radius:2px">  
-    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:10px;margin:6px 0;background:#021325;color:var(--white);border:1px solid #00d8ff55;border-radius:2px">  
-    <button class="hud-btn" id="signInBtn" style="width:100%;margin-top:5px">SIGN IN</button>  
-    <button class="hud-btn" id="forgotPasswordBtn" style="width:100%;margin-top:5px">FORGOT PASSWORD</button>  
-    <button class="hud-btn" id="signUpBtn" style="width:100%;margin-top:5px">CREATE ACCOUNT</button>  
-    <button class="hud-btn" id="signOutBtn" style="width:100%;margin-top:5px;display:none;border-color:var(--red);color:#ff87a3">SIGN OUT</button>  
-   </div>  
-  </div>  
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
-  <script>  
-   const SUPABASE_URL = "https://jtxsibjspbbcxoefxffr.supabase.co";  
-   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XNWenU3XsiF56YBg9UEueQ_JQFn8wBG";  
-   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);  
-   
-   const $=id=>document.getElementById(id);  
-   const authModal = document.getElementById("authModal");  
-   const authMessage = document.getElementById("authMessage");  
-
-   function showAuthMessage(message) {
-       authMessage.textContent = message;
-   }
-
-   let isPasswordRecovery = false;
-
-   function enterRecoveryMode() {
-       isPasswordRecovery = true;
-       authModal.style.display = "grid";
-       showAuthMessage("Enter your new password below.");
-       document.getElementById("authEmail").style.display = "none";
-       document.getElementById("authPassword").value = "";
-       document.getElementById("signInBtn").textContent = "UPDATE PASSWORD";
-       document.getElementById("forgotPasswordBtn").style.display = "none";
-       document.getElementById("signUpBtn").style.display = "none";
-       document.getElementById("signOutBtn").style.display = "none";
-   }
-
-   const urlParams = new URLSearchParams(window.location.search);
-   const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-   if (urlParams.get("reset") === "1" || urlParams.has("code") || hashParams.get("type") === "recovery") {
-       enterRecoveryMode();
-   }
-
-   async function refreshAuth() {
-       if (isPasswordRecovery) {
-           enterRecoveryMode();
-           return;
-       }
-
-       const { data, error } = await supabaseClient.auth.getSession();
-
-       if (error) {
-           showAuthMessage("Unable to check your session. Please refresh.");
-           authModal.style.display = "grid";
-           return;
-       }
-
-       const signedIn = !!data.session;
-       
-       const badge = document.getElementById("authStatusBadge");
-       if (badge) {
-           badge.textContent = signedIn ? "SECURE" : "GUEST";
-           badge.style.color = signedIn ? "var(--green)" : "var(--cyan)";
-       }
-
-       document.getElementById("signOutBtn").style.display =
-           signedIn ? "block" : "none";
-
-       authModal.style.display = signedIn ? "none" : "grid";
-
-       if (!signedIn) {
-           showAuthMessage("Sign in to access your personal memory.");
-       }
-   }
-
-   document.getElementById("openAuthBtn").addEventListener("click", () => {
-       authModal.style.display = "grid";
-   });
-
-   document.getElementById("closeAuthBtn").addEventListener("click", () => {
-       authModal.style.display = "none";
-   });
-
-   document.getElementById("signInBtn").onclick = async () => {
-       const email = document.getElementById("authEmail").value.trim();
-       const password = document.getElementById("authPassword").value;
-
-       if (!password) {
-           showAuthMessage(
-               isPasswordRecovery
-                   ? "Enter your new password."
-                   : "Enter your password."
-           );
-           return;
-       }
-
-       if (isPasswordRecovery) {
-           if (password.length < 6) {
-               showAuthMessage("Use at least 6 characters.");
-               return;
-           }
-
-           showAuthMessage("Updating your password...");
-
-           const { error } = await supabaseClient.auth.updateUser({
-               password: password
-           });
-
-           if (error) {
-               showAuthMessage(error.message);
-               return;
-           }
-
-           isPasswordRecovery = false;
-           showAuthMessage("Password updated successfully! Please sign in.");
-
-           document.getElementById("authEmail").style.display = "";
-           document.getElementById("authPassword").value = "";
-           document.getElementById("signInBtn").textContent = "SIGN IN";
-           document.getElementById("forgotPasswordBtn").style.display = "";
-           document.getElementById("signUpBtn").style.display = "";
-
-           window.history.replaceState({}, document.title, window.location.pathname);
-
-           await supabaseClient.auth.signOut();
-           await refreshAuth();
-           return;
-       }
-
-       if (!email) {
-           showAuthMessage("Enter your email address.");
-           return;
-       }
-
-       showAuthMessage("Signing in...");
-
-       const { error } = await supabaseClient.auth.signInWithPassword({
-           email,
-           password
-       });
-
-       if (error) {
-           showAuthMessage(error.message);
-           return;
-       }
-
-       await refreshAuth();
-       authModal.style.display = "none";
-   };
-
-   document.getElementById("forgotPasswordBtn").onclick = async () => {
-       const email = document.getElementById("authEmail").value.trim();
-       if (!email) {  
-           showAuthMessage("Enter your email address first.");  
-           return;  
-       }  
-       showAuthMessage("Sending password reset email...");  
-       const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-           redirectTo: window.location.origin + "/?reset=1"
-       });  
-       if (error) {  
-           showAuthMessage(error.message);  
-           return;  
-       }  
-       showAuthMessage("Password reset email sent! Check your inbox.");
-   };
-
-   document.getElementById("signUpBtn").onclick = async () => {
-       const email = document.getElementById("authEmail").value.trim();
-       const password = document.getElementById("authPassword").value;
-       if (!email || !password) {  
-           showAuthMessage("Enter an email and choose a password.");  
-           return;  
-       }  
-       if (password.length < 6) {  
-           showAuthMessage("Use a password with at least 6 characters.");  
-           return;  
-       }  
-       showAuthMessage("Creating your account...");  
-       
-       const { data, error } = await supabaseClient.auth.signUp({ 
-           email, 
-           password, 
-           options: { 
-               emailRedirectTo: window.location.origin 
-           } 
-       });  
-
-       if (error) {  
-           showAuthMessage(error.message);  
-           return;  
-       }  
-
-       if (data.session) {  
-           await refreshAuth();  
-           authModal.style.display = "none";
-       } else {  
-           const { error: signInError } = await supabaseClient.auth.signInWithPassword({ email, password });
-           if (!signInError) {
-               await refreshAuth();
-               authModal.style.display = "none";
-           } else {
-               showAuthMessage("Account created successfully! Check your Supabase settings if confirmation is required.");
-           }
-       }
-   };
-
-   document.getElementById("signOutBtn").onclick = async () => {
-       showAuthMessage("Signing out...");
-       const { error } = await supabaseClient.auth.signOut();  
-       if (error) {  
-           showAuthMessage(error.message);  
-           return;  
-       }  
-       await refreshAuth();
-   };
-
-   supabaseClient.auth.onAuthStateChange((event, session) => {
-       if (event === "PASSWORD_RECOVERY") {
-           enterRecoveryMode();
-           return;
-       }
-
-       if (isPasswordRecovery) {
-           return;
-       }
-
-       const signedIn = !!session;
-
-       const badge = document.getElementById("authStatusBadge");
-       if (badge) {
-           badge.textContent = signedIn ? "SECURE" : "GUEST";
-           badge.style.color = signedIn ? "var(--green)" : "var(--cyan)";
-       }
-
-       document.getElementById("signOutBtn").style.display =
-           signedIn ? "block" : "none";
-
-       authModal.style.display = signedIn ? "none" : "grid";
-
-       if (!signedIn) {
-           showAuthMessage("Sign in to access your personal memory.");
-       }
-   });
-
-   refreshAuth();
-
-   const form=$("form"),input=$("input"),messagesEl=$("chatMessages"),statusEl=$("status"),send=$("send");
-   let chats=readJSON("suhana_chats",[]);if(!Array.isArray(chats))chats=[];
-   const oldHistory=readJSON("suhana_history",[]);
-   if(!chats.length)chats.push({id:Date.now().toString(),title:"Previous chat",messages:Array.isArray(oldHistory)?oldHistory:[],updatedAt:Date.now()});
-   let activeChatId=localStorage.getItem("suhana_active_chat");
-   let activeChat=chats.find(c=>c.id===activeChatId)||chats[0];activeChatId=activeChat.id;
-   if(!Array.isArray(activeChat.messages))activeChat.messages=[];
-   let history=activeChat.messages;
-   let memories=readJSON("suhana_memories",[]);if(!Array.isArray(memories))memories=[];
-   
-   function readJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
-   function saveChats(){localStorage.setItem("suhana_chats",JSON.stringify(chats));localStorage.setItem("suhana_active_chat",activeChatId);updateMetrics()}
-   function saveMemories(){localStorage.setItem("suhana_memories",JSON.stringify(memories));renderMemories();updateMetrics()}
-   function updateMetrics(){$("memoryCount").textContent=String(memories.length).padStart(2,"0")+" ITEMS";$("memMeter").style.setProperty("--w",Math.min(100,memories.length*8+8)+"%");$("chatCount").textContent=chats.length+" SESSIONS";$("sessionValue").textContent=String(chats.length).padStart(2,"0");$("chatMeter").style.setProperty("--w",Math.min(100,history.length*5+10)+"%")}
-   
-   function renderMemories() {
-       const short = $("memoryList");
-       const full = $("fullMemoryList");
-       short.replaceChildren();  
-       full.replaceChildren();  
-       if (!memories.length) {  
-           const empty = document.createElement("div");  
-           empty.className = "memory-item empty";  
-           empty.textContent = "No saved memories yet.";  
-           short.append(empty);  
-           full.append(empty.cloneNode(true));  
-           return;  
-       }  
-       memories.slice(-4).reverse().forEach(memory => {  
-           const item = document.createElement("div");  
-           item.className = "memory-item";  
-           item.textContent = "◈ " + memory;  
-           short.append(item);  
-       });  
-       memories.forEach((memory, index) => {  
-           const row = document.createElement("div");  
-           row.className = "history-row";  
-           const text = document.createElement("div");  
-           text.className = "memory-item";  
-           text.style.flex = "1";  
-           text.textContent = memory;  
-           const del = document.createElement("button");  
-           del.className = "hud-btn";  
-           del.textContent = "×";  
-           del.title = "Delete this memory";  
-           del.onclick = () => {  
-               if (!confirm("Delete this saved memory?\n\n" + memory)) return;  
-               memories.splice(index, 1);  
-               saveMemories();  
-           };  
-           row.append(text, del);  
-           full.append(row);  
-       });
-   }
-   
-   function addMessage(text,role,isError=false){$("welcomeChat")?.remove();const el=document.createElement("div");el.className="message "+role+(isError?" error":"");el.textContent=text;messagesEl.append(el);messagesEl.scrollTop=messagesEl.scrollHeight;return el}
-   function renderMessages(){messagesEl.replaceChildren();if(!history.length){const w=document.createElement("div");w.className="welcome-chat";w.id="welcomeChat";w.innerHTML="<b>CHANNEL OPEN</b>Avatar matrix active. Send a message to begin.<br><span style='color:#387c9a'>TEXT // VOICE INPUT // SPOKEN REPLIES</span>";messagesEl.append(w)}else history.forEach(m=>{if(m&&["user","assistant"].includes(m.role)&&typeof m.content==="string")addMessage(m.content,m.role)})}
-   function saveMemory(text){const clean=text.trim();if(!clean)return false;memories.push(clean);if(memories.length>50)memories=memories.slice(-50);saveMemories();return true}
-   function setStatus(s){statusEl.textContent=s.toUpperCase();$("chatStatus").textContent=s.toUpperCase().slice(0,18)}
-   
-   async function sendMessage(raw){
-       const clean=raw.trim();
-       if(!clean||send.disabled)return;
-       addMessage(clean,"user");
-       input.value="";
-       history.push({role:"user",content:clean});
-       activeChat.messages=history;
-       if(/^remember that\s+/i.test(clean)){
-           const memory=clean.replace(/^remember that\s+/i,"").trim();
-           if(saveMemory(memory))addMessage("Saved to your local memory bank. 💙","assistant");
-           else addMessage("Tell me what you'd like me to remember.","assistant");
-           history.push({role:"assistant",content:"Saved to your local memory bank. 💙"});
-           saveChats();
-           return;
-       }
-       send.disabled=true;
-       setStatus("Suhana thinking");
-       $("apiStatus").textContent="REQUESTING";
-       const wait=addMessage("Establishing cybernetic link…","assistant");
-       try{
-           const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:clean,history:history.slice(-11,-1),memories})});
-           const data=await response.json();
-           if(!response.ok)throw new Error(data.error||"Request failed");
-           const reply=data.reply||"I couldn't create a reply.";
-           wait.textContent=reply;
-           history.push({role:"assistant",content:reply});
-           if(history.length>40)history=history.slice(-40);
-           activeChat.messages=history;
-           activeChat.updatedAt=Date.now();
-           saveChats();
-           $("apiStatus").textContent="CONNECTED";
-           setStatus("System ready");
-       }catch(e){
-           wait.textContent=(e.message||"Connection failed.")+" — check the Suhana server and try again.";
-           wait.classList.add("error");
-           $("apiStatus").textContent="OFFLINE";
-           setStatus("Connection error");
-       }finally{
-           send.disabled=false;
-           input.focus();
-       }
-   }
-
-   function startNewChat(){activeChat={id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()};chats.unshift(activeChat);activeChatId=activeChat.id;history=activeChat.messages;saveChats();renderMessages();setStatus("System ready");input.value="";input.focus()}
-   function renderHistory(){const list=$("historyList");list.replaceChildren();if(!chats.length){list.textContent="No saved conversations.";return}chats.forEach(c=>{const row=document.createElement("div");row.className="history-row";const open=document.createElement("button");open.className="hud-btn";open.textContent=c.title||"New chat";open.onclick=()=>{activeChat=c;activeChatId=c.id;history=activeChat.messages||[];saveChats();renderMessages();$("historyModal").style.display="none";setStatus("System ready")};const del=document.createElement("button");del.className="hud-btn";del.textContent="DELETE";del.style.color="var(--red)";del.onclick=()=>{if(!confirm("Delete this conversation?"))return;chats=chats.filter(x=>x.id!==c.id);if(!chats.length)chats.push({id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()});if(activeChatId===c.id){activeChat=chats[0];activeChatId=activeChat.id;history=activeChat.messages||[];renderMessages()}saveChats();renderHistory()};row.append(open,del);list.append(row)})}
-   
-   $("newChat").onclick=startNewChat;
-   $("historyButton").onclick=()=>{renderHistory();$("historyModal").style.display="grid"};
-   $("closeHistory").onclick=()=>$("historyModal").style.display="none";
-   $("deleteAll").onclick=()=>{if(!confirm("Delete all chat history?"))return;chats=[{id:Date.now().toString(),title:"New chat",messages:[],updatedAt:Date.now()}];activeChat=chats[0];activeChatId=activeChat.id;history=activeChat.messages;saveChats();renderMessages();renderHistory()};
-   $("focusChat").onclick=()=>{ $("chatPanel").scrollIntoView({behavior:"smooth",block:"center"});input.focus()};
-   $("openMemories").onclick=()=>$("memoryModal").style.display="grid";
-   $("closeMemory").onclick=()=>$("memoryModal").style.display="none";
-   $("clearMemories").onclick=()=>{if(!confirm("Erase all memories?"))return;memories=[];saveMemories()};
-   
-   $("weatherButton").onclick=async()=>{
-       const b=$("weatherButton");
-       b.disabled=true;
-       b.textContent="LOADING…";
-       try{
-           const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=9.98&longitude=76.28&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code&timezone=Asia%2FKolkata");
-           if(!r.ok)throw Error("Weather unavailable");
-           const d=await r.json();
-           const c=d.current;
-           $("temp").textContent=Math.round(c.temperature_2m)+"°C";
-           $("weatherNote").textContent="Feels "+Math.round(c.apparent_temperature)+"°C · Humidity "+c.relative_humidity_2m+"%";
-           b.textContent="REFRESH TELEMETRY";
-       }catch(e){
-           $("weatherNote").textContent="Could not load weather telemetry.";
-           b.textContent="RETRY";
-       }finally{
-           b.disabled=false;
-       }
-   };
-
-   const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
-   let voiceEnabled=true,recognition=null,isListening=false,finalTranscript="";
-   $("toggleVoice").onclick=()=>{voiceEnabled=!voiceEnabled;$("voiceIcon").textContent=voiceEnabled?"◖))":"MUTE";};
-   $("voice").onclick=()=>{$("toggleVoice").click()};
-
-   if(SpeechAPI){
-       recognition=new SpeechAPI();
-       recognition.lang="en-IN";
-       recognition.continuous=false;
-       recognition.interimResults=true;
-       recognition.onstart=()=>{isListening=true;finalTranscript="";input.value="";$("mic").textContent="■";setStatus("Listening")};
-       recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalTranscript+=t+" ";else interim+=t}input.value=(finalTranscript+interim).trim()};
-       recognition.onerror=e=>setStatus("Microphone error");
-       recognition.onend=()=>{isListening=false;$("mic").textContent="🎙";const t=finalTranscript.trim();if(t){input.value=t;sendMessage(t)}else setStatus("System ready")};
-       $("mic").onclick=()=>{if(isListening)recognition.stop();else try{recognition.start()}catch{setStatus("Mic retry")}};
-   }else{$("mic").onclick=()=>setStatus("Voice not supported")}
-
-   form.addEventListener("submit",e=>{e.preventDefault();sendMessage(input.value)});
-   input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
-   
-   function updateClock(){const now=new Date();const t=now.toLocaleTimeString("en-GB",{hour12:false});$("topClock").textContent=t;$("mainClock").textContent=t;$("topDate").textContent=now.toLocaleDateString("en-GB",{day:"2-digit",month:"short"}).toUpperCase();$("mainDate").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",year:"numeric"}).toUpperCase()}
-   function bars(id,count){const el=$(id);for(let i=0;i<count;i++){const b=document.createElement("i");b.style.setProperty("--h",(15+Math.random()*80)+"%");el.append(b)}}
-   
-   bars("wave",28);bars("activityGraph",26);
-   setInterval(()=>{updateClock();document.querySelectorAll("#activityGraph i").forEach(b=>b.style.height=(10+Math.random()*85)+"%");$("activityValue").textContent=(45+Math.floor(Math.random()*45))+"%"},1000);
-   
-   updateClock();renderMemories();updateMetrics();renderMessages();
-  </script>  
- </body>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUHANA // Cybernetic Avatar Matrix MK-II</title>
+    <style>
+        :root {
+            --bg-color: #030712;
+            --panel-bg: rgba(3, 15, 30, 0.75);
+            --border-color: #0ea5e9;
+            --border-glow: rgba(14, 165, 233, 0.4);
+            --text-cyan: #38bdf8;
+            --text-dim: #64748b;
+            --accent-blue: #0284c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-cyan);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Top Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(2, 6, 23, 0.9);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-badge {
+            background: var(--text-cyan);
+            color: var(--bg-color);
+            padding: 2px 6px;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 20px;
+        }
+
+        .status-item span {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        /* Main Workspace */
+        .workspace {
+            display: grid;
+            grid-template-columns: 320px 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            gap: 10px;
+            padding: 10px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 10px var(--border-glow);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .panel-title {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed rgba(14, 165, 233, 0.3);
+            padding-bottom: 3px;
+        }
+
+        /* Left Column Controls */
+        .diagnostics-panel { grid-column: 1; grid-row: 1; }
+        .command-panel { grid-column: 1; grid-row: 2; }
+        .memory-panel { grid-column: 1; grid-row: 3; }
+
+        .metric-bar {
+            background: rgba(14, 165, 233, 0.1);
+            height: 6px;
+            margin: 4px 0 10px 0;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            background: var(--text-cyan);
+            height: 100%;
+            width: 85%;
+            box-shadow: 0 0 8px var(--text-cyan);
+        }
+
+        /* Center-Right Core Visualizer */
+        .core-panel {
+            grid-column: 2 / 4;
+            grid-row: 1 / 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .core-image-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .core-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.6));
+            border: 1px solid var(--border-color);
+        }
+
+        .core-overlay-text {
+            position: absolute;
+            bottom: 15px;
+            background: rgba(3, 7, 18, 0.85);
+            padding: 6px 20px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            letter-spacing: 2px;
+            box-shadow: 0 0 10px var(--border-glow);
+        }
+
+        /* Chat Panel */
+        .chat-panel {
+            grid-column: 2 / 4;
+            grid-row: 3;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-right: 5px;
+            margin-bottom: 8px;
+        }
+
+        .message {
+            padding: 6px 10px;
+            max-width: 80%;
+            border-radius: 2px;
+        }
+
+        .message.suhana {
+            background: rgba(14, 165, 233, 0.15);
+            border-left: 2px solid var(--text-cyan);
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: rgba(2, 132, 199, 0.2);
+            border-right: 2px solid #38bdf8;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 6px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-cyan);
+            padding: 6px 10px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .chat-input-area button {
+            background: var(--accent-blue);
+            color: white;
+            border: 1px solid var(--border-color);
+            padding: 0 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chat-input-area button:hover {
+            background: var(--text-cyan);
+            color: var(--bg-color);
+        }
+
+        /* Telemetry Stream ticker at bottom */
+        .ticker-bar {
+            grid-column: 1 / 4;
+            background: rgba(2, 6, 23, 0.9);
+            border-top: 1px solid var(--border-color);
+            padding: 4px 10px;
+            font-size: 10px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dim);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="brand-badge">SUHANA</div>
+            <span>CYBERNETIC AVATAR MATRIX // MK-II</span>
+        </div>
+        <div class="status-indicators">
+            <div class="status-item">SYSTEM: <span>ONLINE</span></div>
+            <div class="status-item">STATUS: <span>SECURE</span></div>
+            <div class="status-item">TIME: <span id="clock">00:00:00</span></div>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <!-- Diagnostics -->
+        <div class="panel diagnostics-panel">
+            <div class="panel-title">System Diagnostics</div>
+            <div style="font-size: 10px; display:flex; justify-content:space-between;">
+                <span>Neural Load</span><span>OPTIMAL</span>
+            </div>
+            <div class="metric-bar"><div class="metric-fill" style="width: 72%;"></div></div>
+            
+            <div style="font-size: 10px; display:flex; justify-content:space-between;">
+                <span>Memory Bank Integrity</span><span>05 ITEMS</span>
+            </div>
+            <div class="metric-bar"><div class="metric-fill" style="width: 45%;"></div></div>
+            
+            <div style="font-size: 10px; display:flex; justify-content:space-between;">
+                <span>Session Buffer</span><span>4 SESSIONS</span>
+            </div>
+            <div class="metric-bar"><div class="metric-fill" style="width: 90%;"></div></div>
+        </div>
+
+        <!-- Command Deck -->
+        <div class="panel command-panel">
+            <div class="panel-title">Command Deck</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px;">
+                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">⚡ Open Shell</div>
+                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">🔊 Voice Output</div>
+                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">🧠 Memory Bank</div>
+                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">❌ Clear Session</div>
+            </div>
+        </div>
+
+        <!-- Saved Memory Bank -->
+        <div class="panel memory-panel">
+            <div class="panel-title">Saved Memory Bank (Local)</div>
+            <div style="font-size: 10px; display: flex; flex-direction: column; gap: 4px; color: #94a3b8;">
+                <div>> User ID Confirmed: Mikul</div>
+                <div>> Discipline: Mechanical Engineering</div>
+                <div>> Encryption Key: Active-Secure</div>
+            </div>
+        </div>
+
+        <!-- Core Avatar Visualizer Panel -->
+        <div class="panel core-panel">
+            <div class="panel-title" style="width: 100%; text-align: left;">Core Matrix Visual Feed</div>
+            <div class="core-image-container">
+                <!-- Direct replacement using your cybernetic interface face image reference -->
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'><rect width='100%' height='100%' fill='%23020617'/><circle cx='400' cy='225' r='150' fill='none' stroke='%230ea5e9' stroke-width='2' opacity='0.4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2338bdf8' font-family='monospace' font-size='20'>[ SUHANA NEURAL CORE MATRIX ACTIVE ]</text></svg>" alt="Suhana Neural Core" id="coreVisual">
+            </div>
+            <div class="core-overlay-text">SUHANA NEURAL CORE // AVATAR MATRIX ONLINE</div>
+        </div>
+
+        <!-- Secure Chat Communication Panel -->
+        <div class="panel chat-panel">
+            <div class="panel-title">Secure Communication // Suhana</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message suhana">Hey Mikul. Nice to hear from you. Systems are fully stable.</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="userInput" placeholder="Transmit message to Suhana..." autocomplete="off">
+                <button onclick="sendMessage()">TRANSMIT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ticker-bar">
+        <div>TELEMETRY MONITOR: ACTIVE SPN // 67%</div>
+        <div>WEATHER SERVICE: STANDBY</div>
+        <div>ENCRYPTED HUD // NEURAL NET</div>
+    </div>
+
+    <script>
+        // Live Clock Updater
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Interactive Chat Simulation Logic
+        function sendMessage() {
+            const inputField = document.getElementById('userInput');
+            const messageText = inputField.value.trim();
+            if(!messageText) return;
+
+            const chatContainer = document.getElementById('chatMessages');
+
+            // Append User Message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerText = messageText;
+            chatContainer.appendChild(userMsg);
+
+            inputField.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Generate Automated Response simulating Suhana
+            setTimeout(() => {
+                const suhanaMsg = document.createElement('div');
+                suhanaMsg.className = 'message suhana';
+                
+                if(messageText.toLowerCase().includes('status') || messageText.toLowerCase().includes('diagnostics')) {
+                    suhanaMsg.innerText = "All telemetry indicators are optimal, Mikul. Neural load is running at standard parameters.";
+                } else {
+                    suhanaMsg.innerText = `Command received: "${messageText}". Processing data arrays through the core matrix...`;
+                }
+
+                chatContainer.appendChild(suhanaMsg);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 800);
+        }
+
+        // Allow 'Enter' key to transmit messages
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
 </html>
