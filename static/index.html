@@ -44,29 +44,16 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 .metric-line{display:flex;justify-content:space-between;gap:6px;font-size:10px;margin:8px 0 3px}  
 .metric-line strong{color:var(--cyan);font-weight:500}  
 
-/* EXACT HUMAN FACE AVATAR BACKGROUND PANEL */  
+/* EXACT ROBOTIC FACE CORE AS REQUESTED */  
 .center-column{display:flex;flex-direction:column;gap:12px;position:relative}  
 .core-area{min-height:480px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:2px solid var(--cyan);box-shadow:inset 0 0 40px #00d8ff33,0 0 25px #00d8ff22;border-radius:4px}  
-.core-avatar-bg{position:absolute;inset:0;background:url('1000286152_4.png') center/cover no-repeat;filter:drop-shadow(0 0 30px #00d8ff66) hue-rotate(185deg) saturate(220%);opacity:.88;z-index:1}  
-.core-avatar-overlay{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,transparent 15%,rgba(1,6,18,.82) 85%);z-index:2;pointer-events:none}  
+.core-avatar-bg{position:absolute;inset:0;background:url('1000286152_5.png') center/cover no-repeat;filter:drop-shadow(0 0 35px #00d8ff77) hue-rotate(185deg) saturate(230%);opacity:.92;z-index:1}  
+.core-avatar-overlay{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 10%,rgba(1,6,18,.80) 85%);z-index:2;pointer-events:none}  
 .core-area > *:not(.core-avatar-bg):not(.core-avatar-overlay){z-index:3}  
 
 .core-heading{text-align:center;margin-bottom:6px}  
 .core-heading .eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted)}  
 .core-heading h2{font-size:clamp(18px,2.2vw,26px);letter-spacing:5px;color:var(--cyan);margin:4px 0;text-shadow:0 0 14px #00d8ffaa}  
-
-.reactor{width:min(55vw,280px);min-width:180px;aspect-ratio:1;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 20px #00d8ff88)}  
-.ring{position:absolute;border-radius:50%;border:2px solid transparent}  
-.ring.r1{inset:0;border-top-color:var(--cyan);border-right-color:#0055ff;border-bottom-color:#00d8ff55;animation:spin 12s linear infinite}  
-.ring.r2{inset:8%;border:1px dashed #00d8ffbb;animation:spin 16s linear infinite reverse}  
-.ring.r3{inset:16%;border:6px solid #021a32;border-top-color:var(--cyan);border-bottom-color:#0099ff;animation:spin 6s linear infinite}  
-.ring.r4{inset:24%;border:2px solid #00d8ff88;box-shadow:inset 0 0 18px #00d8ff33,0 0 12px #00d8ff33}  
-.ring.r5{inset:32%;border:1px dashed #88ffff;animation:spin 4s linear infinite}  
-
-.core{width:34%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffffff 0,#70ffff 15%,#00aaff 40%,#003388 70%,#010916 100%);box-shadow:0 0 25px var(--cyan),0 0 60px #00d8ffaa,inset 0 0 18px #ffffffaa;animation:pulse 2.2s ease-in-out infinite}  
-
-.orbit-label{position:absolute;font-size:8px;letter-spacing:1px;color:var(--white);z-index:3;background:#010c1cee;padding:3px 6px;border:1px solid #00d8ff55;border-radius:1px;box-shadow:0 0 6px #00d8ff33}  
-.label-a{left:2%;top:26%}.label-b{right:2%;top:36%}.label-c{left:6%;bottom:20%}.label-d{right:6%;bottom:18%}  
 
 .core-caption{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:10px}  
 .core-caption strong{color:var(--green);font-weight:600}  
@@ -201,7 +188,7 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
      </section>  
     </aside>  
 
-    <!-- CENTRAL AI AVATAR HUMAN FACE CORE -->  
+    <!-- CENTRAL ROBOTIC FACE AVATAR PANEL -->  
     <section class="column center-column">  
      <section class="panel core-area">  
       <div class="core-avatar-bg"></div>  
@@ -209,18 +196,6 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
       <div class="core-heading">  
        <div class="eyebrow">CYBERNETIC AVATAR // ACTIVE</div>  
        <h2>SUHANA NEURAL CORE</h2>  
-      </div>  
-      <div class="reactor" aria-label="Animated cyan cybernetic core">  
-       <div class="ring r1"></div>  
-       <div class="ring r2"></div>  
-       <div class="ring r3"></div>  
-       <div class="ring r4"></div>  
-       <div class="ring r5"></div>  
-       <div class="core"></div>  
-       <span class="orbit-label label-a">AI MODEL 4.0</span>  
-       <span class="orbit-label label-b">REAL-TIME SYNC</span>  
-       <span class="orbit-label label-c">NEURAL LINK</span>  
-       <span class="orbit-label label-d">VOICE 2.0</span>  
       </div>  
       <div class="core-caption">  
        <strong><i class="live-dot"></i>AVATAR MATRIX ONLINE</strong> &nbsp; // &nbsp; ALL SYSTEMS STABLE  
@@ -764,4 +739,3 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 </html>
 
 ```
-
