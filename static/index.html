@@ -1,413 +1,273 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUHANA // Cybernetic Avatar Matrix MK-II</title>
-    <style>
-        :root {
-            --bg-color: #020617;
-            --panel-bg: rgba(3, 15, 30, 0.85);
-            --border-color: #0ea5e9;
-            --border-glow: rgba(14, 165, 233, 0.3);
-            --text-cyan: #38bdf8;
-            --text-dim: #64748b;
-            --accent-blue: #0284c7;
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Cookie check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+      :root {
+        color-scheme: light dark;
+      }
+ 
+      body {
+        font-family: 'Inter', Helvetica, Arial, sans-serif;
+        background: light-dark(#F8F8F7, #191919);
+        color: light-dark(#1f1f1f, #e3e3e3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+      }
+ 
+      .container {
+        background: light-dark(#FFFFFF, #1F1F1F);
+        padding: 32px;
+        border-radius: 16px;
+        border: 1px solid light-dark(#E2E3E4, #3E3E3E);
+        max-width: min(80%, 500px);
+        width: 100%;
+        color: light-dark(#2B2D31, #D4D4D4);
+      }
+ 
+      h1 {
+        font-size: 20px;
+        font-weight: 500;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        color: light-dark(#2B2D31, #D4D4D4);
+      }
+ 
+      p {
+        font-size: 14px;
+        color: light-dark(#2B2D31, #D4D4D4);
+        line-height: 21px;
+        margin: 0 0 1.5rem 0;
+      }
+ 
+      .icon {
+        margin-bottom: 1rem;
+        line-height: 0;
+      }
+ 
+      .button-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 2rem;
+      }
+ 
+      button {
+        background-color: light-dark(#fff, #323232);
+        color: light-dark(#2B2D31, #FCFCFC);
+        border: 1px solid light-dark(#E2E3E4, #3E3E3E);
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 14px;
+        line-height: 21px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-weight: 400;
+        font-family: 'Inter', Helvetica, Arial, sans-serif;
+        width: 100%;
+      }
+ 
+      button:hover {
+        background-color: light-dark(#EAEAEB, #424242);
+      }
+ 
+      .hidden {
+        display: none;
+      }
+ 
+      /* Loading Spinner Animation */
+      .spinner {
+        margin: 0 auto 1.5rem auto;
+        width: 40px;
+        height: 40px;
+        border: 4px solid light-dark(#f0f0f0, #262626);
+        border-top: 4px solid light-dark(#076eff, #87a9ff); /* Blue color */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+ 
+      .logo {
+        border-radius: 10px;
+        display: block;
+        margin: 0 auto 2rem auto;
+      }
+ 
+      .logo.hidden {
+        display: none;
+      }
+ 
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', Courier, monospace;
+        100% {
+          transform: rotate(360deg);
         }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-cyan);
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background-image: 
-                linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-
-        /* Top Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 12px;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(2, 6, 23, 0.95);
-            font-size: 11px;
-            letter-spacing: 1px;
-            flex-shrink: 0;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .brand-badge {
-            background: var(--text-cyan);
-            color: var(--bg-color);
-            padding: 2px 5px;
-            font-weight: bold;
-            font-size: 9px;
-        }
-
-        .status-indicators {
-            display: flex;
-            gap: 15px;
-        }
-
-        .status-item span {
-            color: #22c55e;
-            font-weight: bold;
-        }
-
-        /* Main Workspace Layout */
-        .workspace {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            grid-template-rows: auto auto 1fr;
-            gap: 6px;
-            padding: 6px;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 0 8px var(--border-glow);
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .panel-title {
-            font-size: 9px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-bottom: 6px;
-            border-bottom: 1px dashed rgba(14, 165, 233, 0.3);
-            padding-bottom: 2px;
-        }
-
-        /* Sidebar Panels */
-        .diagnostics-panel { grid-column: 1; grid-row: 1; }
-        .command-panel { grid-column: 1; grid-row: 2; }
-        .memory-panel { grid-column: 1; grid-row: 3; }
-
-        .metric-bar {
-            background: rgba(14, 165, 233, 0.1);
-            height: 5px;
-            margin: 2px 0 6px 0;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .metric-fill {
-            background: var(--text-cyan);
-            height: 100%;
-            width: 72%;
-            box-shadow: 0 0 6px var(--text-cyan);
-        }
-
-        /* Center Core Visualizer Panel */
-        .core-panel {
-            grid-column: 2;
-            grid-row: 1 / 3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            min-height: 0;
-        }
-
-        .core-image-container {
-            width: 100%;
-            flex: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-            border: 1px solid rgba(14, 165, 233, 0.4);
-            overflow: hidden;
-        }
-
-        .core-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.5));
-        }
-
-        .core-overlay-text {
-            margin-top: 4px;
-            background: rgba(3, 7, 18, 0.9);
-            width: 100%;
-            text-align: center;
-            padding: 4px;
-            border: 1px solid var(--border-color);
-            font-size: 11px;
-            letter-spacing: 1.5px;
-        }
-
-        /* Chat Panel */
-        .chat-panel {
-            grid-column: 2;
-            grid-row: 3;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            font-size: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding-right: 4px;
-            margin-bottom: 6px;
-        }
-
-        .message {
-            padding: 5px 8px;
-            max-width: 85%;
-            border-radius: 2px;
-        }
-
-        .message.suhana {
-            background: rgba(14, 165, 233, 0.15);
-            border-left: 2px solid var(--text-cyan);
-            align-self: flex-start;
-        }
-
-        .message.user {
-            background: rgba(2, 132, 199, 0.2);
-            border-right: 2px solid #38bdf8;
-            align-self: flex-end;
-            text-align: right;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            background: rgba(2, 6, 23, 0.9);
-            border: 1px solid var(--border-color);
-            color: var(--text-cyan);
-            padding: 5px 8px;
-            font-size: 10px;
-            outline: none;
-        }
-
-        .chat-input-area button {
-            background: var(--accent-blue);
-            color: white;
-            border: 1px solid var(--border-color);
-            padding: 0 10px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 10px;
-        }
-
-        .chat-input-area button:hover {
-            background: var(--text-cyan);
-            color: var(--bg-color);
-        }
-
-        /* Bottom Ticker Bar */
-        .ticker-bar {
-            grid-column: 1 / 3;
-            background: rgba(2, 6, 23, 0.95);
-            border-top: 1px solid var(--border-color);
-            padding: 3px 10px;
-            font-size: 9px;
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-dim);
-            flex-shrink: 0;
-        }
-
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); }
+      }
     </style>
-</head>
-<body>
-
-    <header>
-        <div class="brand">
-            <div class="brand-badge">SUHANA</div>
-            <span>CYBERNETIC AVATAR MATRIX // MK-II</span>
-        </div>
-        <div class="status-indicators">
-            <div class="status-item">SYSTEM: <span>ONLINE</span></div>
-            <div class="status-item">STATUS: <span>SECURE</span></div>
-            <div class="status-item">TIME: <span id="clock">00:00:00</span></div>
-        </div>
-    </header>
-
-    <div class="workspace">
-        <!-- Diagnostics -->
-        <div class="panel diagnostics-panel">
-            <div class="panel-title">System Diagnostics</div>
-            <div style="font-size: 9px; display:flex; justify-content:space-between;">
-                <span>Neural Load</span><span>OPTIMAL</span>
-            </div>
-            <div class="metric-bar"><div class="metric-fill" style="width: 72%;"></div></div>
-            
-            <div style="font-size: 9px; display:flex; justify-content:space-between;">
-                <span>Memory Integrity</span><span>05 ITEMS</span>
-            </div>
-            <div class="metric-bar"><div class="metric-fill" style="width: 45%;"></div></div>
-            
-            <div style="font-size: 9px; display:flex; justify-content:space-between;">
-                <span>Session Buffer</span><span>4 SESSIONS</span>
-            </div>
-            <div class="metric-bar"><div class="metric-fill" style="width: 90%;"></div></div>
-        </div>
-
-        <!-- Command Deck -->
-        <div class="panel command-panel">
-            <div class="panel-title">Command Deck</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px;">
-                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">⚡ Open Shell</div>
-                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">🔊 Voice Out</div>
-                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">🧠 Memory</div>
-                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">❌ Clear</div>
-            </div>
-        </div>
-
-        <!-- Saved Memory Bank -->
-        <div class="panel memory-panel" style="flex:1; overflow-y:auto;">
-            <div class="panel-title">Saved Memory Bank (Local)</div>
-            <div style="font-size: 9px; display: flex; flex-direction: column; gap: 3px; color: #94a3b8;">
-                <div>> User ID Confirmed: Mikul</div>
-                <div>> Discipline: Mechanical Eng.</div>
-                <div>> Encryption: Active-Secure</div>
-            </div>
-        </div>
-
-        <!-- Core Avatar Visualizer Panel linking to Flask static folder -->
-        <div class="panel core-panel">
-            <div class="panel-title" style="width: 100%; text-align: left;">Core Matrix Visual Feed</div>
-            <div class="core-image-container">
-                <img id="coreImage" src="/static/1000286152.png" alt="Suhana Cybernetic Face Core" onerror="loadFallbackCanvas(this)">
-            </div>
-            <div class="core-overlay-text">SUHANA NEURAL CORE // AVATAR MATRIX ONLINE</div>
-        </div>
-
-        <!-- Secure Chat Communication Panel -->
-        <div class="panel chat-panel">
-            <div class="panel-title">Secure Communication // Suhana</div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="message suhana">Hey Mikul. Nice to hear from you. Systems are fully stable.</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="userInput" placeholder="Transmit message to Suhana..." autocomplete="off">
-                <button onclick="sendMessage()">TRANSMIT</button>
-            </div>
-        </div>
+ </head>
+ <body>
+  <div class="container">
+   <img class="logo" src="https://www.gstatic.com/images/branding/productlogos/ai_studio/v1/web-512dp/logo_ai_studio_color_1x_web_512dp.png" alt="AI Studio Logo" width="256" height="256">
+   <div class="spinner"></div>
+   <div id="error-ui" class="hidden">
+    <div class="icon">
+     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48px" height="48px" fill="#D73A49">
+      <path d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M13,17h-2v-2h2V17z M13,13h-2V7h2V13z" />
+     </svg>
     </div>
-
-    <div class="ticker-bar">
-        <div>TELEMETRY MONITOR: ACTIVE SPN // 67%</div>
-        <div>WEATHER SERVICE: STANDBY</div>
-        <div>ENCRYPTED HUD // NEURAL NET</div>
+    <div id="stepOne" class="text-container">
+     <h1>Action required to load your app</h1>
+     <p>It looks like your browser is blocking a required security cookie, which is common on older versions of iOS and Safari.</p>
+     <div class="button-container">
+      <button id="authInSeparateWindowButton" onclick="redirectToReturnUrl(true)">Authenticate in new window</button>
+     </div>
     </div>
-
-    <script>
-        function loadFallbackCanvas(imgElement) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 600;
-            canvas.height = 350;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#020617';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#0ea5e9';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-            ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 14px Courier New';
-            ctx.textAlign = 'center';
-            ctx.fillText('[ IMAGE FILE NOT FOUND IN STATIC FOLDER ]', canvas.width / 2, canvas.height / 2 - 10);
-            ctx.font = '10px Courier New';
-            ctx.fillStyle = '#64748b';
-            ctx.fillText('Please place 1000286152.png inside the static/ folder', canvas.width / 2, canvas.height / 2 + 15);
-            imgElement.src = canvas.toDataURL();
+    <div id="stepTwo" class="text-container hidden">
+     <h1>Action required to load your app</h1>
+     <p>It looks like your browser is blocking a required security cookie, which is common on older versions of iOS and Safari.</p>
+     <div class="button-container">
+      <button id="interactButton" onclick="redirectToReturnUrl(false)">Close and continue</button>
+     </div>
+    </div>
+    <div id="stepThree" class="text-container hidden">
+     <h1>Almost there!</h1>
+     <p>Grant permission for the required security cookie below.</p>
+     <div class="button-container">
+      <button id="grantPermissionButton" onclick="grantStorageAccess()">Grant permission</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+      const AUTH_FLOW_TEST_COOKIE_NAME = '__SECURE-aistudio_auth_flow_may_set_cookies';
+      const COOKIE_VALUE = 'true';
+ 
+      function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+          }
         }
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
+        return null;
+      }
+ 
+      function setAuthFlowTestCookie() {
+        // Set the cookie's TTL to 1 minute. This is a short lived cookie because it is only used
+        // when the user does not have an auth token or their auth token needs to be reset.
+        // Making this cookie too long-lived allows the user to get into a state where they can't
+        // mint a new auth token.
+        document.cookie = `${AUTH_FLOW_TEST_COOKIE_NAME}=${COOKIE_VALUE}; Path=/; Secure; SameSite=None; Domain=${window.location.hostname}; Partitioned; Max-Age=60;`;
+      }
+ 
+      /**
+       * Returns true if the test cookie is set, false otherwise.
+       */
+      function authFlowTestCookieIsSet() {
+        return getCookie(AUTH_FLOW_TEST_COOKIE_NAME) === COOKIE_VALUE;
+      }
+ 
+      /**
+       * Redirects to the return url. If autoClose is true, then the return url will be opened in a
+       * new window, and it will be closed automatically when the page loads.
+       * Options:
+       *   storageAccessGranted: if true, appends __storage_access_granted=1 to
+       *   the return url so the Lua auth script can set the test cookie
+       *   server-side (needed for Safari/iOS where document.cookie is blocked).
+       */
+      async function redirectToReturnUrl(autoClose, storageAccessGranted = false) {
+        const initialReturnUrlStr = new URLSearchParams(window.location.search).get('return_url');
+        const returnUrl = initialReturnUrlStr ? new URL(initialReturnUrlStr) : null;
+ 
+        // Prevent potentially malicious URLs from being used
+        if (returnUrl.protocol.toLowerCase() === 'javascript:') {
+          console.error('Potentially malicious return URL blocked');
+          return;
         }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        async function sendMessage() {
-            const inputField = document.getElementById('userInput');
-            const messageText = inputField.value.trim();
-            if(!messageText) return;
-
-            const chatContainer = document.getElementById('chatMessages');
-
-            const userMsg = document.createElement('div');
-            userMsg.className = 'message user';
-            userMsg.innerText = messageText;
-            chatContainer.appendChild(userMsg);
-
-            inputField.value = '';
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: messageText,
-                        memories: ["User ID: Mikul", "Discipline: Mechanical Engineering"],
-                        history: []
-                    })
-                });
-                const data = await response.json();
-
-                const suhanaMsg = document.createElement('div');
-                suhanaMsg.className = 'message suhana';
-                suhanaMsg.innerText = data.reply || data.error || "Connection error occurred.";
-                chatContainer.appendChild(suhanaMsg);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            } catch (err) {
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'message suhana';
-                errorMsg.innerText = "Network transmission error.";
-                chatContainer.appendChild(errorMsg);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
+ 
+        if (storageAccessGranted) {
+          returnUrl.searchParams.set('__storage_access_granted', '1');
         }
-
-        document.getElementById('userInput').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') { sendMessage(); }
-        });
+ 
+        if (autoClose) {
+          returnUrl.searchParams.set('__auto_close', '1');
+          const url = new URL(window.location.href);
+          url.searchParams.set('return_url', returnUrl.toString());
+          // Land on the cookie check page first, so the user can interact with it before proceeding
+          // to the return url where cookies can be set.
+          window.open(url.toString(), '_blank');
+          const hasAccess = await document.hasStorageAccess();
+          document.querySelector('#stepOne').classList.add('hidden');
+          if (!hasAccess) {
+            document.querySelector('#stepThree').classList.remove('hidden');
+          } else {
+            window.location.reload();
+          }
+        } else {
+          window.location.href = returnUrl.toString();
+        }
+      }
+ 
+      /**
+       * Grants the browser permission to set cookies. If successful, then it redirects to the
+       * return url.
+       */
+      async function grantStorageAccess() {
+        try {
+          await document.requestStorageAccess();
+          // Recent Safari/iOS versions block document.cookie entirely in
+          // cross-site iframes, even after requestStorageAccess(). Only
+          // server-side Set-Cookie headers work. Signal to the Lua auth script
+          // via query param so it can set the test cookie server-side.
+          redirectToReturnUrl(false, /* storageAccessGranted= */ true);
+        } catch (err) {
+          console.log('error after button click: ', err);
+        }
+      }
+ 
+      /**
+       * Verifies that the browser can set cookies. If it can, then it redirects to the return url.
+       * If it can't, then it shows the error UI.
+       */
+      function verifyCanSetCookies() {
+        setAuthFlowTestCookie();
+        if (authFlowTestCookieIsSet()) {
+          // Check if we are on the auto-close flow, and if so show the interact button.
+          const returnUrl = new URLSearchParams(window.location.search).get('return_url');
+          const autoClose = new URL(returnUrl).searchParams.has('__auto_close');
+          if (autoClose) {
+            document.querySelector('#stepOne').classList.add('hidden');
+            document.querySelector('#stepTwo').classList.remove('hidden');
+          } else {
+            redirectToReturnUrl(false);
+            return;
+          }
+        }
+        // The cookie could not be set, so initiate the recovery flow.
+        document.querySelector('.logo').classList.add('hidden');
+        document.querySelector('.spinner').classList.add('hidden');
+        document.querySelector('#error-ui').classList.remove('hidden');
+      }
+ 
+      // Start the cookie verification process.
+      verifyCanSetCookies();
     </script>
-</body>
+ </body>
 </html>
