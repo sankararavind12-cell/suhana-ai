@@ -1,4 +1,3 @@
-```html
 <!doctype html>
 <html lang="en">  
  <head>  
@@ -44,18 +43,25 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
 .metric-line{display:flex;justify-content:space-between;gap:6px;font-size:10px;margin:8px 0 3px}  
 .metric-line strong{color:var(--cyan);font-weight:500}  
 
-/* EXACT ROBOTIC FACE CORE AS REQUESTED */  
+/* EXACT ROBOTIC FACE HUD OVERLAY PANEL */  
 .center-column{display:flex;flex-direction:column;gap:12px;position:relative}  
-.core-area{min-height:480px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:2px solid var(--cyan);box-shadow:inset 0 0 40px #00d8ff33,0 0 25px #00d8ff22;border-radius:4px}  
-.core-avatar-bg{position:absolute;inset:0;background:url('1000286152_5.png') center/cover no-repeat;filter:drop-shadow(0 0 35px #00d8ff77) hue-rotate(185deg) saturate(230%);opacity:.92;z-index:1}  
-.core-avatar-overlay{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 10%,rgba(1,6,18,.80) 85%);z-index:2;pointer-events:none}  
-.core-area > *:not(.core-avatar-bg):not(.core-avatar-overlay){z-index:3}  
+.core-area{min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;position:relative;overflow:hidden;border:2px solid var(--cyan);box-shadow:inset 0 0 40px #00d8ff33,0 0 25px #00d8ff22;border-radius:4px;padding:20px}  
+.core-avatar-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1400&auto=format&fit=crop') center/cover no-repeat;filter:drop-shadow(0 0 40px #00d8ff99) hue-rotate(185deg) saturate(240%);opacity:.96;z-index:1}  
+.core-avatar-overlay{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,transparent 5%,rgba(1,6,18,.75) 85%);z-index:2;pointer-events:none}  
 
-.core-heading{text-align:center;margin-bottom:6px}  
+/* Holographic UI Frames overlaying the robotic face */  
+.hud-frame-top-left{position:absolute;top:10px;left:10px;border:1px dashed #00d8ff66;padding:8px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6);letter-spacing:1px}  
+.hud-frame-top-right{position:absolute;top:10px;right:10px;border:1px dashed #00d8ff66;padding:8px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6);letter-spacing:1px;text-align:right}  
+.hud-frame-bottom-left{position:absolute;bottom:50px;left:10px;border:1px solid #00d8ff44;padding:6px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6)}  
+.hud-frame-bottom-right{position:absolute;bottom:50px;right:10px;border:1px solid #00d8ff44;padding:6px;font-size:7px;color:var(--cyan);z-index:3;background:rgba(1,8,18,0.6)}  
+
+.core-area > *:not(.core-avatar-bg):not(.core-avatar-overlay):not([class*="hud-frame"]){z-index:3}  
+
+.core-heading{text-align:center;margin-bottom:6px;z-index:3}  
 .core-heading .eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted)}  
 .core-heading h2{font-size:clamp(18px,2.2vw,26px);letter-spacing:5px;color:var(--cyan);margin:4px 0;text-shadow:0 0 14px #00d8ffaa}  
 
-.core-caption{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:10px}  
+.core-caption{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:6px;z-index:3}  
 .core-caption strong{color:var(--green);font-weight:600}  
 
 /* CHAT & CONTROLS */  
@@ -188,11 +194,18 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
      </section>  
     </aside>  
 
-    <!-- CENTRAL ROBOTIC FACE AVATAR PANEL -->  
+    <!-- CENTRAL ROBOTIC FACE AVATAR PANEL WITH HOLOGRAPHIC HUD -->  
     <section class="column center-column">  
      <section class="panel core-area">  
       <div class="core-avatar-bg"></div>  
       <div class="core-avatar-overlay"></div>  
+      
+      <!-- Holographic UI frames matching your image asset layout -->  
+      <div class="hud-frame-top-left">SYS_DIAG: 99.4%<br>CORE_SYNC: ACTIVE</div>  
+      <div class="hud-frame-top-right">NODE_ID: 0x8F2<br>LATENCY: 12MS</div>  
+      <div class="hud-frame-bottom-left">NEURAL MAPPING // ONLINE</div>  
+      <div class="hud-frame-bottom-right">STATUS: SECURE</div>  
+
       <div class="core-heading">  
        <div class="eyebrow">CYBERNETIC AVATAR // ACTIVE</div>  
        <h2>SUHANA NEURAL CORE</h2>  
@@ -737,5 +750,3 @@ button:focus-visible,textarea:focus-visible{outline:1px solid var(--cyan);box-sh
   </script>  
  </body>  
 </html>
-
-```
