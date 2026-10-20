@@ -308,11 +308,11 @@
             </div>
         </div>
 
-        <!-- Core Avatar Visualizer Panel with Integrated Cybernetic Face -->
+        <!-- Core Avatar Visualizer Panel with Canvas Fallback -->
         <div class="panel core-panel">
             <div class="panel-title" style="width: 100%; text-align: left;">Core Matrix Visual Feed</div>
             <div class="core-image-container">
-                <img src="1000286152.png" alt="Suhana Cybernetic Face Core">
+                <img id="coreImage" src="1000286152.png" alt="Suhana Cybernetic Face Core" onerror="loadFallbackCanvas(this)">
             </div>
             <div class="core-overlay-text">SUHANA NEURAL CORE // AVATAR MATRIX ONLINE</div>
         </div>
@@ -337,6 +337,34 @@
     </div>
 
     <script>
+        // Automatic fallback generator so the layout looks incredible even if the png file isn't uploaded yet
+        function loadFallbackCanvas(imgElement) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 600;
+            canvas.height = 350;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw Sci-Fi Background Glow
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = '#0ea5e9';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+            // Draw Cybernetic Holographic Head Placeholder graphics
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 14px Courier New';
+            ctx.textAlign = 'center';
+            ctx.fillText('[ SUHANA CYBERNETIC CORE HUD ]', canvas.width / 2, canvas.height / 2 - 10);
+            
+            ctx.font = '10px Courier New';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('STATUS: MATRIX SYNCHRONIZED', canvas.width / 2, canvas.height / 2 + 15);
+
+            imgElement.src = canvas.toDataURL();
+        }
+
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
