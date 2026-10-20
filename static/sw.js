@@ -1,4 +1,4 @@
-const CACHE_NAME = "suhana-v1";
+const CACHE_NAME = "suhana-v2";
 const FILES = [
   "/",
   "/manifest.webmanifest"
