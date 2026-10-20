@@ -6,10 +6,10 @@
     <title>SUHANA // Cybernetic Avatar Matrix MK-II</title>
     <style>
         :root {
-            --bg-color: #030712;
-            --panel-bg: rgba(3, 15, 30, 0.75);
+            --bg-color: #020617;
+            --panel-bg: rgba(3, 15, 30, 0.85);
             --border-color: #0ea5e9;
-            --border-glow: rgba(14, 165, 233, 0.4);
+            --border-glow: rgba(14, 165, 233, 0.3);
             --text-cyan: #38bdf8;
             --text-dim: #64748b;
             --accent-blue: #0284c7;
@@ -25,6 +25,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-cyan);
+            width: 100vw;
             height: 100vh;
             overflow: hidden;
             display: flex;
@@ -40,30 +41,31 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-bottom: 1px solid var(--border-color);
-            background: rgba(2, 6, 23, 0.9);
-            font-size: 12px;
+            background: rgba(2, 6, 23, 0.95);
+            font-size: 11px;
             letter-spacing: 1px;
+            flex-shrink: 0;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .brand-badge {
             background: var(--text-cyan);
             color: var(--bg-color);
-            padding: 2px 6px;
+            padding: 2px 5px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 9px;
         }
 
         .status-indicators {
             display: flex;
-            gap: 20px;
+            gap: 15px;
         }
 
         .status-item span {
@@ -71,13 +73,13 @@
             font-weight: bold;
         }
 
-        /* Main Workspace */
+        /* Main Workspace Layout */
         .workspace {
             display: grid;
-            grid-template-columns: 320px 1fr 1fr;
-            grid-template-rows: auto 1fr auto;
-            gap: 10px;
-            padding: 10px;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: auto auto 1fr;
+            gap: 6px;
+            padding: 6px;
             flex: 1;
             overflow: hidden;
         }
@@ -85,107 +87,108 @@
         .panel {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            box-shadow: 0 0 10px var(--border-glow);
-            padding: 10px;
+            box-shadow: 0 0 8px var(--border-glow);
+            padding: 8px;
             display: flex;
             flex-direction: column;
             position: relative;
         }
 
         .panel-title {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
+            letter-spacing: 1.2px;
+            margin-bottom: 6px;
             border-bottom: 1px dashed rgba(14, 165, 233, 0.3);
-            padding-bottom: 3px;
+            padding-bottom: 2px;
         }
 
-        /* Left Column Controls */
+        /* Sidebar Panels */
         .diagnostics-panel { grid-column: 1; grid-row: 1; }
         .command-panel { grid-column: 1; grid-row: 2; }
         .memory-panel { grid-column: 1; grid-row: 3; }
 
         .metric-bar {
             background: rgba(14, 165, 233, 0.1);
-            height: 6px;
-            margin: 4px 0 10px 0;
+            height: 5px;
+            margin: 2px 0 6px 0;
             border: 1px solid var(--border-color);
             position: relative;
-            overflow: hidden;
         }
 
         .metric-fill {
             background: var(--text-cyan);
             height: 100%;
             width: 85%;
-            box-shadow: 0 0 8px var(--text-cyan);
+            box-shadow: 0 0 6px var(--text-cyan);
         }
 
-        /* Center-Right Core Visualizer */
+        /* Center Core Visualizer Panel */
         .core-panel {
-            grid-column: 2 / 4;
+            grid-column: 2;
             grid-row: 1 / 3;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            position: relative;
+            min-height: 0;
         }
 
         .core-image-container {
             width: 100%;
-            height: 100%;
+            flex: 1;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: #000;
+            border: 1px solid rgba(14, 165, 233, 0.4);
+            overflow: hidden;
         }
 
         .core-image-container img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.6));
-            border: 1px solid var(--border-color);
+            filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.5));
         }
 
         .core-overlay-text {
-            position: absolute;
-            bottom: 15px;
-            background: rgba(3, 7, 18, 0.85);
-            padding: 6px 20px;
+            margin-top: 4px;
+            background: rgba(3, 7, 18, 0.9);
+            width: 100%;
+            text-align: center;
+            padding: 4px;
             border: 1px solid var(--border-color);
-            font-size: 14px;
-            letter-spacing: 2px;
-            box-shadow: 0 0 10px var(--border-glow);
+            font-size: 11px;
+            letter-spacing: 1.5px;
         }
 
         /* Chat Panel */
         .chat-panel {
-            grid-column: 2 / 4;
+            grid-column: 2;
             grid-row: 3;
-            height: 160px;
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            font-size: 11px;
+            font-size: 10px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            padding-right: 5px;
-            margin-bottom: 8px;
+            gap: 4px;
+            padding-right: 4px;
+            margin-bottom: 6px;
         }
 
         .message {
-            padding: 6px 10px;
-            max-width: 80%;
+            padding: 5px 8px;
+            max-width: 85%;
             border-radius: 2px;
         }
 
@@ -204,16 +207,17 @@
 
         .chat-input-area {
             display: flex;
-            gap: 6px;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
         .chat-input-area input {
             flex: 1;
-            background: rgba(2, 6, 23, 0.8);
+            background: rgba(2, 6, 23, 0.9);
             border: 1px solid var(--border-color);
             color: var(--text-cyan);
-            padding: 6px 10px;
-            font-size: 11px;
+            padding: 5px 8px;
+            font-size: 10px;
             outline: none;
         }
 
@@ -221,9 +225,10 @@
             background: var(--accent-blue);
             color: white;
             border: 1px solid var(--border-color);
-            padding: 0 15px;
+            padding: 0 10px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 10px;
         }
 
         .chat-input-area button:hover {
@@ -231,25 +236,21 @@
             color: var(--bg-color);
         }
 
-        /* Telemetry Stream ticker at bottom */
+        /* Bottom Ticker Bar */
         .ticker-bar {
-            grid-column: 1 / 4;
-            background: rgba(2, 6, 23, 0.9);
+            grid-column: 1 / 3;
+            background: rgba(2, 6, 23, 0.95);
             border-top: 1px solid var(--border-color);
-            padding: 4px 10px;
-            font-size: 10px;
+            padding: 3px 10px;
+            font-size: 9px;
             display: flex;
             justify-content: space-between;
             color: var(--text-dim);
+            flex-shrink: 0;
         }
 
-        /* Scrollbars */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-        }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); }
     </style>
 </head>
 <body>
@@ -270,17 +271,17 @@
         <!-- Diagnostics -->
         <div class="panel diagnostics-panel">
             <div class="panel-title">System Diagnostics</div>
-            <div style="font-size: 10px; display:flex; justify-content:space-between;">
+            <div style="font-size: 9px; display:flex; justify-content:space-between;">
                 <span>Neural Load</span><span>OPTIMAL</span>
             </div>
             <div class="metric-bar"><div class="metric-fill" style="width: 72%;"></div></div>
             
-            <div style="font-size: 10px; display:flex; justify-content:space-between;">
-                <span>Memory Bank Integrity</span><span>05 ITEMS</span>
+            <div style="font-size: 9px; display:flex; justify-content:space-between;">
+                <span>Memory Integrity</span><span>05 ITEMS</span>
             </div>
             <div class="metric-bar"><div class="metric-fill" style="width: 45%;"></div></div>
             
-            <div style="font-size: 10px; display:flex; justify-content:space-between;">
+            <div style="font-size: 9px; display:flex; justify-content:space-between;">
                 <span>Session Buffer</span><span>4 SESSIONS</span>
             </div>
             <div class="metric-bar"><div class="metric-fill" style="width: 90%;"></div></div>
@@ -289,30 +290,29 @@
         <!-- Command Deck -->
         <div class="panel command-panel">
             <div class="panel-title">Command Deck</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px;">
-                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">⚡ Open Shell</div>
-                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">🔊 Voice Output</div>
-                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">🧠 Memory Bank</div>
-                <div style="border: 1px solid var(--border-color); padding: 8px; background: rgba(14,165,233,0.05);">❌ Clear Session</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px;">
+                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">⚡ Open Shell</div>
+                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">🔊 Voice Out</div>
+                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">🧠 Memory</div>
+                <div style="border: 1px solid var(--border-color); padding: 5px; background: rgba(14,165,233,0.05);">❌ Clear</div>
             </div>
         </div>
 
         <!-- Saved Memory Bank -->
-        <div class="panel memory-panel">
+        <div class="panel memory-panel" style="flex:1; overflow-y:auto;">
             <div class="panel-title">Saved Memory Bank (Local)</div>
-            <div style="font-size: 10px; display: flex; flex-direction: column; gap: 4px; color: #94a3b8;">
+            <div style="font-size: 9px; display: flex; flex-direction: column; gap: 3px; color: #94a3b8;">
                 <div>> User ID Confirmed: Mikul</div>
-                <div>> Discipline: Mechanical Engineering</div>
-                <div>> Encryption Key: Active-Secure</div>
+                <div>> Discipline: Mechanical Eng.</div>
+                <div>> Encryption: Active-Secure</div>
             </div>
         </div>
 
-        <!-- Core Avatar Visualizer Panel -->
+        <!-- Core Avatar Visualizer Panel with Integrated Cybernetic Face -->
         <div class="panel core-panel">
             <div class="panel-title" style="width: 100%; text-align: left;">Core Matrix Visual Feed</div>
             <div class="core-image-container">
-                <!-- Direct replacement using your cybernetic interface face image reference -->
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'><rect width='100%' height='100%' fill='%23020617'/><circle cx='400' cy='225' r='150' fill='none' stroke='%230ea5e9' stroke-width='2' opacity='0.4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2338bdf8' font-family='monospace' font-size='20'>[ SUHANA NEURAL CORE MATRIX ACTIVE ]</text></svg>" alt="Suhana Neural Core" id="coreVisual">
+                <img src="1000286152.png" alt="Suhana Cybernetic Face Core">
             </div>
             <div class="core-overlay-text">SUHANA NEURAL CORE // AVATAR MATRIX ONLINE</div>
         </div>
@@ -337,7 +337,6 @@
     </div>
 
     <script>
-        // Live Clock Updater
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
@@ -345,7 +344,6 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Interactive Chat Simulation Logic
         function sendMessage() {
             const inputField = document.getElementById('userInput');
             const messageText = inputField.value.trim();
@@ -353,7 +351,6 @@
 
             const chatContainer = document.getElementById('chatMessages');
 
-            // Append User Message
             const userMsg = document.createElement('div');
             userMsg.className = 'message user';
             userMsg.innerText = messageText;
@@ -362,27 +359,17 @@
             inputField.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // Generate Automated Response simulating Suhana
             setTimeout(() => {
                 const suhanaMsg = document.createElement('div');
                 suhanaMsg.className = 'message suhana';
-                
-                if(messageText.toLowerCase().includes('status') || messageText.toLowerCase().includes('diagnostics')) {
-                    suhanaMsg.innerText = "All telemetry indicators are optimal, Mikul. Neural load is running at standard parameters.";
-                } else {
-                    suhanaMsg.innerText = `Command received: "${messageText}". Processing data arrays through the core matrix...`;
-                }
-
+                suhanaMsg.innerText = `Command received: "${messageText}". Processing data arrays...`;
                 chatContainer.appendChild(suhanaMsg);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }, 800);
         }
 
-        // Allow 'Enter' key to transmit messages
         document.getElementById('userInput').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') {
-                sendMessage();
-            }
+            if(e.key === 'Enter') { sendMessage(); }
         });
     </script>
 </body>
