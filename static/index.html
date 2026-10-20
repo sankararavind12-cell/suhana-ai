@@ -120,7 +120,7 @@
         .metric-fill {
             background: var(--text-cyan);
             height: 100%;
-            width: 85%;
+            width: 72%;
             box-shadow: 0 0 6px var(--text-cyan);
         }
 
@@ -308,11 +308,11 @@
             </div>
         </div>
 
-        <!-- Core Avatar Visualizer Panel with Canvas Fallback -->
+        <!-- Core Avatar Visualizer Panel linking to Flask static folder -->
         <div class="panel core-panel">
             <div class="panel-title" style="width: 100%; text-align: left;">Core Matrix Visual Feed</div>
             <div class="core-image-container">
-                <img id="coreImage" src="1000286152.png" alt="Suhana Cybernetic Face Core" onerror="loadFallbackCanvas(this)">
+                <img id="coreImage" src="/static/1000286152.png" alt="Suhana Cybernetic Face Core" onerror="loadFallbackCanvas(this)">
             </div>
             <div class="core-overlay-text">SUHANA NEURAL CORE // AVATAR MATRIX ONLINE</div>
         </div>
@@ -337,31 +337,23 @@
     </div>
 
     <script>
-        // Automatic fallback generator so the layout looks incredible even if the png file isn't uploaded yet
         function loadFallbackCanvas(imgElement) {
             const canvas = document.createElement('canvas');
             canvas.width = 600;
             canvas.height = 350;
             const ctx = canvas.getContext('2d');
-            
-            // Draw Sci-Fi Background Glow
             ctx.fillStyle = '#020617';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
             ctx.strokeStyle = '#0ea5e9';
             ctx.lineWidth = 2;
             ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-
-            // Draw Cybernetic Holographic Head Placeholder graphics
             ctx.fillStyle = '#38bdf8';
             ctx.font = 'bold 14px Courier New';
             ctx.textAlign = 'center';
-            ctx.fillText('[ SUHANA CYBERNETIC CORE HUD ]', canvas.width / 2, canvas.height / 2 - 10);
-            
+            ctx.fillText('[ IMAGE FILE NOT FOUND IN STATIC FOLDER ]', canvas.width / 2, canvas.height / 2 - 10);
             ctx.font = '10px Courier New';
             ctx.fillStyle = '#64748b';
-            ctx.fillText('STATUS: MATRIX SYNCHRONIZED', canvas.width / 2, canvas.height / 2 + 15);
-
+            ctx.fillText('Please place 1000286152.png inside the static/ folder', canvas.width / 2, canvas.height / 2 + 15);
             imgElement.src = canvas.toDataURL();
         }
 
@@ -372,7 +364,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        function sendMessage() {
+        async function sendMessage() {
             const inputField = document.getElementById('userInput');
             const messageText = inputField.value.trim();
             if(!messageText) return;
@@ -387,13 +379,30 @@
             inputField.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            setTimeout(() => {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: messageText,
+                        memories: ["User ID: Mikul", "Discipline: Mechanical Engineering"],
+                        history: []
+                    })
+                });
+                const data = await response.json();
+
                 const suhanaMsg = document.createElement('div');
                 suhanaMsg.className = 'message suhana';
-                suhanaMsg.innerText = `Command received: "${messageText}". Processing data arrays...`;
+                suhanaMsg.innerText = data.reply || data.error || "Connection error occurred.";
                 chatContainer.appendChild(suhanaMsg);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 800);
+            } catch (err) {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message suhana';
+                errorMsg.innerText = "Network transmission error.";
+                chatContainer.appendChild(errorMsg);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
         }
 
         document.getElementById('userInput').addEventListener('keypress', function(e) {
